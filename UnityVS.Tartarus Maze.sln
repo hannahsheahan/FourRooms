@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.Tartarus Maze.CSharp.Plugins", "UnityVS.Tartarus Maze.CSharp.Plugins.csproj", "{E248937B-2744-3D22-C009-3B8D636D86FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.Tartarus Maze.CSharp", "UnityVS.Tartarus Maze.CSharp.csproj", "{2D2479D6-544E-FBCF-BF8E-DF61C940350A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.Tartarus Maze.CSharp.Editor", "UnityVS.Tartarus Maze.CSharp.Editor.csproj", "{9E14A85D-A5B3-0F83-8048-9490B41F0670}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E248937B-2744-3D22-C009-3B8D636D86FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E248937B-2744-3D22-C009-3B8D636D86FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E248937B-2744-3D22-C009-3B8D636D86FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E248937B-2744-3D22-C009-3B8D636D86FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D2479D6-544E-FBCF-BF8E-DF61C940350A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D2479D6-544E-FBCF-BF8E-DF61C940350A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D2479D6-544E-FBCF-BF8E-DF61C940350A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D2479D6-544E-FBCF-BF8E-DF61C940350A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E14A85D-A5B3-0F83-8048-9490B41F0670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E14A85D-A5B3-0F83-8048-9490B41F0670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E14A85D-A5B3-0F83-8048-9490B41F0670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E14A85D-A5B3-0F83-8048-9490B41F0670}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

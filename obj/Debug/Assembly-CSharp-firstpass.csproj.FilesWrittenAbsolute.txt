@@ -1,0 +1,38 @@
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Assembly-CSharp-firstpass.dll
+/Users/william/Documents/Unity/Tartarus Maze/obj/Debug/Assembly-CSharp-firstpass.dll
+/Users/william/Documents/Unity/Tartarus Maze/obj/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/UnityEngine.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/UnityEditor.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Mono.Cecil.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Unity.DataContract.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/william/Documents/Unity/Tartarus Maze/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Assembly-CSharp-firstpass.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/obj/Debug/Assembly-CSharp-firstpass.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/obj/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEngine.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEditor.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/UnityEngine.VR.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Mono.Cecil.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Unity.DataContract.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/william.cothi/Dropbox/Documents/Unity/Tartarus Maze 2/Temp/bin/Debug/Mono.Cecil.Mdb.dll

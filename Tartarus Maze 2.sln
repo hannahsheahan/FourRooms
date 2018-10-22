@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tartarus Maze 2", "Assembly-CSharp-firstpass.csproj", "{C1341127-0D18-912F-9241-4E69224391D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tartarus Maze 2", "Assembly-CSharp.csproj", "{5F265BEB-BF6C-CFB5-D7B3-0771CDDAB273}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tartarus Maze 2", "Assembly-CSharp-Editor.csproj", "{986E0E55-870A-89BB-CD74-4C7035661E56}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1341127-0D18-912F-9241-4E69224391D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1341127-0D18-912F-9241-4E69224391D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1341127-0D18-912F-9241-4E69224391D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1341127-0D18-912F-9241-4E69224391D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F265BEB-BF6C-CFB5-D7B3-0771CDDAB273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F265BEB-BF6C-CFB5-D7B3-0771CDDAB273}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F265BEB-BF6C-CFB5-D7B3-0771CDDAB273}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F265BEB-BF6C-CFB5-D7B3-0771CDDAB273}.Release|Any CPU.Build.0 = Release|Any CPU
+		{986E0E55-870A-89BB-CD74-4C7035661E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{986E0E55-870A-89BB-CD74-4C7035661E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{986E0E55-870A-89BB-CD74-4C7035661E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{986E0E55-870A-89BB-CD74-4C7035661E56}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

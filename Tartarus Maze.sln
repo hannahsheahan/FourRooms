@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{B840895D-773D-2E6A-B9BF-E367B25CA951}") = "Tartarus Maze", "Assembly-CSharp-firstpass.csproj", "{B1C846EA-1910-95FC-23B9-D138DEF59E07}"
+EndProject
+Project("{B840895D-773D-2E6A-B9BF-E367B25CA951}") = "Tartarus Maze", "Assembly-CSharp.csproj", "{916551E3-33E1-58E0-32EE-E026F781CBD3}"
+EndProject
+Project("{B840895D-773D-2E6A-B9BF-E367B25CA951}") = "Tartarus Maze", "Assembly-CSharp-Editor.csproj", "{5FE957ED-4589-1FEE-35E6-5D0ED4DB9105}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1C846EA-1910-95FC-23B9-D138DEF59E07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1C846EA-1910-95FC-23B9-D138DEF59E07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1C846EA-1910-95FC-23B9-D138DEF59E07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1C846EA-1910-95FC-23B9-D138DEF59E07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{916551E3-33E1-58E0-32EE-E026F781CBD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{916551E3-33E1-58E0-32EE-E026F781CBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{916551E3-33E1-58E0-32EE-E026F781CBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{916551E3-33E1-58E0-32EE-E026F781CBD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE957ED-4589-1FEE-35E6-5D0ED4DB9105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE957ED-4589-1FEE-35E6-5D0ED4DB9105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE957ED-4589-1FEE-35E6-5D0ED4DB9105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE957ED-4589-1FEE-35E6-5D0ED4DB9105}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
