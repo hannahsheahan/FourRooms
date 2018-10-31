@@ -27,8 +27,6 @@ public class HideStar : MonoBehaviour
 		endTime = -1f;
 		entryTime = -1f;
 		fps = GameObject.Find ("FPSController");
-    //pas = GameObject.Find("PlayAreaScripts");
-
     }
 
     void OnTriggerEnter(Collider other)
@@ -61,57 +59,26 @@ public class HideStar : MonoBehaviour
 
         if (endTime > 0 & Time.time - endTime >= 2f)
 		{
-			using (StreamWriter writer =
-				new StreamWriter(filepath.path + Participant.id +"Testing.txt",true))
+			using (StreamWriter writer = new StreamWriter(filepath.path + Participant.id +"Testing.txt",true))
 			{
-				writer.WriteLine ((LevelManager.level+1) + " " + (LevelManager.trial+1));
 				for (var i = 0; i < fps.GetComponent<TrackingScript>().getCoords().Count; i++)
 				{
 					writer.WriteLine("{0}", fps.GetComponent<TrackingScript>().getCoords()[i]);
 				}
 				writer.WriteLine("YES");
-				writer.WriteLine ("");
-			}
-
-			LevelManager.trial ++;
-			if (LevelManager.trial == 10) {
-				LevelManager.level ++;
-				LevelManager.trial = 0;
-			}
-
-			if (LevelManager.trial == 0) {
-				SceneManager.LoadScene ("ContinueScreen");
-
-			} else {
-				SceneManager.LoadScene ("BlankTest");
 			}
 		}
 
 		else if (endTime < 0 & Time.time - startTime >= 49f)
 		{
-			using (StreamWriter writer =
-				       new StreamWriter (filepath.path + Participant.id + "Testing.txt", true)) {
-				writer.WriteLine ((LevelManager.level+1) + " " + (LevelManager.trial+1));
-				for (var i = 0; i < fps.GetComponent<TrackingScript> ().getCoords ().Count; i++) {
+			using (StreamWriter writer = new StreamWriter (filepath.path + Participant.id + "Testing.txt", true)) 
+            {
+				for (var i = 0; i < fps.GetComponent<TrackingScript> ().getCoords ().Count; i++) 
+                {
 					writer.WriteLine ("{0}", fps.GetComponent<TrackingScript> ().getCoords () [i]);
 				}
 				writer.WriteLine ("NO");
-				writer.WriteLine ("");
 			}
-
-			LevelManager.trial ++;
-			if (LevelManager.trial == 10) {
-				LevelManager.level ++;
-				LevelManager.trial = 0;
-			}
-
-			if (LevelManager.trial == 0) {
-				SceneManager.LoadScene ("ContinueScreen");
-
-			} else {
-				SceneManager.LoadScene ("BlankTest");
-			}
-		}
-
+   		}
 	}
 }

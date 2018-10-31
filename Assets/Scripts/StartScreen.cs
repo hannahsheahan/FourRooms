@@ -5,40 +5,39 @@ using UnityEngine.SceneManagement;
 
 public class StartScreen : MonoBehaviour
 {
-	public string ID = "";
-    private string lvlstring = "1";
-    private int lvl;
+    private DataController dataController;
+   
+    public string ID = "";
+    public string mapString = "1";
+    public int mapIndex;
 
-	void OnGUI()
+
+    private void Start()
+    {
+        dataController = FindObjectOfType<DataController>(); //usually be careful with 'Find' but in this case should be ok. Ok this fetches the instance of DataController, dataController.
+    }
+
+    void OnGUI()
 	{
-		GUI.Box (new Rect(80, 60, 300, 250), "Start Screen");
+		// Display some boxes and input areas
+        GUI.Box (new Rect(80, 60, 300, 250), "Welcome");
 
 		GUI.Label (new Rect (90, 90, 200, 20), "Participant ID");
-
 		ID = GUI.TextField (new Rect (90, 115, 200, 20), ID, 20);
 
-        GUI.Label(new Rect(90, 140, 200, 20), "Level");
+        GUI.Label(new Rect(90, 140, 200, 20), "Which maze?");
+        mapString = GUI.TextField(new Rect(90, 165, 200, 20), mapString, 20);
+        mapIndex = Convert.ToInt32(mapString) - 1;
 
-        lvlstring = GUI.TextField(new Rect(90, 165, 200, 20), lvlstring, 20);
-
+        // Store input and start game when ready
         if (GUI.Button (new Rect (200, 250, 50, 25), "Start") || Input.GetKeyDown("return")) 
 		{
-			Participant.id = ID;
-			using (StreamWriter writer =
-				new StreamWriter(filepath.path + Participant.id +"Testing.txt",true))
-			{
-				writer.WriteLine("Participant: " + ID);
-				writer.WriteLine ("");
-			}
+            // Send participant data to the GameController
+            //GameController.control.CollectParticipantInfo(ID, mapString);
+             dataController.SetParticipantID(ID);
 
-            lvl = Convert.ToInt32(lvlstring)-1;
-
-			LevelManager.trial = 0;
-			LevelManager.level = lvl;
-
-			SceneManager.LoadScene ("tartarus" + (LevelManager.level + 1));
+            // Launch scene
+            GameController.control.NextScene("tartarus" + (mapIndex + 1));
 		}
-
 	}
-
 }

@@ -13,9 +13,7 @@ public class ContinueScreen : MonoBehaviour
 
 		if (GUI.Button (new Rect (200, 250, 50, 25), "Yes") || Input.GetKeyDown("return")) 
 		{
-			SceneManager.LoadScene ("tartarus" + (LevelManager.level+1));
-		}
-
+            GameController.control.SceneContinue();  // Continue by playing the current scene again
+        }
 	}
-
 }

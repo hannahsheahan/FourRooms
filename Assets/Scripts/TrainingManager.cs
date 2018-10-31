@@ -249,6 +249,8 @@ public class TrainingManager : MonoBehaviour {
 
 	void Start () 
 	{
+
+        // Spawn the player at different random start locations according to the 'ring'?
 		if (TrainCount.ring == 0) {
 			transform.position = new Vector3 (145, 72.5f, 105);
 			transform.eulerAngles = new Vector3 (0, 0, 0);

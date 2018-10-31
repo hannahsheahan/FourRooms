@@ -9,6 +9,7 @@ public class TrackingScript : MonoBehaviour
     
     void Start ()
     {
+        // Track the time, position, rotation of the player at a rate of 25Hz (this seems pretty slow but maybe ok).
         InvokeRepeating("storeLocation", 0f, 0.04f);
     }
 
