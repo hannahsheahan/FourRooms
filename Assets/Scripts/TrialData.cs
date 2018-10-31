@@ -19,7 +19,7 @@ public class TrialData
     //public float maxTrialDuration;
 
     // Tracking data
-    public List<string> timeStepTrackingData;
+    public List<string> timeStepTrackingData = new List<string>();
 
 
 }

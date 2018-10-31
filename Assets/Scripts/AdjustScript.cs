@@ -7,7 +7,8 @@ public class AdjustScript : MonoBehaviour {
     /// This script is here only as a testing script to make sure that data is persisting between scenes.
     /// </summary>
 
-
+    // This was a tester script that is now obsolete
+    /*
     private void OnGUI()
     {
         if(GUI.Button(new Rect(10, 140, 120, 30), "Health up") || Input.GetKeyUp(KeyCode.Q))
@@ -26,6 +27,6 @@ public class AdjustScript : MonoBehaviour {
         {
             GameController.control.experience -= 10;
         }
-
     }
+    */
 }

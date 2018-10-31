@@ -8,9 +8,12 @@ public class TestSceneSwitchingByButton : MonoBehaviour {
     private int currentScene;
     private bool pressed = false;
 
+    // ********************************************************************** //
+
     void Update()
     {
-        if (pressed)  // use this to stop multiple button presses per frame doing weird things
+        // use Update() to stop multiple button presses per frame doing weird things to the state transitions
+        if (pressed)  
         {
             Debug.Log("Current scene: " + currentScene);
             Debug.Log("Next scene: tartarus" + (currentScene + 1));
@@ -19,9 +22,11 @@ public class TestSceneSwitchingByButton : MonoBehaviour {
         }
     }
 
+    // ********************************************************************** //
+
     void OnGUI()
     {
-        currentScene = SceneManager.GetActiveScene().buildIndex;
+        currentScene = SceneManager.GetActiveScene().buildIndex -2; // Correct labeling for the Persistent and Start Screens
 
         GUI.Label(new Rect(10, 60, 120, 30), "Curent scene: " + currentScene);
         if (GUI.Button(new Rect(10, 90, 120, 30), "Load next scene") || Input.GetKeyDown("return"))
@@ -29,7 +34,4 @@ public class TestSceneSwitchingByButton : MonoBehaviour {
             pressed = true;
         }
     }
-
-
-
 }

@@ -17,11 +17,11 @@ public class GameController : MonoBehaviour {
 
     private DataController dataController;
 
-
     private GameData currentGameData;
     private TrialData currentTrialData;
     private ParticipantData currentParticipantData;
 
+    private string participantID;
     private int currentTrialNumber;
     private float timeRemaining;
     private string currentMapName;
@@ -30,12 +30,6 @@ public class GameController : MonoBehaviour {
     private string filepath;
 
     public static GameController control;
-
-
-
-    public float health;
-    public float experience;
-
 
     // ********************************************************************** //
 
@@ -65,28 +59,12 @@ public class GameController : MonoBehaviour {
 
         currentGameData = dataController.GetGameData();  // doesn't mean anything yet. Is instantiated but contains nothing.
         currentParticipantData = dataController.GetParticipantData();
-        
 
-
-
-
-        /*
-        //-----
-        currentGameData = dataController.GetGameData();
-        //currentTrialData = currentGameData.allTrialData[0];  // Ok this one is never gonna work because we haven't created any trials yet
-        currentParticipantData = currentGameData.participantData;  // this is just a reference, not an object
-        string participantId = currentParticipantData.id;  // this is also just a reference to a field of a reference. Not an object, so thats why it doesnt have a value yet
-
-        Debug.Log("Participant data: " + participantId);
-
-
-        //---
-        currentParticipantData = dataController.GetParticipantData();   // do I need to create a local instance of this??
-        Debug.Log("Participant data: ");
 
         participantID = currentParticipantData.id;   // *** HRS this is not working because object ref not set to an instance of object
         Debug.Log("Participant data: " + participantID);
         //participantID = dataController.GetParticipantData().id;
+        /*
 
         // Data for the current trial
         currentTrialData = dataController.GetCurrentTrialData();
@@ -102,27 +80,8 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, 100, 20), "Health: " + health);
-        GUI.Label(new Rect(10, 30, 100, 20), "Experience: " + experience);
-    }
-
-    // ********************************************************************** //
-    /*
-    public void CollectParticipantInfo(string ID, string mapString)
-    {
-        currentMapName = mapString;
-        currentMapIndex = Convert.ToInt32(currentMapName) - 1;
-        participantID = ID;
-        dataController.
-    }
-    */
-    // ********************************************************************** //
-
     public void NextScene(string scene)
     {
-        //Debug.Log("Participant ID is: " + dataController.GetParticipantData().id);
         // Save the current trial data and move to the next scene
         dataController.AddTrial();  // Create a new trial to store data to
         dataController.SaveData();
@@ -144,6 +103,8 @@ public class GameController : MonoBehaviour {
         // Return the name of the currently active scene/map (for saving as part of TrialData)
         return SceneManager.GetActiveScene().name;
     }
+
+    // ********************************************************************** //
 
     public int GetCurrentMapIndex()
     {
@@ -186,15 +147,21 @@ public class GameController : MonoBehaviour {
         }
     }
     */
-    //------
+    // ********************************************************************** //
+    // This was a test method that is no longer needed
+    /*
+    void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, 100, 20), "Health: " + health);
+        GUI.Label(new Rect(10, 30, 100, 20), "Experience: " + experience);
+    }
 
-    // Organise participant data so it fits nicely into a file writing format
-    // This will eventually become ParticipantData (keep in separate script) and we will also use TrialData similarly.
     [Serializable]
     class PlayerData
     {
         public float health;
         public float experience;
     }
+    */
 
 }

@@ -6,10 +6,12 @@ using System.Collections.Generic;
 public class TrackingScript : MonoBehaviour
 {
     public List<string> coords = new List<string>();
-    
+
+
     void Start ()
     {
         // Track the time, position, rotation of the player at a rate of 25Hz (this seems pretty slow but maybe ok).
+        coords.Add(string.Format("{0} {1} {2} {3} {4} {5} {6}", "Time", "x-position", "y-position", "z-position", "x-rotation", "y-rotation", "z-rotation"));
         InvokeRepeating("storeLocation", 0f, 0.04f);
     }
 

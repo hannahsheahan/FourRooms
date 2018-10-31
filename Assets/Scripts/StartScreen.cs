@@ -11,11 +11,14 @@ public class StartScreen : MonoBehaviour
     public string mapString = "1";
     public int mapIndex;
 
+    // ********************************************************************** //
 
     private void Start()
     {
-        dataController = FindObjectOfType<DataController>(); //usually be careful with 'Find' but in this case should be ok. Ok this fetches the instance of DataController, dataController.
+        dataController = FindObjectOfType<DataController>(); // Fetch our single DataController
     }
+
+    // ********************************************************************** //
 
     void OnGUI()
 	{
@@ -32,12 +35,8 @@ public class StartScreen : MonoBehaviour
         // Store input and start game when ready
         if (GUI.Button (new Rect (200, 250, 50, 25), "Start") || Input.GetKeyDown("return")) 
 		{
-            // Send participant data to the GameController
-            //GameController.control.CollectParticipantInfo(ID, mapString);
-             dataController.SetParticipantID(ID);
-
-            // Launch scene
-            GameController.control.NextScene("tartarus" + (mapIndex + 1));
-		}
+            dataController.SetParticipantID(ID);  // Send participant data to the DataController
+            GameController.control.NextScene("tartarus" + (mapIndex + 1)); // Launch scene
+        }
 	}
 }
