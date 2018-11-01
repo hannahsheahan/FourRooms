@@ -25,7 +25,7 @@ public class StartScreen : MonoBehaviour
 		// Display some boxes and input areas
         GUI.Box (new Rect(80, 60, 300, 250), "Welcome");
 
-		GUI.Label (new Rect (90, 90, 200, 20), "Participant ID");
+        GUI.Label (new Rect (90, 90, 200, 20), "Participant ID");
 		ID = GUI.TextField (new Rect (90, 115, 200, 20), ID, 20);
 
         GUI.Label(new Rect(90, 140, 200, 20), "Which maze?");
@@ -36,7 +36,7 @@ public class StartScreen : MonoBehaviour
         if (GUI.Button (new Rect (200, 250, 50, 25), "Start") || Input.GetKeyDown("return")) 
 		{
             dataController.SetParticipantID(ID);  // Send participant data to the DataController
-            GameController.control.NextScene("tartarus" + (mapIndex + 1)); // Launch scene
+            GameController.control.StartGame();   // Launch first trial
         }
 	}
 }

@@ -16,7 +16,8 @@ public class TrialData
 
     //public Vector3 goalLocation;
 
-    //public float maxTrialDuration;
+    public float maxTrialDuration;
+    public float movementTime;
 
     // Tracking data
     public List<string> timeStepTrackingData = new List<string>();

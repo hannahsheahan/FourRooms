@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\ContinueScreen.cs" />
     <Compile Include="Assets\Scripts\ContinueScreenTraining.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
+    <Compile Include="Assets\Scripts\DisplayMessage.cs" />
     <Compile Include="Assets\Scripts\ExperimentData.cs" />
     <Compile Include="Assets\Scripts\filepath.cs" />
     <Compile Include="Assets\Scripts\FinishForaging.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />
     <Compile Include="Assets\Scripts\HideStar.cs" />
+    <Compile Include="Assets\Scripts\LavaDeath.cs" />
     <Compile Include="Assets\Scripts\LevelManager.cs" />
     <Compile Include="Assets\Scripts\LocationManager.cs" />
     <Compile Include="Assets\Scripts\NextReminder.cs" />
@@ -85,10 +87,13 @@
     <Compile Include="Assets\Scripts\ReminderManager.cs" />
     <Compile Include="Assets\Scripts\ReminderStar.cs" />
     <Compile Include="Assets\Scripts\rotate.cs" />
+    <Compile Include="Assets\Scripts\SpawnPlayerLocation.cs" />
+    <Compile Include="Assets\Scripts\Star.cs" />
     <Compile Include="Assets\Scripts\StartScreen.cs" />
     <Compile Include="Assets\Scripts\StartScreenReminder.cs" />
     <Compile Include="Assets\Scripts\StartScreenTraining.cs" />
     <Compile Include="Assets\Scripts\TestSceneSwitchingByButton.cs" />
+    <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\TrackingScript.cs" />
     <Compile Include="Assets\Scripts\TrainCount.cs" />
     <Compile Include="Assets\Scripts\TrainingManager.cs" />
@@ -96,7 +101,6 @@
     <Compile Include="Assets\Scripts\TrialData.cs" />
     <Compile Include="Assets\Scripts\WallManager.cs" />
     <Compile Include="Assets\Scripts\WallTraining.cs" />
-    <Compile Include="Assets\SimpleObjectPool.cs" />
     <None Include="Assets\PowerUps Vol 1 Free\Readme.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

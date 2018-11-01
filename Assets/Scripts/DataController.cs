@@ -40,6 +40,8 @@ public class DataController : MonoBehaviour {
         PlayerFPS = GameObject.Find("FPSController");     // This will yield null but its on purpose :)
     }
 
+    // ********************************************************************** //
+
     private void Update()
     {
         // If we've moved past the StartScreen, we should have generated a FPS Player
@@ -69,6 +71,7 @@ public class DataController : MonoBehaviour {
     public void SaveData()
     {
         // do the saving to the json file here (it should taking the data from fps.coords from the trackingScript)
+        Debug.Log("Saving trial.");
         string dataAsJson = JsonUtility.ToJson(gameData);
         File.WriteAllText(filePath, dataAsJson);
     }
@@ -78,8 +81,8 @@ public class DataController : MonoBehaviour {
     public void AddTrial()
     {
         // Load in the just-finished trial data
-        Debug.Log("Next trial starting");
         gameData.allTrialData[currentTrialNumber].trialNumber = currentTrialNumber;
+        gameData.allTrialData[currentTrialNumber].movementTime = GameController.control.movementTime;
         gameData.allTrialData[currentTrialNumber].mapIndex = GameController.control.GetCurrentMapIndex();
         gameData.allTrialData[currentTrialNumber].mapName = GameController.control.GetCurrentMapName();
 
@@ -117,7 +120,7 @@ public class DataController : MonoBehaviour {
     public TrialData GetCurrentTrialData()
     {
         // Supply the trial data to the GameController
-        return gameData.allTrialData[0]; // for now this is a placeholder. Will eventually return which trial we are on etc
+        return gameData.allTrialData[currentTrialNumber]; // for now this is a placeholder. Will eventually return which trial we are on etc
     }
 
     // ********************************************************************** //
