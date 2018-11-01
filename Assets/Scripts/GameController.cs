@@ -123,18 +123,10 @@ public class GameController : MonoBehaviour {
 
     private void Update()     // Update() executes once per frame
     {
-        // ***HRS to implement finite state machine in here to control game play
-        // Will take basically what HideStar.cs was doing and do it here
 
-        // HideStar should just trigger an event that updates a GameController variable
-
-
-
-        // Data for current frame in current trial (will go in FSM)
-       // timeRemaining = currentTrialData.maxTrialDuration;
-       // currentMapIndex = dataController.GetCurrentTrialData().mapIndex;
-        // ***HRS ^ this currentMapIndex is doing weird not updating things, so...
-        // I think perhaps they have not been instantiated?
+        // timeRemaining = currentTrialData.maxTrialDuration;
+        // currentMapIndex = dataController.GetCurrentTrialData().mapIndex;
+        // ***HRS ^ this currentMapIndex is doing weird not updating things, so... I think perhaps they have not been instantiated?
 
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 2; // ***HRS this is a hack but for now it's fine.
         currentSceneName = "tartarus" + currentSceneIndex;
@@ -193,6 +185,7 @@ public class GameController : MonoBehaviour {
 
             case STATE_GO:
 
+                screenMessageColor = "";
                 screenMessage = "Find the star!";
 
                 // Make a 'beep' go sound and start the trial timer
@@ -237,9 +230,6 @@ public class GameController : MonoBehaviour {
 
 
                 // ***HRS  Later differentiate between the different errors e.g. timeout
-
-                //DisplayMessage("Restarting trial");
-                //GUI.Label(new Rect(10, 10, 100, 20), "Restarting trial");
 
                 screenMessageColor = "red";
                 screenMessage = "Restarting trial";

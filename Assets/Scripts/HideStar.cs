@@ -43,6 +43,7 @@ public class HideStar : MonoBehaviour
 		GetComponent<MeshRenderer>().enabled = false;
 	}
 
+    /*
 	void Update()
 	{
 		if (entryTime > 0 & Time.time - entryTime >= 2f)
@@ -81,4 +82,6 @@ public class HideStar : MonoBehaviour
 			}
    		}
 	}
+
+    */
 }

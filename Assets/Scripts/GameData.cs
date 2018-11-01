@@ -5,7 +5,7 @@ using System.Collections;
 public class GameData
 {
     public ParticipantData participantData;
-    private static int maxNumberOfTrials = 20;
+    private static int maxNumberOfTrials = 50;
     public TrialData[] allTrialData = new TrialData[maxNumberOfTrials];
 
 }

@@ -42,9 +42,7 @@ public class SpawnPlayerLocation : MonoBehaviour {
 
 
         // Choose a random spawn orientation to look at (degrees). Keep at 0 for now...
-        int numPossibleSpawnLocations = 100 - wallXPositions.Length; // The maze is a 10 x 10 grid
-
-        for (int i = 0; i < numPossibleSpawnLocations; i++)
+        for (int i = 0; i < locs.Count; i++)
         {
             rots.Add(new Vector3(0, 0, 0));
         }
@@ -54,6 +52,6 @@ public class SpawnPlayerLocation : MonoBehaviour {
     void Start () 
     {
         transform.position = locs[Random.Range(0, locs.Count)];
-        transform.eulerAngles= rots[Random.Range(0, locs.Count)];
+        transform.eulerAngles= rots[Random.Range(0, rots.Count)];
     }
 }
