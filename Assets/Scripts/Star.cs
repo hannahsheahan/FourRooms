@@ -32,11 +32,19 @@ public class Star : MonoBehaviour
 
     // ********************************************************************** //
 
+    void OnTriggerExit(Collider other)
+    {
+        starHit = false;
+    }
+
+    // ********************************************************************** //
+
     void Update()
     {
         if ((starTimer.ElapsedSeconds() > GameController.control.minDwellAtStar) && (starHit))
         {
             GameController.control.StarFound();
+            starHit = false;
         }
     }
     // ********************************************************************** //

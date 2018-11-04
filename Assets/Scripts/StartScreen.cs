@@ -22,6 +22,7 @@ public class StartScreen : MonoBehaviour
 
     void OnGUI()
 	{
+        /*
 		// Display some boxes and input areas
         GUI.Box (new Rect(80, 60, 300, 250), "Welcome");
 
@@ -38,5 +39,6 @@ public class StartScreen : MonoBehaviour
             dataController.SetParticipantID(ID);  // Send participant data to the DataController
             GameController.control.StartGame();   // Launch first trial
         }
+        */
 	}
 }

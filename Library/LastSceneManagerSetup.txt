@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/tartarus2.unity
+- path: Assets/Scenes/tartarus1.unity
   isLoaded: 1
   isActive: 1

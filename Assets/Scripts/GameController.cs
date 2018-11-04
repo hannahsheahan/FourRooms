@@ -38,20 +38,30 @@ public class GameController : MonoBehaviour {
     // Within-trial data that changes with timeframe
     private bool playerControlActive;
     private bool starFound = false;
-    public GameObject star;
-    public string screenMessage;
+
+    // Audio clips
+    public AudioClip starFoundSound;
+    public AudioClip goCueSound;
+    public AudioClip fallSound;
+    private AudioSource source;
+
+    // Messages to the screen
+    public bool FLAG_trialError;
+    private string displayMessage = "noMessage";
+    private string textMessage = "";
     public string screenMessageColor;
-    //private Text wellDoneText;
-    //private Text screenMessage;
 
     // Timer variables
     private Timer stateTimer;
     private Timer movementTimer;
+    public Timer messageTimer;
     public float movementTime; 
     private float goalAppearDelay = 0.0f;   // *** HRS Figure out how to package these up into dataController savefile later
-    private float goCueDelay = 0.0f;
+    private float goCueDelay = 1.5f;
     public  float minDwellAtStar = 0.5f;  // 500 ms
     public float displayMessageTime = 1.5f; // 1.5 sec 
+    public float waitFinishTime = 1.5f;
+    public float errorDwellTime = 1.0f;
     public float timeRemaining;
 
 
@@ -89,13 +99,16 @@ public class GameController : MonoBehaviour {
         {
             Destroy(gameObject);
         }
-	}
+    }
 
     // ********************************************************************** //
 
     private void Start()     // Start() executes once when object is created
     {
         dataController = FindObjectOfType<DataController>(); //usually be careful with 'Find' but in this case should be ok. Ok this fetches the instance of DataController, dataController.
+        source = GetComponent<AudioSource>();
+
+        FLAG_trialError = false;
 
         // Trial invariant data
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
@@ -117,6 +130,7 @@ public class GameController : MonoBehaviour {
         stateTimer.Reset();
 
         movementTimer = new Timer();
+        messageTimer = new Timer();
 
     }
     // ********************************************************************** //
@@ -128,7 +142,7 @@ public class GameController : MonoBehaviour {
         // currentMapIndex = dataController.GetCurrentTrialData().mapIndex;
         // ***HRS ^ this currentMapIndex is doing weird not updating things, so... I think perhaps they have not been instantiated?
 
-        currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 2; // ***HRS this is a hack but for now it's fine.
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 1; // ***HRS this is a hack but for now it's fine.
         currentSceneName = "tartarus" + currentSceneIndex;
 
         switch (State)
@@ -144,16 +158,21 @@ public class GameController : MonoBehaviour {
                 break;
 
             case STATE_STARTTRIAL:
+
+                FLAG_trialError = false; // we start the trial with a clean-slate
+
                 if (stateTimer.ElapsedSeconds() > displayMessageTime)
                 {
-                    screenMessage = "";
+                    // can put a message up about waiting until the go cue
+
                 }
-                // Make sure we're found the player and enabled it to move (this is actually redundant)
+
+                // Make sure we're found the player and make sure they cant move
                 if (PlayerFPS != null)  
                 {
-                    if (!PlayerFPS.GetComponent<FirstPersonController>().enabled)
+                    if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
                     {
-                        PlayerFPS.GetComponent<FirstPersonController>().enabled = true;  
+                        PlayerFPS.GetComponent<FirstPersonController>().enabled = false;  
                     }
                 }
                 else
@@ -161,9 +180,15 @@ public class GameController : MonoBehaviour {
                     PlayerFPS = GameObject.Find("FPSController");
                 }
 
+
+
                 // Wait until the goal/target can appear
                 if (stateTimer.ElapsedSeconds() >= goalAppearDelay)
                 {
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                    //Debug.Log("Player active, state start trial: " + PlayerFPS.GetComponent<FirstPersonController>().enabled);
+                    //Debug.Log("State start trial, starFound: " + starFound);
+
                     StateNext(STATE_GOALAPPEAR);
                 }
                 break;
@@ -172,6 +197,8 @@ public class GameController : MonoBehaviour {
             case STATE_GOALAPPEAR:
                 // display the star (so far its already visible so can add this later)
                 starFound = false;
+                //Debug.Log("State goal appear, starFound: " + starFound);
+
                 StateNext(STATE_DELAY);
                 break;
 
@@ -179,39 +206,44 @@ public class GameController : MonoBehaviour {
                 // Wait for the go cue
                 if (stateTimer.ElapsedSeconds() >= goCueDelay)
                 {
+                    source.PlayOneShot(goCueSound, 1F);
                     StateNext(STATE_GO);
                 }
                 break;
 
             case STATE_GO:
 
-                screenMessageColor = "";
-                screenMessage = "Find the star!";
+                // Enable the controller
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = true;
+                //Debug.Log("Player active, state go: " + PlayerFPS.GetComponent<FirstPersonController>().enabled);
 
                 // Make a 'beep' go sound and start the trial timer
                 movementTimer.Reset();
+
+                //Debug.Log("State go, starFound: " + starFound);
 
                 StateNext(STATE_MOVING);
                 break;
 
             case STATE_MOVING:
 
-                if (stateTimer.ElapsedSeconds() > displayMessageTime)
-                {
-                    screenMessage = "";
-                }
-
                 if (starFound)
                 {
+                    source.PlayOneShot(starFoundSound, 1F);
                     movementTime = movementTimer.ElapsedSeconds();
                     StateNext(STATE_STARFOUND);
                 }
                 break;
 
             case STATE_STARFOUND:
-                // display a congratulatory message
 
-                StateNext(STATE_FINISH);
+                displayMessage = "wellDoneMessage";      // display a congratulatory message
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
+
+                if (stateTimer.ElapsedSeconds() > waitFinishTime)
+                {
+                    StateNext(STATE_FINISH);
+                }
                 break;
 
             case STATE_FINISH:
@@ -229,22 +261,21 @@ public class GameController : MonoBehaviour {
                 // ***HRS show a message on the screen because something went wrong
 
 
-                // ***HRS  Later differentiate between the different errors e.g. timeout
+                // ***HRS  Later differentiate between the different errors in save file e.g. timeout
 
-                screenMessageColor = "red";
-                screenMessage = "Restarting trial";
+                FLAG_trialError = true;
 
-                // save the data and restart the trial
-                NextScene(currentSceneName);
-                StateNext(STATE_STARTTRIAL);
+                // Wait a little while in the error state
+                if (stateTimer.ElapsedSeconds() > errorDwellTime)
+                {
+                    // save the data and restart the trial
+                    NextScene(currentSceneName);
+                    StateNext(STATE_STARTTRIAL);
+                }
+
                 break;
-
-
+        
         }
-
-
-
-
     }
     // ********************************************************************** //
 
@@ -253,9 +284,6 @@ public class GameController : MonoBehaviour {
         // Save the current trial data and move to the next scene
         dataController.AddTrial();  // Create a new trial to store data to
         dataController.SaveData();
-
-        // reset the message on the screen
-        screenMessage = "";
 
         Debug.Log("Upcoming scene: " + scene);
         SceneManager.LoadScene(scene);
@@ -295,16 +323,60 @@ public class GameController : MonoBehaviour {
     }
 
     // ********************************************************************** //
-    /*
-    public void DisplayMessage(string message)
+
+    private void OnGUI()
     {
-        screenMessage.text = message;
+        switch (displayMessage)
+        {
+
+            case "noMessage":
+                textMessage = "";
+                messageTimer.Reset();
+                break;
+
+            case "wellDoneMessage":
+                textMessage = "Well done!";
+                if (messageTimer.ElapsedSeconds() > displayMessageTime)
+                {
+                    displayMessage = "noMessage"; // reset the message
+                }
+                break;
+
+            case "findStarMessage":
+                textMessage = "Find the star!";
+                if (messageTimer.ElapsedSeconds() > displayMessageTime)
+                {
+                    displayMessage = "noMessage"; // reset the message
+                }
+                break;
+
+            case "lavaDeathMessage":
+                textMessage = "Aaaaaaaaaaaaaaaahhhh!";
+                if (messageTimer.ElapsedSeconds() > displayMessageTime)
+                {
+                    displayMessage = "noMessage"; // reset the message
+                }
+                break;
+
+            case "restartTrialMessage":
+                textMessage = "Restarting the trial";
+                if (messageTimer.ElapsedSeconds() > displayMessageTime)
+                {
+                    displayMessage = "noMessage"; // reset the message
+                }
+                break;
+
+        }
+       
+        GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 25, 200, 100), textMessage);
     }
-    */
+
     // ********************************************************************** //
 
     public void LavaDeath()
     {
+        source.PlayOneShot(fallSound, 1F);
+        displayMessage = "lavaDeathMessage";
         Debug.Log("AAAAAAAAAAAAH! You fell and hit the lava!");
         // You've fallen into the lava, so disable the player controller, give an error message, save the data and restart the trial
         StateNext(STATE_ERROR);

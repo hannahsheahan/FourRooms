@@ -18,6 +18,7 @@ public class TrialData
 
     public float maxTrialDuration;
     public float movementTime;
+    public bool trialError;
 
     // Tracking data
     public List<string> timeStepTrackingData = new List<string>();
