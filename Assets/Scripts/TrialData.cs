@@ -16,11 +16,20 @@ public class TrialData
 
     //public Vector3 goalLocation;
 
-    public float maxTrialDuration;
-    public float movementTime;
-    public bool trialError;
+    // trial event times
+    public float maxMovementTime;
+    public float firstMovementTime;       // time until first star collected
+    public float totalMovementTime;       // time until second star collected
+
+    // trial error flags
+    public bool FLAG_trialTimeout;        
+    public bool FLAG_trialError;
+
+
+    //public bool trialError;
 
     // Tracking data
+    public List<string> stateTransitions = new List<string>();
     public List<string> timeStepTrackingData = new List<string>();
 
 

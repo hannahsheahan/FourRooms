@@ -8,8 +8,6 @@ public class EnterParticipantIDScript : MonoBehaviour {
     public AudioClip buttonClickSound;
     private AudioSource source;
 
-    private string ID = "";
-
     // ********************************************************************** //
 
     private void Awake()

@@ -14,7 +14,7 @@ public class TrackingScript : MonoBehaviour
     {
         // Track the time, position, rotation of the player at a rate of 25Hz (this seems pretty slow but maybe ok).
         coords.Add(string.Format("{0} {1} {2} {3} {4} {5} {6}", "Time", "x-position", "y-position", "z-position", "x-rotation", "y-rotation", "z-rotation"));
-        InvokeRepeating("StoreLocation", 0f, 0.04f);
+        InvokeRepeating("StoreLocation", 0f, GameController.control.dataRecordFrequency);
     }
 
     // ********************************************************************** //

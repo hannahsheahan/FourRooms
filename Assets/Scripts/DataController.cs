@@ -15,6 +15,7 @@ public class DataController : MonoBehaviour {
     private GameObject PlayerFPS;
 
     public int currentTrialNumber = 0;
+    public bool participantIDSet = false;
 
     private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/data/";
     //private string participantDataFileName = "test-"; // later make this the participant ID (cast as int)
@@ -80,26 +81,51 @@ public class DataController : MonoBehaviour {
 
     public void AddTrial()
     {
-        // Load in the just-finished trial data
+
+        // Transfer over the just-finished trial data
+        ///-------
         gameData.allTrialData[currentTrialNumber].trialNumber = currentTrialNumber;
-        gameData.allTrialData[currentTrialNumber].movementTime = GameController.control.movementTime;
+        gameData.allTrialData[currentTrialNumber].totalMovementTime = GameController.control.maxMovementTime;
+        gameData.allTrialData[currentTrialNumber].firstMovementTime = GameController.control.firstMovementTime;
+        gameData.allTrialData[currentTrialNumber].totalMovementTime = GameController.control.totalMovementTime;
+
+
+        gameData.allTrialData[currentTrialNumber].FLAG_trialTimeout = GameController.control.FLAG_trialTimeout;
+        gameData.allTrialData[currentTrialNumber].FLAG_trialError = GameController.control.FLAG_trialError;
+
         gameData.allTrialData[currentTrialNumber].mapIndex = GameController.control.GetCurrentMapIndex();
         gameData.allTrialData[currentTrialNumber].mapName = GameController.control.GetCurrentMapName();
 
-        // Add in the frame-by-frame Trackingdata
-        if (PlayerFPS != null)     // Our player GameObject has been generated
+        ///-------
+        // Add in the frame-by-frame data (these should be synchronized)
+        if (PlayerFPS != null)     
         {
-            List<string> trackedTrialData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
-            trackedTrialData = PlayerFPS.GetComponent<TrackingScript>().getCoords();  
+            // Add in the state transition data
+            List<string> trackedStateData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
+            trackedStateData = GameController.control.stateTransitions;
 
-            int stringLength = trackedTrialData.Count;
+            int stringLength = trackedStateData.Count;
+            Debug.Log("There were this many tracked state transition timesteps: " + stringLength);
+
+            for (var i = 0; i < stringLength; i++)
+            {
+                gameData.allTrialData[currentTrialNumber].stateTransitions.Add(trackedStateData[i]);
+            }
+
+            // Add in the player tracking data
+            List<string> trackedTrialData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
+            trackedTrialData = PlayerFPS.GetComponent<TrackingScript>().getCoords();
+
+            stringLength = trackedTrialData.Count;
             Debug.Log("There were this many tracked navigation timesteps: " + stringLength);
 
             for (var i = 0; i < stringLength; i++)
             {
                 gameData.allTrialData[currentTrialNumber].timeStepTrackingData.Add(trackedTrialData[i]);
             }
+
         }
+
 
         // ***HRS Will add in the spawn locations etc here later once we've got that working
 
@@ -127,7 +153,11 @@ public class DataController : MonoBehaviour {
 
     public void SetParticipantID(string ID)
     {
-        gameData.participantData.id = ID;
+        if (ID != "")  // you're not allowed to give a fake ID
+        {
+            participantIDSet = true;
+            gameData.participantData.id = ID;
+        }
     }
 
     // ********************************************************************** //

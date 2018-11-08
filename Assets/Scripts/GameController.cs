@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour {
     private GameObject PlayerFPS;
     private GameData currentGameData;
     private string filepath;
+    private bool doubleRewardTask = false;       // later set this in the config file. If twoRewardTask == false, there is just one star to collect on each trial
 
     // End-of-trial data
     private TrialData currentTrialData;
@@ -42,11 +43,13 @@ public class GameController : MonoBehaviour {
     // Audio clips
     public AudioClip starFoundSound;
     public AudioClip goCueSound;
+    public AudioClip errorSound; 
     public AudioClip fallSound;
     private AudioSource source;
 
     // Messages to the screen
     public bool FLAG_trialError;
+    public bool FLAG_trialTimeout;
     private string displayMessage = "noMessage";
     private string textMessage = "";
     public string screenMessageColor;
@@ -55,14 +58,18 @@ public class GameController : MonoBehaviour {
     private Timer stateTimer;
     private Timer movementTimer;
     public Timer messageTimer;
-    public float movementTime; 
-    private float goalAppearDelay = 0.0f;   // *** HRS Figure out how to package these up into dataController savefile later
-    private float goCueDelay = 1.5f;
-    public  float minDwellAtStar = 0.5f;  // 500 ms
-    public float displayMessageTime = 1.5f; // 1.5 sec 
-    public float waitFinishTime = 1.5f;
-    public float errorDwellTime = 1.0f;
+    public float firstMovementTime;
+    public float totalMovementTime;
+    public float maxMovementTime     = 15.0f;  
+    private float goalAppearDelay    = 0.0f;   // *** HRS Figure out how to package these up into dataController savefile later
+    private float goCueDelay         = 1.5f;
+    public  float minDwellAtStar     = 0.5f;  // 500 ms
+    public float displayMessageTime  = 1.5f; // 1.5 sec 
+    public float waitFinishTime      = 1.5f;
+    public float errorDwellTime      = 1.0f;
     public float timeRemaining;
+    //    public float dataRecordFrequency = 0.02f;  // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
+    public float dataRecordFrequency = 0.04f;  // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
 
 
     // Game-play state machine states
@@ -71,18 +78,22 @@ public class GameController : MonoBehaviour {
     public const int STATE_GOALAPPEAR  = 2;
     public const int STATE_DELAY       = 3;
     public const int STATE_GO          = 4;
-    public const int STATE_MOVING      = 5;
-    public const int STATE_STARFOUND   = 6;
-    public const int STATE_FINISH      = 7;
-    public const int STATE_NEXTTRIAL   = 8;
-    public const int STATE_INTERTRIAL  = 9;
-    public const int STATE_TIMEOUT     = 10;
-    public const int STATE_ERROR       = 11;
-    public const int STATE_REST        = 12;
-    public const int STATE_MAX         = 13;
+    public const int STATE_MOVING1     = 5;
+    public const int STATE_STAR1FOUND  = 6;
+    public const int STATE_MOVING2     = 7;
+    public const int STATE_STAR2FOUND  = 8;
+    public const int STATE_FINISH      = 9;
+    public const int STATE_NEXTTRIAL   = 10;
+    public const int STATE_INTERTRIAL  = 11;
+    public const int STATE_TIMEOUT     = 12;
+    public const int STATE_ERROR       = 13;
+    public const int STATE_REST        = 14;
+    public const int STATE_MAX         = 15;
 
-    private string[] stateText = new string[] { "StartScreen","StartTrial","GoalAppear","Delay","Go","Moving","GoalHit","Finish","NextTrial","InterTrial","Timeout","Error","Rest", "Max" };
+    private string[] stateText = new string[] { "StartScreen","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest", "Max" };
     public int State;
+    public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
+
     private bool gameStarted = false;
 
     // ********************************************************************** //
@@ -132,6 +143,8 @@ public class GameController : MonoBehaviour {
         movementTimer = new Timer();
         messageTimer = new Timer();
 
+        stateTransitions.Clear();
+
     }
     // ********************************************************************** //
 
@@ -152,7 +165,7 @@ public class GameController : MonoBehaviour {
 
                 if (gameStarted)
                 {
-                    PlayerFPS = GameObject.Find("FPSController"); // Create a local reference to the player object that has just been created
+                    //PlayerFPS = GameObject.Find("FPSController"); // Create a local reference to the player object that has just been created
                     StateNext(STATE_STARTTRIAL);
                 }
                 break;
@@ -160,11 +173,10 @@ public class GameController : MonoBehaviour {
             case STATE_STARTTRIAL:
 
                 FLAG_trialError = false; // we start the trial with a clean-slate
-
+                FLAG_trialTimeout = false;
                 if (stateTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     // can put a message up about waiting until the go cue
-
                 }
 
                 // Make sure we're found the player and make sure they cant move
@@ -178,17 +190,18 @@ public class GameController : MonoBehaviour {
                 else
                 {
                     PlayerFPS = GameObject.Find("FPSController");
+
+                    // Track the state-transitions at the same update frequency as the FPSPlayer (and putting it here should sync them too)
+                    stateTransitions.Clear();                      // restart the state tracker ready for the new trial
+                    stateTransitions.Add("Game State");
+                    RecordFSMState();                              // catch the current state before the update
+                    InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);  
                 }
-
-
 
                 // Wait until the goal/target can appear
                 if (stateTimer.ElapsedSeconds() >= goalAppearDelay)
                 {
                     PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
-                    //Debug.Log("Player active, state start trial: " + PlayerFPS.GetComponent<FirstPersonController>().enabled);
-                    //Debug.Log("State start trial, starFound: " + starFound);
-
                     StateNext(STATE_GOALAPPEAR);
                 }
                 break;
@@ -196,9 +209,13 @@ public class GameController : MonoBehaviour {
 
             case STATE_GOALAPPEAR:
                 // display the star (so far its already visible so can add this later)
-                starFound = false;
-                //Debug.Log("State goal appear, starFound: " + starFound);
 
+                // Make an image of the star appear in front of the camera (lock
+                // it to the camera so its 2D or make as part of canvas), showing
+                // what type of reward to collect on that trial
+
+
+                starFound = false;
                 StateNext(STATE_DELAY);
                 break;
 
@@ -215,27 +232,60 @@ public class GameController : MonoBehaviour {
 
                 // Enable the controller
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = true;
-                //Debug.Log("Player active, state go: " + PlayerFPS.GetComponent<FirstPersonController>().enabled);
 
                 // Make a 'beep' go sound and start the trial timer
                 movementTimer.Reset();
-
-                //Debug.Log("State go, starFound: " + starFound);
-
-                StateNext(STATE_MOVING);
+                StateNext(STATE_MOVING1);
                 break;
 
-            case STATE_MOVING:
+            case STATE_MOVING1:
+
+                if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
+                {
+                    StateNext(STATE_TIMEOUT);
+                }
 
                 if (starFound)
                 {
                     source.PlayOneShot(starFoundSound, 1F);
-                    movementTime = movementTimer.ElapsedSeconds();
-                    StateNext(STATE_STARFOUND);
+                    firstMovementTime = movementTimer.ElapsedSeconds();
+
+                    if (doubleRewardTask)  // we are collecting two stars on this trial
+                    {
+                        StateNext(STATE_STAR1FOUND);
+                    }
+                    else              // there's only one star to collect
+                    {
+                        totalMovementTime = firstMovementTime;
+                        StateNext(STATE_STAR2FOUND);
+                    }
                 }
                 break;
 
-            case STATE_STARFOUND:
+
+            case STATE_STAR1FOUND:
+
+                starFound = false;  // reset the starFound trigger ready to collect the next star
+                StateNext(STATE_MOVING2);
+                break;
+
+
+            case STATE_MOVING2:
+
+                if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
+                {
+                    StateNext(STATE_TIMEOUT);
+                }
+
+                if (starFound)
+                {
+                    source.PlayOneShot(starFoundSound, 1F);
+                    totalMovementTime = movementTimer.ElapsedSeconds();
+                    StateNext(STATE_STAR2FOUND);
+                }
+                break;
+
+            case STATE_STAR2FOUND:
 
                 displayMessage = "wellDoneMessage";      // display a congratulatory message
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
@@ -248,27 +298,46 @@ public class GameController : MonoBehaviour {
 
             case STATE_FINISH:
 
+                // stop recording the state transitions for this trial
+                CancelInvoke("RecordFSMState");
+
                 // end the trial, save the data
                 Debug.Log("The current map is: " + currentSceneIndex + " so the next map will be: " + (currentSceneIndex + 1));
-                NextScene("tartarus" + (currentSceneIndex + 1));
+                NextScene("tartarus" +  1);   // Just loop this map for now for demo
+                //NextScene("tartarus" + (currentSceneIndex + 1));
+
                 StateNext(STATE_STARTTRIAL);
                 break;
 
+            case STATE_TIMEOUT:
+
+                displayMessage = "timeoutMessage";
+                Debug.Log("Trial timed out: (after " + movementTimer.ElapsedSeconds() + " sec)");
+                FLAG_trialTimeout = true;
+
+                StateNext(STATE_ERROR);
+                break;
+
+
             case STATE_ERROR:
-
-                Debug.Log("ERROR STATE");
-
-                // ***HRS show a message on the screen because something went wrong
 
 
                 // ***HRS  Later differentiate between the different errors in save file e.g. timeout
 
                 FLAG_trialError = true;
+                firstMovementTime = movementTimer.ElapsedSeconds();
+                totalMovementTime = firstMovementTime;
+
 
                 // Wait a little while in the error state
                 if (stateTimer.ElapsedSeconds() > errorDwellTime)
                 {
+                    // stop recording the state transitions for this trial
+                    CancelInvoke("RecordFSMState");
+
                     // save the data and restart the trial
+                    source.PlayOneShot(errorSound, 1F); 
+                    Debug.Log("ERROR STATE");
                     NextScene(currentSceneName);
                     StateNext(STATE_STARTTRIAL);
                 }
@@ -324,6 +393,13 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
+    private void RecordFSMState()
+    {
+        stateTransitions.Add(State.ToString());
+    }
+
+    // ********************************************************************** //
+
     private void OnGUI()
     {
         switch (displayMessage)
@@ -344,6 +420,15 @@ public class GameController : MonoBehaviour {
 
             case "findStarMessage":
                 textMessage = "Find the star!";
+                if (messageTimer.ElapsedSeconds() > displayMessageTime)
+                {
+                    displayMessage = "noMessage"; // reset the message
+                }
+                break;
+
+
+            case "timeoutMessage":
+                textMessage = "Trial timed out!";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
@@ -375,7 +460,7 @@ public class GameController : MonoBehaviour {
 
     public void LavaDeath()
     {
-        source.PlayOneShot(fallSound, 1F);
+        //source.PlayOneShot(fallSound, 1F);
         displayMessage = "lavaDeathMessage";
         Debug.Log("AAAAAAAAAAAAH! You fell and hit the lava!");
         // You've fallen into the lava, so disable the player controller, give an error message, save the data and restart the trial

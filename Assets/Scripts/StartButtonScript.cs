@@ -9,6 +9,8 @@ public class StartButtonScript : MonoBehaviour
     public AudioClip buttonClickSound;
     private AudioSource source;
 
+    public string enterIDmessage;
+
     // ********************************************************************** //
 
     private void Awake()
@@ -27,9 +29,12 @@ public class StartButtonScript : MonoBehaviour
 
     public void StartGameOnClick()
     {
-        //dataController.SetParticipantID(ID);  // Send participant data to the DataController
-        source.PlayOneShot(buttonClickSound,1F);
-        GameController.control.StartGame();   // Launch first trial
+        if (dataController.participantIDSet)  // the player has entered a name (this will avoid multiple datafiles with no participant ID number)
+        {
+            source.PlayOneShot(buttonClickSound, 1F);
+            GameController.control.StartGame();   // Launch first trial
+        }
+
     }
 
 }

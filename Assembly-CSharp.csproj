@@ -79,7 +79,7 @@
     <Compile Include="Assets\Scripts\SpawnPlayerLocation.cs" />
     <Compile Include="Assets\Scripts\Star.cs" />
     <Compile Include="Assets\Scripts\StartButtonScript.cs" />
-    <Compile Include="Assets\Scripts\StartScreen.cs" />
+    <Compile Include="Assets\Scripts\stateTransitions.cs" />
     <Compile Include="Assets\Scripts\TestSceneSwitchingByButton.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\TrackingScript.cs" />
