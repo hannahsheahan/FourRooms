@@ -5,7 +5,20 @@ using System.Collections;
 public class GameData
 {
     public ParticipantData participantData;
-    private static int maxNumberOfTrials = 50;
-    public TrialData[] allTrialData = new TrialData[maxNumberOfTrials];
+    public int totalTrials;
+    public TrialData[] allTrialData;
 
+
+    // ********************************************************************** //
+    // Use a constructor
+    public GameData(int trials)
+    {
+
+        //  initialize array of trials, and instantiate each trial in the array
+        allTrialData = new TrialData[trials];
+        for (int i = 0; i < allTrialData.Length; i++)
+        {
+            allTrialData[i] = new TrialData();
+        }
+    }
 }

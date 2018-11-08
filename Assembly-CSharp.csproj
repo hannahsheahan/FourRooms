@@ -64,7 +64,7 @@
     <Compile Include="Assets\Scripts\ContinueScreen.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
     <Compile Include="Assets\Scripts\EnterParticipantIDScript.cs" />
-    <Compile Include="Assets\Scripts\ExperimentData.cs" />
+    <Compile Include="Assets\Scripts\ExperimentConfig.cs" />
     <Compile Include="Assets\Scripts\filepath.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />
@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\ReminderManager.cs" />
     <Compile Include="Assets\Scripts\rotate.cs" />
     <Compile Include="Assets\Scripts\SpawnPlayerLocation.cs" />
+    <Compile Include="Assets\Scripts\SpawnStarLocation.cs" />
     <Compile Include="Assets\Scripts\Star.cs" />
     <Compile Include="Assets\Scripts\StartButtonScript.cs" />
     <Compile Include="Assets\Scripts\stateTransitions.cs" />

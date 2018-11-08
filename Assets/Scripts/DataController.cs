@@ -10,18 +10,30 @@ using System.IO;
 
 public class DataController : MonoBehaviour {
 
-    public GameData gameData;    // data for the entire game, including all trials
+    /// <summary>
+    /// The DataController script is a persistent object which controls all the 
+    /// data I/O (e.g. trial loading/sequencing and saving) for the experiment.
+    /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
+    /// Date: 30/11/2018
+    /// </summary>
+
+    public GameData gameData;          // data for the entire game, including all trials
+    public ExperimentConfig config;   // experiment details, trial sequence, randomisation etc
     public ParticipantData participantData;
     private GameObject PlayerFPS;
 
     public int currentTrialNumber = 0;
     public bool participantIDSet = false;
 
+    // Data file saving
     private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/data/";
-    //private string participantDataFileName = "test-"; // later make this the participant ID (cast as int)
     public DateTime dateTime = DateTime.Now;
     public string stringDateTime; 
     public string filePath;
+
+    // Loading trial configuration variables
+    public int totalTrials;
+
 
     // ********************************************************************** //
 
@@ -29,15 +41,15 @@ public class DataController : MonoBehaviour {
     {
         DontDestroyOnLoad(gameObject);  // when we load new scenes DataController will persist
 
-        // Set up the save file
+        // Set up the save file and load in the pre-determined trial sequence. (Note: doing this upfront helps for testing randomisation)
         DataSetup();
+        LoadTrialSequence();
     }
 
     // ********************************************************************** //
 
     void Start()
     {
-        GameController.control.NextScene("StartScreen");  // Note: always try to use GameController.control.NextScene to transition scenes since this autosaves the trial data.
         PlayerFPS = GameObject.Find("FPSController");     // This will yield null but its on purpose :)
     }
 
@@ -64,8 +76,6 @@ public class DataController : MonoBehaviour {
         {
             Debug.Log("Warning: writing over existing datafile.");
         }
-        gameData = new GameData();
-        SaveData();
     }
     // ********************************************************************** //
 
@@ -75,6 +85,38 @@ public class DataController : MonoBehaviour {
         Debug.Log("Saving trial.");
         string dataAsJson = JsonUtility.ToJson(gameData);
         File.WriteAllText(filePath, dataAsJson);
+    }
+
+    // ********************************************************************** //
+
+    public void LoadTrialSequence()
+    {
+        // Load in the trial sequence to the data controller and save it
+        config = new ExperimentConfig();
+        totalTrials = config.GetTotalTrials();
+
+        // Create the gameData object where we will store all the data
+        gameData = new GameData(totalTrials);
+
+        // Add each required trial data to gameData in turn
+        gameData.totalTrials = totalTrials; 
+        Debug.Log("Total number of trials to load: " + totalTrials);
+
+        for (int trial = 0; trial < totalTrials; trial++)
+        {
+            gameData.allTrialData[trial].mapName = config.GetTrialMaze(trial);
+
+            gameData.allTrialData[trial].playerSpawnLocation = config.GetPlayerStartPosition(trial);
+            gameData.allTrialData[trial].playerSpawnOrientation = config.GetPlayerStartOrientation(trial);
+
+            gameData.allTrialData[trial].star1Location = config.GetStar1StartPosition(trial);
+            gameData.allTrialData[trial].star2Location = config.GetStar2StartPosition(trial);
+
+            gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);
+            gameData.allTrialData[trial].doubleRewardTask = config.GetIsDoubleReward(trial);
+        }
+
+        SaveData();
     }
 
     // ********************************************************************** //
@@ -89,11 +131,10 @@ public class DataController : MonoBehaviour {
         gameData.allTrialData[currentTrialNumber].firstMovementTime = GameController.control.firstMovementTime;
         gameData.allTrialData[currentTrialNumber].totalMovementTime = GameController.control.totalMovementTime;
 
-
         gameData.allTrialData[currentTrialNumber].FLAG_trialTimeout = GameController.control.FLAG_trialTimeout;
         gameData.allTrialData[currentTrialNumber].FLAG_trialError = GameController.control.FLAG_trialError;
 
-        gameData.allTrialData[currentTrialNumber].mapIndex = GameController.control.GetCurrentMapIndex();
+        // ** HRS watch out for this - potential for conflicts between pregenerated map sequence and gameController 
         gameData.allTrialData[currentTrialNumber].mapName = GameController.control.GetCurrentMapName();
 
         ///-------
@@ -123,15 +164,10 @@ public class DataController : MonoBehaviour {
             {
                 gameData.allTrialData[currentTrialNumber].timeStepTrackingData.Add(trackedTrialData[i]);
             }
-
         }
-
-
-        // ***HRS Will add in the spawn locations etc here later once we've got that working
-
         currentTrialNumber++;
-
     }
+
     // ********************************************************************** //
     /// Get() and Set() Methods
     // ********************************************************************** //

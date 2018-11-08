@@ -10,7 +10,7 @@ using System.IO;
 
 public class GameController : MonoBehaviour {
     /// <summary>
-    /// This is a singleton script will control the game flow between scenes, 
+    /// The GameController is a singleton script will control the game flow between scenes, 
     /// and centralise everything so all main processes branch from here.
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 30 Oct 2018
@@ -26,15 +26,20 @@ public class GameController : MonoBehaviour {
     private string filepath;
     private bool doubleRewardTask = false;       // later set this in the config file. If twoRewardTask == false, there is just one star to collect on each trial
 
-    // End-of-trial data
+    // Start-of-trial data
     private TrialData currentTrialData;
-    private ParticipantData currentParticipantData;
     private string currentMapName;
-    private int currentMapIndex;
-    private string participantID;
     private int currentTrialNumber;
     private int currentSceneIndex;
     private string currentSceneName;
+
+    public Vector3 playerSpawnLocation;
+    public Vector3 playerSpawnOrientation;
+    public Vector3 star1SpawnLocation;
+    public Vector3 star2SpawnLocation;
+    public Vector3 activeStarSpawnLocation;   // because we have 2 stars, use this to hold the location of the current one (refer to in the star prefab)
+
+    private string nextScene;
 
     // Within-trial data that changes with timeframe
     private bool playerControlActive;
@@ -68,29 +73,29 @@ public class GameController : MonoBehaviour {
     public float waitFinishTime      = 1.5f;
     public float errorDwellTime      = 1.0f;
     public float timeRemaining;
-    //    public float dataRecordFrequency = 0.02f;  // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float dataRecordFrequency = 0.04f;  // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
 
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
-    public const int STATE_STARTTRIAL  = 1;
-    public const int STATE_GOALAPPEAR  = 2;
-    public const int STATE_DELAY       = 3;
-    public const int STATE_GO          = 4;
-    public const int STATE_MOVING1     = 5;
-    public const int STATE_STAR1FOUND  = 6;
-    public const int STATE_MOVING2     = 7;
-    public const int STATE_STAR2FOUND  = 8;
-    public const int STATE_FINISH      = 9;
-    public const int STATE_NEXTTRIAL   = 10;
-    public const int STATE_INTERTRIAL  = 11;
-    public const int STATE_TIMEOUT     = 12;
-    public const int STATE_ERROR       = 13;
-    public const int STATE_REST        = 14;
-    public const int STATE_MAX         = 15;
+    public const int STATE_SETUP       = 1;
+    public const int STATE_STARTTRIAL  = 2;
+    public const int STATE_GOALAPPEAR  = 3;
+    public const int STATE_DELAY       = 4;
+    public const int STATE_GO          = 5;
+    public const int STATE_MOVING1     = 6;
+    public const int STATE_STAR1FOUND  = 7;
+    public const int STATE_MOVING2     = 8;
+    public const int STATE_STAR2FOUND  = 9;
+    public const int STATE_FINISH      = 10;
+    public const int STATE_NEXTTRIAL   = 11;
+    public const int STATE_INTERTRIAL  = 12;
+    public const int STATE_TIMEOUT     = 13;
+    public const int STATE_ERROR       = 14;
+    public const int STATE_REST        = 15;
+    public const int STATE_MAX         = 16;
 
-    private string[] stateText = new string[] { "StartScreen","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest", "Max" };
+    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest", "Max" };
     public int State;
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
 
@@ -119,21 +124,9 @@ public class GameController : MonoBehaviour {
         dataController = FindObjectOfType<DataController>(); //usually be careful with 'Find' but in this case should be ok. Ok this fetches the instance of DataController, dataController.
         source = GetComponent<AudioSource>();
 
-        FLAG_trialError = false;
-
         // Trial invariant data
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
         Debug.Log("File path: " + filepath);
-
-        currentGameData = dataController.GetGameData();  // doesn't mean anything yet. Is instantiated but contains nothing.
-        currentParticipantData = dataController.GetParticipantData();
-        participantID = currentParticipantData.id;
-
-        // Initialize variables with data for the current trial
-        currentTrialData = dataController.GetCurrentTrialData();
-        currentTrialNumber = currentTrialData.trialNumber;
-        currentMapName = currentTrialData.mapName;
-        currentMapIndex = currentTrialData.mapIndex;
 
         // Initialise FSM State
         State = STATE_STARTSCREEN;
@@ -142,19 +135,16 @@ public class GameController : MonoBehaviour {
 
         movementTimer = new Timer();
         messageTimer = new Timer();
-
         stateTransitions.Clear();
 
+        StartExperiment();  
+
     }
+
     // ********************************************************************** //
 
     private void Update()     // Update() executes once per frame
     {
-
-        // timeRemaining = currentTrialData.maxTrialDuration;
-        // currentMapIndex = dataController.GetCurrentTrialData().mapIndex;
-        // ***HRS ^ this currentMapIndex is doing weird not updating things, so... I think perhaps they have not been instantiated?
-
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 1; // ***HRS this is a hack but for now it's fine.
         currentSceneName = "tartarus" + currentSceneIndex;
 
@@ -162,40 +152,26 @@ public class GameController : MonoBehaviour {
         {
 
             case STATE_STARTSCREEN:
-
                 if (gameStarted)
                 {
-                    //PlayerFPS = GameObject.Find("FPSController"); // Create a local reference to the player object that has just been created
-                    StateNext(STATE_STARTTRIAL);
+                    StateNext(STATE_SETUP);
                 }
+                break;
+
+            case STATE_SETUP:
+
+                TrialSetup();
+
+                StateNext(STATE_STARTTRIAL);
                 break;
 
             case STATE_STARTTRIAL:
 
-                FLAG_trialError = false; // we start the trial with a clean-slate
-                FLAG_trialTimeout = false;
+                StartRecording();
+
                 if (stateTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     // can put a message up about waiting until the go cue
-                }
-
-                // Make sure we're found the player and make sure they cant move
-                if (PlayerFPS != null)  
-                {
-                    if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
-                    {
-                        PlayerFPS.GetComponent<FirstPersonController>().enabled = false;  
-                    }
-                }
-                else
-                {
-                    PlayerFPS = GameObject.Find("FPSController");
-
-                    // Track the state-transitions at the same update frequency as the FPSPlayer (and putting it here should sync them too)
-                    stateTransitions.Clear();                      // restart the state tracker ready for the new trial
-                    stateTransitions.Add("Game State");
-                    RecordFSMState();                              // catch the current state before the update
-                    InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);  
                 }
 
                 // Wait until the goal/target can appear
@@ -266,6 +242,8 @@ public class GameController : MonoBehaviour {
             case STATE_STAR1FOUND:
 
                 starFound = false;  // reset the starFound trigger ready to collect the next star
+                activeStarSpawnLocation = star2SpawnLocation;
+
                 StateNext(STATE_MOVING2);
                 break;
 
@@ -306,7 +284,7 @@ public class GameController : MonoBehaviour {
                 NextScene("tartarus" +  1);   // Just loop this map for now for demo
                 //NextScene("tartarus" + (currentSceneIndex + 1));
 
-                StateNext(STATE_STARTTRIAL);
+                StateNext(STATE_SETUP);
                 break;
 
             case STATE_TIMEOUT:
@@ -339,7 +317,7 @@ public class GameController : MonoBehaviour {
                     source.PlayOneShot(errorSound, 1F); 
                     Debug.Log("ERROR STATE");
                     NextScene(currentSceneName);
-                    StateNext(STATE_STARTTRIAL);
+                    StateNext(STATE_SETUP);
                 }
 
                 break;
@@ -354,9 +332,55 @@ public class GameController : MonoBehaviour {
         dataController.AddTrial();  // Create a new trial to store data to
         dataController.SaveData();
 
-        Debug.Log("Upcoming scene: " + scene);
-        SceneManager.LoadScene(scene);
+        nextScene = scene;
     }
+    // ********************************************************************** //
+
+    public void TrialSetup()
+    {
+        // Start the trial with a clean-slate
+        FLAG_trialError = false;
+        FLAG_trialTimeout = false;
+        starFound = false;
+
+        // Load in the trial data
+        currentTrialData = dataController.GetCurrentTrialData();
+        currentTrialNumber = currentTrialData.trialNumber;
+        currentMapName = currentTrialData.mapName;
+
+        playerSpawnLocation = currentTrialData.playerSpawnLocation;
+        playerSpawnOrientation = currentTrialData.playerSpawnOrientation;
+        star1SpawnLocation = currentTrialData.star1Location;
+        star2SpawnLocation = currentTrialData.star2Location;
+        activeStarSpawnLocation = star1SpawnLocation;
+
+        // Start the next scene/trial
+        Debug.Log("Upcoming scene: " + nextScene);
+        SceneManager.LoadScene(nextScene);
+    }
+
+    // ********************************************************************** //
+
+    public void StartRecording()
+    {
+        // Make sure we're found the player and make sure they cant move (and start recording player and FSM data)
+        if (PlayerFPS != null)
+        {
+            if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
+            {
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+            }
+        }
+        else
+        {   // Track the state-transitions at the same update frequency as the FPSPlayer (and putting it here should sync them too)
+            PlayerFPS = GameObject.Find("FPSController");
+            stateTransitions.Clear();                      // restart the state tracker ready for the new trial
+            stateTransitions.Add("Game State");
+            RecordFSMState();                              // catch the current state before the update
+            InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);
+        }
+    }
+
     // ********************************************************************** //
 
     public void SceneContinue()
@@ -368,14 +392,18 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
+    public void StartExperiment()
+    {   
+        NextScene("StartScreen");
+        TrialSetup();
+    }
+
+    // ********************************************************************** //
+
     public void StartGame()
     {
-        // start game from the desired initial maze/trial 
-        currentMapIndex = dataController.GetCurrentTrialData().mapIndex;
-
-        // start the first trial
-        NextScene("tartarus" + (currentMapIndex + 1));
-        gameStarted = true;
+        NextScene("tartarus1");   // a good place to start the game
+        gameStarted = true;  // start the game rolling!
     }
 
     // ********************************************************************** //
