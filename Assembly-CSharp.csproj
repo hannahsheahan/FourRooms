@@ -68,7 +68,6 @@
     <Compile Include="Assets\Scripts\filepath.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />
-    <Compile Include="Assets\Scripts\HideStar.cs" />
     <Compile Include="Assets\Scripts\LavaDeath.cs" />
     <Compile Include="Assets\Scripts\NextReminder.cs" />
     <Compile Include="Assets\Scripts\PanelManager.cs" />

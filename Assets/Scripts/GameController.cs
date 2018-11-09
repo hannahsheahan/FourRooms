@@ -14,6 +14,9 @@ public class GameController : MonoBehaviour {
     /// and centralise everything so all main processes branch from here.
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 30 Oct 2018
+    /// Notes: N/A
+    /// Issues: N/A
+    /// 
     /// </summary>
 
     // Persistent controllers for data management and gameplay
@@ -65,15 +68,17 @@ public class GameController : MonoBehaviour {
     public Timer messageTimer;
     public float firstMovementTime;
     public float totalMovementTime;
-    public float maxMovementTime     = 15.0f;  
-    private float goalAppearDelay    = 0.0f;   // *** HRS Figure out how to package these up into dataController savefile later
-    private float goCueDelay         = 1.5f;
-    public  float minDwellAtStar     = 0.5f;  // 500 ms
-    public float displayMessageTime  = 1.5f; // 1.5 sec 
-    public float waitFinishTime      = 1.5f;
-    public float errorDwellTime      = 1.0f;
+
+    public float maxMovementTime;  
+    private float goalAppearDelay;
+    private float goCueDelay;
+    public  float minDwellAtStar; 
+    public float displayMessageTime; 
+    public float waitFinishTime;
+    public float errorDwellTime;
+
+    public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
-    public float dataRecordFrequency = 0.04f;  // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
 
 
     // Game-play state machine states
@@ -127,6 +132,7 @@ public class GameController : MonoBehaviour {
         // Trial invariant data
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
         Debug.Log("File path: " + filepath);
+        dataRecordFrequency = dataController.GetRecordFrequency();
 
         // Initialise FSM State
         State = STATE_STARTSCREEN;
@@ -348,11 +354,21 @@ public class GameController : MonoBehaviour {
         currentTrialNumber = currentTrialData.trialNumber;
         currentMapName = currentTrialData.mapName;
 
-        playerSpawnLocation = currentTrialData.playerSpawnLocation;
-        playerSpawnOrientation = currentTrialData.playerSpawnOrientation;
-        star1SpawnLocation = currentTrialData.star1Location;
-        star2SpawnLocation = currentTrialData.star2Location;
+        // Location and orientation variables
+        playerSpawnLocation     = currentTrialData.playerSpawnLocation;
+        playerSpawnOrientation  = currentTrialData.playerSpawnOrientation;
+        star1SpawnLocation      = currentTrialData.star1Location;
+        star2SpawnLocation      = currentTrialData.star2Location;
         activeStarSpawnLocation = star1SpawnLocation;
+
+        // Timer variables
+        maxMovementTime = currentTrialData.maxMovementTime;
+        goalAppearDelay = currentTrialData.goalAppearDelay;
+        goCueDelay      = currentTrialData.goCueDelay;
+        minDwellAtStar  = currentTrialData.minDwellAtStar;
+        displayMessageTime = currentTrialData.displayMessageTime;
+        waitFinishTime  = currentTrialData.waitFinishTime;
+        errorDwellTime  = currentTrialData.errorDwellTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);

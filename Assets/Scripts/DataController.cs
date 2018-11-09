@@ -98,36 +98,48 @@ public class DataController : MonoBehaviour {
         // Create the gameData object where we will store all the data
         gameData = new GameData(totalTrials);
 
-        // Add each required trial data to gameData in turn
-        gameData.totalTrials = totalTrials; 
+        // Data that is consistent across trials
+        gameData.totalTrials = totalTrials;
+        gameData.dataRecordFrequency = config.GetDataFrequency();
         Debug.Log("Total number of trials to load: " + totalTrials);
 
+        // Add each required trial data to gameData in turn
         for (int trial = 0; trial < totalTrials; trial++)
         {
             gameData.allTrialData[trial].mapName = config.GetTrialMaze(trial);
 
+            // Positions and orientations
             gameData.allTrialData[trial].playerSpawnLocation = config.GetPlayerStartPosition(trial);
             gameData.allTrialData[trial].playerSpawnOrientation = config.GetPlayerStartOrientation(trial);
 
             gameData.allTrialData[trial].star1Location = config.GetStar1StartPosition(trial);
             gameData.allTrialData[trial].star2Location = config.GetStar2StartPosition(trial);
 
+            // Rewards
             gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);
             gameData.allTrialData[trial].doubleRewardTask = config.GetIsDoubleReward(trial);
+
+            // Timer variables (can change these for each trial later e.g. with jitter)
+            gameData.allTrialData[trial].maxMovementTime = config.maxMovementTime;
+            gameData.allTrialData[trial].goalAppearDelay = config.goalAppearDelay;
+            gameData.allTrialData[trial].goCueDelay      = config.goCueDelay;
+            gameData.allTrialData[trial].minDwellAtStar  = config.minDwellAtStar;
+            gameData.allTrialData[trial].displayMessageTime = config.displayMessageTime;
+            gameData.allTrialData[trial].waitFinishTime  = config.waitFinishTime;
+            gameData.allTrialData[trial].errorDwellTime  = config.errorDwellTime;
+
         }
 
-        SaveData();
+        SaveData();   // ***HRS Important to keep this here. It seems unimportant, but without it the timing of object initialisation changes somehow(?) and errors emerge. Make sure this isn't too sensitive or figure out a better way to resolve this issue
     }
 
     // ********************************************************************** //
 
     public void AddTrial()
     {
-
         // Transfer over the just-finished trial data
-        ///-------
+       
         gameData.allTrialData[currentTrialNumber].trialNumber = currentTrialNumber;
-        gameData.allTrialData[currentTrialNumber].totalMovementTime = GameController.control.maxMovementTime;
         gameData.allTrialData[currentTrialNumber].firstMovementTime = GameController.control.firstMovementTime;
         gameData.allTrialData[currentTrialNumber].totalMovementTime = GameController.control.totalMovementTime;
 
@@ -137,7 +149,7 @@ public class DataController : MonoBehaviour {
         // ** HRS watch out for this - potential for conflicts between pregenerated map sequence and gameController 
         gameData.allTrialData[currentTrialNumber].mapName = GameController.control.GetCurrentMapName();
 
-        ///-------
+
         // Add in the frame-by-frame data (these should be synchronized)
         if (PlayerFPS != null)     
         {
@@ -176,6 +188,12 @@ public class DataController : MonoBehaviour {
     {
         // Supply the trial data to the GameController
         return gameData; // for now this is a placeholder. Will eventually return which trial we are on etc
+    }
+    // ********************************************************************** //
+
+    public float GetRecordFrequency()
+    {
+        return gameData.dataRecordFrequency;
     }
     // ********************************************************************** //
 

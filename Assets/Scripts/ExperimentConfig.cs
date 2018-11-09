@@ -36,11 +36,9 @@ public class ExperimentConfig
     private Vector3[] playerStartOrientations;
     private Vector3 spawnOrientation;
 
-
     private Vector3[] possibleStarPositions;
     private Vector3[] star1Positions;
     private Vector3[] star2Positions;
-
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
@@ -49,6 +47,18 @@ public class ExperimentConfig
     private string[] possibleRewardTypes; 
     private string[] rewardTypes;             // diamond or gold? (martini or beer)
 
+    // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
+    public float maxMovementTime;
+    public float goalAppearDelay;
+    public float goCueDelay;
+    public float minDwellAtStar;
+    public float displayMessageTime;
+    public float waitFinishTime;
+    public float errorDwellTime;
+    private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
+
+
+
     // ********************************************************************** //
     // Use a constructor to set this up
     public ExperimentConfig() 
@@ -56,13 +66,23 @@ public class ExperimentConfig
 
         // Set these variables to define your experiment:
         totalTrials   = 30;
-        restFrequency = 10;      // ***HRS  pause the experiment and take a rest after this many trials
+        restFrequency = 10;         // ***HRS  pause the experiment and take a rest after this many trials
 
         // ... ***HRS add other variables to control here
 
 
+        // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
+        dataRecordFrequency = 0.04f;
+        maxMovementTime     = 15.0f;
+        goalAppearDelay     = 0.0f;     
+        goCueDelay          = 1.5f;
+        minDwellAtStar      = 0.5f;      
+        displayMessageTime  = 1.5f;     
+        waitFinishTime      = 1.5f;
+        errorDwellTime      = 1.0f;
 
-        // These variables will change less often
+
+    // These variables define the environment (are less likely to be played with)
         roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
         starYposition   = 75.5f;
@@ -177,20 +197,15 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private Vector3 findStartOrientation(Vector3 position)
-    {
+    private Vector3 findStartOrientation(Vector3 position)     {
         // Generate a starting orientation that always makes the player look towards the centre of the environment
-        Vector3 lookVector = new Vector3();
-        lookVector = mazeCentre - position;
-
-        float angle = (float)Math.Atan(lookVector.z / lookVector.x);   // angle of the vector connecting centre and spawn location
-        spawnOrientation = new Vector3(0.0f, angle, 0.0f);
-
-        return spawnOrientation;
-    }
-
-
-
+        Vector3 lookVector = new Vector3();         lookVector = mazeCentre - position; 
+        float angle = (float)Math.Atan2(lookVector.z, lookVector.x);   // angle of the vector connecting centre and spawn location         angle = 90 - angle * (float)(180 / Math.PI);                   // correct for where angles are measured from 
+        if (angle<0)   // put the view angle in the range 0 to 360 degrees
+        {
+            angle = 360 + angle;
+        }
+        spawnOrientation = new Vector3(0.0f, angle, 0.0f);          return spawnOrientation;     } 
     // ********************************************************************** //
     // Get() and Set() Methods
     // ********************************************************************** //
@@ -199,6 +214,14 @@ public class ExperimentConfig
     {
         return totalTrials;
     }
+
+    // ********************************************************************** //
+
+    public float GetDataFrequency()
+    {
+        return dataRecordFrequency;
+    }
+
     // ********************************************************************** //
 
     public string GetTrialMaze(int trial)

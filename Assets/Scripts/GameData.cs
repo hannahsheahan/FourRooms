@@ -6,6 +6,8 @@ public class GameData
 {
     public ParticipantData participantData;
     public int totalTrials;
+    public float dataRecordFrequency;
+
     public TrialData[] allTrialData;
 
 

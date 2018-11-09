@@ -14,6 +14,7 @@ public class TrialData
 
     // Static per trial data
     public int trialNumber = 0;
+
     //public int mapIndex;   // this causes some complications (because SceneManager only manages active/loaded scenes, so .buildIndex throws -1)
     public string mapName;
     public bool doubleRewardTask;
@@ -28,6 +29,16 @@ public class TrialData
     public float maxMovementTime;
     public float firstMovementTime;       // time until first star collected
     public float totalMovementTime;       // time until second star collected
+
+    // trial configuration times
+    public float goalAppearDelay;
+    public float AppearDelay;
+    public float goCueDelay;
+    public float minDwellAtStar;      
+    public float displayMessageTime;    
+    public float waitFinishTime;
+    public float errorDwellTime;
+
 
     // trial error flags
     public bool FLAG_trialTimeout;        
