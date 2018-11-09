@@ -20,6 +20,7 @@ public class ExperimentConfig
 
 
     // Scenes/mazes
+    private const int setupAndCloseTrials = 3;     // Note: there must be 3 extra trials in trial list to account for Persistent, StartScreen and Exit 'trials'.
     private int totalTrials;
     private int restFrequency;
     private string[] trialMazes;
@@ -65,8 +66,8 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        totalTrials   = 30;
-        restFrequency = 10;         // ***HRS  pause the experiment and take a rest after this many trials
+        totalTrials   = 2   + setupAndCloseTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+        restFrequency = 10;             // ***HRS  pause the experiment and take a rest after this many trials
 
         // ... ***HRS add other variables to control here
 
@@ -105,8 +106,16 @@ public class ExperimentConfig
         // Generate the trial randomisation etc that we want:
         // **HRS (later we can generate an array of things to cover and then permute from a function here) 
 
+        // Define the first two trials (which are the Persistent and StartScreen states)
+        // Note: this lets the other variables take their default values on these starting trials
+        trialMazes[0] = "Persistent";
+        trialMazes[1] = "StartScreen";
+
+        // Define the final exit state
+        trialMazes[totalTrials-1] = "Exit";
+
         // Let's make the trials completely random for now, to see if it works
-        for (int trial = 0; trial < totalTrials; trial++)
+        for (int trial = 2; trial < totalTrials-1; trial++)
         {
             trialMazes[trial] = "tartarus1";   // set this to stay the same, for now
             doubleRewardTask[trial] = false;   // use only single star trials for now
@@ -124,8 +133,10 @@ public class ExperimentConfig
             {   // single star to be collected
                 star2Positions[trial] = star1Positions[trial];  
             }
-
         }
+
+
+
 
 
         // ... ** HRS add any other randomisation etc you want here

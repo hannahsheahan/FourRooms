@@ -17,7 +17,8 @@ public class TestSceneSwitchingByButton : MonoBehaviour {
         {
             Debug.Log("Current scene: " + currentScene);
             Debug.Log("Next scene: tartarus" + (currentScene + 1));
-            GameController.control.NextScene("tartarus" + (currentScene + 1));  // load the next scene
+            //GameController.control.NextScene("tartarus" + (currentScene + 1));  // load the next scene
+            GameController.control.NextScene();  // load the next scene
             pressed = false;
         }
     }

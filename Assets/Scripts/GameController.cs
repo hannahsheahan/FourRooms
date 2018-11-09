@@ -63,11 +63,13 @@ public class GameController : MonoBehaviour {
     public string screenMessageColor;
 
     // Timer variables
+    private Timer experimentTimer;
     private Timer stateTimer;
     private Timer movementTimer;
     public Timer messageTimer;
     public float firstMovementTime;
     public float totalMovementTime;
+    public float totalExperimentTime;
 
     public float maxMovementTime;  
     private float goalAppearDelay;
@@ -98,9 +100,10 @@ public class GameController : MonoBehaviour {
     public const int STATE_TIMEOUT     = 13;
     public const int STATE_ERROR       = 14;
     public const int STATE_REST        = 15;
-    public const int STATE_MAX         = 16;
+    public const int STATE_EXIT        = 16;
+    public const int STATE_MAX         = 17;
 
-    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest", "Max" };
+    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","Exit","Max" };
     public int State;
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
 
@@ -139,6 +142,7 @@ public class GameController : MonoBehaviour {
         stateTimer = new Timer();
         stateTimer.Reset();
 
+        experimentTimer = new Timer();
         movementTimer = new Timer();
         messageTimer = new Timer();
         stateTransitions.Clear();
@@ -166,9 +170,16 @@ public class GameController : MonoBehaviour {
 
             case STATE_SETUP:
 
-                TrialSetup();
-
-                StateNext(STATE_STARTTRIAL);
+                if ( TrialSetup() )
+                {
+                    StateNext(STATE_STARTTRIAL);
+                }
+                else  // we've reached the final trial
+                {
+                    totalExperimentTime = experimentTimer.ElapsedSeconds();
+                    Cursor.visible = true;
+                    StateNext(STATE_EXIT);
+                }
                 break;
 
             case STATE_STARTTRIAL:
@@ -286,9 +297,10 @@ public class GameController : MonoBehaviour {
                 CancelInvoke("RecordFSMState");
 
                 // end the trial, save the data
-                Debug.Log("The current map is: " + currentSceneIndex + " so the next map will be: " + (currentSceneIndex + 1));
-                NextScene("tartarus" +  1);   // Just loop this map for now for demo
+                //NextScene("tartarus" +  1);   // Just loop this map for now for demo
                 //NextScene("tartarus" + (currentSceneIndex + 1));
+                NextScene();
+                Debug.Log("The current map is: " + currentSceneIndex + " and the next map will be: " + (currentSceneIndex + 1));
 
                 StateNext(STATE_SETUP);
                 break;
@@ -322,27 +334,36 @@ public class GameController : MonoBehaviour {
                     // save the data and restart the trial
                     source.PlayOneShot(errorSound, 1F); 
                     Debug.Log("ERROR STATE");
-                    NextScene(currentSceneName);
+                    //NextScene(currentSceneName);
+                    NextScene(); // ***HRS Note that this will just move on to the next scene now rather than repeating . Change later
                     StateNext(STATE_SETUP);
                 }
 
                 break;
-        
+
+            case STATE_EXIT:
+                // Display the total experiment time and wait for the participant to close the application
+                //Cursor.visible = true;
+
+
+                break;
+
+
         }
     }
     // ********************************************************************** //
 
-    public void NextScene(string scene)
+    public void NextScene()
     {
         // Save the current trial data and move to the next scene
         dataController.AddTrial();  // Create a new trial to store data to
         dataController.SaveData();
 
-        nextScene = scene;
+        //nextScene = scene;
     }
     // ********************************************************************** //
 
-    public void TrialSetup()
+    public bool TrialSetup()
     {
         // Start the trial with a clean-slate
         FLAG_trialError = false;
@@ -352,7 +373,7 @@ public class GameController : MonoBehaviour {
         // Load in the trial data
         currentTrialData = dataController.GetCurrentTrialData();
         currentTrialNumber = currentTrialData.trialNumber;
-        currentMapName = currentTrialData.mapName;
+        nextScene = currentTrialData.mapName;
 
         // Location and orientation variables
         playerSpawnLocation     = currentTrialData.playerSpawnLocation;
@@ -373,6 +394,15 @@ public class GameController : MonoBehaviour {
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
+
+        if (nextScene=="Exit")
+        {
+            return false;   // we don't want to keep going in the normal FSM and recording data during the exit scene
+        }
+        else
+        {
+            return true;
+        }
     }
 
     // ********************************************************************** //
@@ -409,8 +439,9 @@ public class GameController : MonoBehaviour {
     // ********************************************************************** //
 
     public void StartExperiment()
-    {   
-        NextScene("StartScreen");
+    {
+        experimentTimer.Reset();
+        NextScene();
         TrialSetup();
     }
 
@@ -418,8 +449,16 @@ public class GameController : MonoBehaviour {
 
     public void StartGame()
     {
-        NextScene("tartarus1");   // a good place to start the game
-        gameStarted = true;  // start the game rolling!
+        NextScene();
+        gameStarted = true;     // start the game rolling!
+        Cursor.visible = false; 
+    }
+
+    // ********************************************************************** //
+
+    public void ExitGame()
+    {
+        Application.Quit();  // close the application
     }
 
     // ********************************************************************** //

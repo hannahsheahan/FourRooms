@@ -15,7 +15,6 @@ public class GameData
     // Use a constructor
     public GameData(int trials)
     {
-
         //  initialize array of trials, and instantiate each trial in the array
         allTrialData = new TrialData[trials];
         for (int i = 0; i < allTrialData.Length; i++)
