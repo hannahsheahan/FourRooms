@@ -1,11 +1,12 @@
 ﻿<Properties StartupConfiguration="{7F1C645E-A8A1-739D-9CEE-42785020E511}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/RestBreakProgress.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameController.cs" Line="345" Column="19" />
-      <File FileName="Assets/Scripts/DataController.cs" Line="203" Column="1" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="361" Column="33" />
+      <File FileName="Assets/Scripts/DataController.cs" Line="144" Column="1" />
       <File FileName="Assets/Scripts/TrialData.cs" Line="29" Column="33" />
-      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="69" Column="26" />
+      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="82" Column="38" />
+      <File FileName="Assets/RestBreakProgress.cs" Line="17" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

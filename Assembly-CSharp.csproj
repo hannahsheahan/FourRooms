@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\RestBreakProgress.cs" />
     <Compile Include="Assets\Scripts\ContinueScreen.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
     <Compile Include="Assets\Scripts\DisplayExperimentTime.cs" />

@@ -21,10 +21,13 @@ public class ExperimentConfig
 
     // Scenes/mazes
     private const int setupAndCloseTrials = 3;     // Note: there must be 3 extra trials in trial list to account for Persistent, StartScreen and Exit 'trials'.
+    private const int restbreakOffset = 1;         // Note: makes specifying restbreaks more intuitive
+    private const int setupTrials = 2;
     private int totalTrials;
     private int restFrequency;
+    private int nbreaks;
     private string[] trialMazes;
-    private string[] possibleMazes;          // the existing mazes/scenes that can be selected from
+    private string[] possibleMazes;                // the existing mazes/scenes that can be selected from
     private int sceneCount;
     private int roomSize;
     private float playerYposition;
@@ -56,8 +59,8 @@ public class ExperimentConfig
     public float displayMessageTime;
     public float waitFinishTime;
     public float errorDwellTime;
+    public float restbreakDuration;
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
-
 
 
     // ********************************************************************** //
@@ -66,14 +69,20 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        totalTrials   = 2   + setupAndCloseTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-        restFrequency = 10;             // ***HRS  pause the experiment and take a rest after this many trials
+        totalTrials   = 20   + setupAndCloseTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+        restFrequency = 1    + restbreakOffset;            // Take a rest after this many normal trials
+
+        // Figure out how many rest breaks we will have and add them to the trial list
+        nbreaks = (int)(totalTrials / restFrequency);  // round down to whole integer
+        totalTrials = totalTrials + nbreaks;
 
         // ... ***HRS add other variables to control here
 
 
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.04f;
+        restbreakDuration   = 15.0f;    // how long are the imposed rest breaks?
+
         maxMovementTime     = 15.0f;
         goalAppearDelay     = 0.0f;     
         goCueDelay          = 1.5f;
@@ -89,6 +98,7 @@ public class ExperimentConfig
         starYposition   = 75.5f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
 
+
         // Define a maze, start and goal positions, and reward type for each trial
         trialMazes = new string[totalTrials];
         playerStartPositions = new Vector3[totalTrials];
@@ -97,7 +107,6 @@ public class ExperimentConfig
         star2Positions = new Vector3[totalTrials];
         doubleRewardTask = new bool[totalTrials];
         rewardTypes = new string[totalTrials];
-
 
         // Generate a list of all the possible (player or star) spawn locations
         GeneratePossibleSettings();
@@ -114,24 +123,32 @@ public class ExperimentConfig
         // Define the final exit state
         trialMazes[totalTrials-1] = "Exit";
 
-        // Let's make the trials completely random for now, to see if it works
-        for (int trial = 2; trial < totalTrials-1; trial++)
+        // Let's make the trial content completely random for now, to see if it works
+        for (int trial = setupTrials; trial < totalTrials-1; trial++)
         {
-            trialMazes[trial] = "tartarus1";   // set this to stay the same, for now
-            doubleRewardTask[trial] = false;   // use only single star trials for now
-            rewardTypes[trial] = "diamond";    // use single reward type for now
 
-            playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length-1)]; // random start position
-            playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
-            star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length-1)];           // random star1 position
-
-            if(doubleRewardTask[trial])
-            {   // generate another position for star2
-                star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];     // random star2 position
+            if (  (trial - setupTrials + 1) % restFrequency == 0)  // Time for a rest break
+            {  
+                trialMazes[trial] = "RestBreak";
             }
-            else
-            {   // single star to be collected
-                star2Positions[trial] = star1Positions[trial];  
+            else                                    // It's a regular trial
+            {
+                trialMazes[trial] = "tartarus1";   // set this to stay the same, for now
+                doubleRewardTask[trial] = false;   // use only single star trials for now
+                rewardTypes[trial] = "diamond";    // use single reward type for now
+
+                playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length-1)]; // random start position
+                playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
+                star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length-1)];           // random star1 position
+
+                if(doubleRewardTask[trial])
+                {   // generate another position for star2
+                    star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];     // random star2 position
+                }
+                else
+                {   // single star to be collected
+                    star2Positions[trial] = star1Positions[trial];  
+                }
             }
         }
 

@@ -101,6 +101,8 @@ public class DataController : MonoBehaviour {
         // Data that is consistent across trials
         gameData.totalTrials = totalTrials;
         gameData.dataRecordFrequency = config.GetDataFrequency();
+        gameData.restbreakDuration = config.restbreakDuration;
+
         Debug.Log("Total number of trials to load: " + totalTrials);
 
         // Add each required trial data to gameData in turn
@@ -227,5 +229,13 @@ public class DataController : MonoBehaviour {
     public string GetFilePath()
     {
         return filePath;
+    }
+
+    // ********************************************************************** //
+
+    public float GetRestBreakDuration()
+    {
+        // Supply trial-invariant participant information data
+        return gameData.restbreakDuration;
     }
 }

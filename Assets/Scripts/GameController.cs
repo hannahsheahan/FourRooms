@@ -67,6 +67,7 @@ public class GameController : MonoBehaviour {
     private Timer stateTimer;
     private Timer movementTimer;
     public Timer messageTimer;
+    private Timer restbreakTimer;
     public float firstMovementTime;
     public float totalMovementTime;
     public float totalExperimentTime;
@@ -78,6 +79,8 @@ public class GameController : MonoBehaviour {
     public float displayMessageTime; 
     public float waitFinishTime;
     public float errorDwellTime;
+    public float restbreakDuration;
+    public float elapsedRestbreakTime;
 
     public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
@@ -136,6 +139,7 @@ public class GameController : MonoBehaviour {
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
         Debug.Log("File path: " + filepath);
         dataRecordFrequency = dataController.GetRecordFrequency();
+        restbreakDuration = dataController.GetRestBreakDuration();      // **HRS note that the public/private mix of this is a little weird but not important.
 
         // Initialise FSM State
         State = STATE_STARTSCREEN;
@@ -145,6 +149,7 @@ public class GameController : MonoBehaviour {
         experimentTimer = new Timer();
         movementTimer = new Timer();
         messageTimer = new Timer();
+        restbreakTimer = new Timer();
         stateTransitions.Clear();
 
         StartExperiment();  
@@ -170,15 +175,23 @@ public class GameController : MonoBehaviour {
 
             case STATE_SETUP:
 
-                if ( TrialSetup() )
+                switch (TrialSetup())
                 {
-                    StateNext(STATE_STARTTRIAL);
-                }
-                else  // we've reached the final trial
-                {
-                    totalExperimentTime = experimentTimer.ElapsedSeconds();
-                    Cursor.visible = true;
-                    StateNext(STATE_EXIT);
+                    case "StartTrial":
+                        StateNext(STATE_STARTTRIAL);
+                        break;
+
+                    case "RestBreak":
+                        restbreakTimer.Reset();
+                        StateNext(STATE_REST);
+                        break;
+
+                    case "Exit":
+                        totalExperimentTime = experimentTimer.ElapsedSeconds();
+                        Cursor.visible = true;
+                        StateNext(STATE_EXIT);
+                        break;
+
                 }
                 break;
 
@@ -341,6 +354,20 @@ public class GameController : MonoBehaviour {
 
                 break;
 
+
+            case STATE_REST:
+
+                elapsedRestbreakTime = restbreakTimer.ElapsedSeconds();
+
+                if (elapsedRestbreakTime > restbreakDuration)
+                {
+                    NextScene();
+                    StateNext(STATE_SETUP);   // move on to the next trial
+                    break;
+                }
+                break;
+
+
             case STATE_EXIT:
                 // Display the total experiment time and wait for the participant to close the application
                 //Cursor.visible = true;
@@ -363,7 +390,7 @@ public class GameController : MonoBehaviour {
     }
     // ********************************************************************** //
 
-    public bool TrialSetup()
+    public string TrialSetup()
     {
         // Start the trial with a clean-slate
         FLAG_trialError = false;
@@ -391,17 +418,19 @@ public class GameController : MonoBehaviour {
         waitFinishTime  = currentTrialData.waitFinishTime;
         errorDwellTime  = currentTrialData.errorDwellTime;
 
+
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
 
-        if (nextScene=="Exit")
+
+        if ( (nextScene == "Exit") || (nextScene == "RestBreak") )
         {
-            return false;   // we don't want to keep going in the normal FSM and recording data during the exit scene
+            return nextScene;   // we don't want to record data and do the FSM transitions during the exit and rest break scenes
         }
         else
         {
-            return true;
+            return "StartTrial";
         }
     }
 
