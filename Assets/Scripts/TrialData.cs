@@ -31,10 +31,10 @@ public class TrialData
     public float totalMovementTime;       // time until second star collected
 
     // trial configuration times
-    public float goalAppearDelay;
-    public float AppearDelay;
+    public float preDisplayCueTime;
+    public float displayCueTime;
     public float goCueDelay;
-    public float minDwellAtStar;      
+    public float minDwellAtReward;      
     public float displayMessageTime;    
     public float waitFinishTime;
     public float errorDwellTime;

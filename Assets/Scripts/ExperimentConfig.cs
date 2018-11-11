@@ -53,9 +53,10 @@ public class ExperimentConfig
 
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float maxMovementTime;
-    public float goalAppearDelay;
+    public float preDisplayCueTime;
+    public float displayCueTime;
     public float goCueDelay;
-    public float minDwellAtStar;
+    public float minDwellAtReward;
     public float displayMessageTime;
     public float waitFinishTime;
     public float errorDwellTime;
@@ -70,7 +71,7 @@ public class ExperimentConfig
 
         // Set these variables to define your experiment:
         totalTrials   = 20   + setupAndCloseTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-        restFrequency = 1    + restbreakOffset;            // Take a rest after this many normal trials
+        restFrequency = 3    + restbreakOffset;            // Take a rest after this many normal trials
 
         // Figure out how many rest breaks we will have and add them to the trial list
         nbreaks = (int)(totalTrials / restFrequency);  // round down to whole integer
@@ -81,18 +82,19 @@ public class ExperimentConfig
 
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.04f;
-        restbreakDuration   = 15.0f;    // how long are the imposed rest breaks?
+        restbreakDuration   = 5.0f;    // how long are the imposed rest breaks?
 
         maxMovementTime     = 15.0f;
-        goalAppearDelay     = 0.0f;     
-        goCueDelay          = 1.5f;
-        minDwellAtStar      = 0.5f;      
+        preDisplayCueTime   = 1.5f;    // will take a TR during this period
+        displayCueTime      = 2.0f;
+        goCueDelay          = 1.5f;    // will take a TR during this period
+        minDwellAtReward    = 0.1f;      
         displayMessageTime  = 1.5f;     
         waitFinishTime      = 1.5f;
         errorDwellTime      = 1.0f;
 
 
-    // These variables define the environment (are less likely to be played with)
+        // These variables define the environment (are less likely to be played with)
         roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
         starYposition   = 75.5f;
@@ -123,19 +125,28 @@ public class ExperimentConfig
         // Define the final exit state
         trialMazes[totalTrials-1] = "Exit";
 
-        // Let's make the trial content completely random for now, to see if it works
+        // Let's make the trial content completely random for now
         for (int trial = setupTrials; trial < totalTrials-1; trial++)
         {
-
+            // Deal with restbreaks and regular trials
             if (  (trial - setupTrials + 1) % restFrequency == 0)  // Time for a rest break
             {  
                 trialMazes[trial] = "RestBreak";
             }
             else                                    // It's a regular trial
             {
-                trialMazes[trial] = "tartarus1";   // set this to stay the same, for now
+                // For now, change the reward type every second trial
+                if (trial % 2 == 0)          
+                {
+                    rewardTypes[trial] = "wine";    // use single reward type for now
+                }
+                else
+                {
+                    rewardTypes[trial] = "cheese";    // use single reward type for now
+                }
+
+                trialMazes[trial] = "FourRooms_" + rewardTypes[trial];   // set this to stay the same, for now
                 doubleRewardTask[trial] = false;   // use only single star trials for now
-                rewardTypes[trial] = "diamond";    // use single reward type for now
 
                 playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length-1)]; // random start position
                 playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
@@ -151,8 +162,6 @@ public class ExperimentConfig
                 }
             }
         }
-
-
 
 
 

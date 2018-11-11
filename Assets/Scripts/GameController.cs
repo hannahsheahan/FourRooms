@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour {
     private int currentSceneIndex;
     private string currentSceneName;
 
+
     public Vector3 playerSpawnLocation;
     public Vector3 playerSpawnOrientation;
     public Vector3 star1SpawnLocation;
@@ -61,6 +62,9 @@ public class GameController : MonoBehaviour {
     private string displayMessage = "noMessage";
     private string textMessage = "";
     public string screenMessageColor;
+    public bool displayCue;
+    public string rewardType;
+    public bool rewardVisible;
 
     // Timer variables
     private Timer experimentTimer;
@@ -73,9 +77,10 @@ public class GameController : MonoBehaviour {
     public float totalExperimentTime;
 
     public float maxMovementTime;  
-    private float goalAppearDelay;
+    private float preDisplayCueTime;
     private float goCueDelay;
-    public  float minDwellAtStar; 
+    private float displayCueTime;
+    public  float minDwellAtReward; 
     public float displayMessageTime; 
     public float waitFinishTime;
     public float errorDwellTime;
@@ -152,6 +157,9 @@ public class GameController : MonoBehaviour {
         restbreakTimer = new Timer();
         stateTransitions.Clear();
 
+        // Ensure cue images are off
+        displayCue = false;
+
         StartExperiment();  
 
     }
@@ -161,7 +169,7 @@ public class GameController : MonoBehaviour {
     private void Update()     // Update() executes once per frame
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 1; // ***HRS this is a hack but for now it's fine.
-        currentSceneName = "tartarus" + currentSceneIndex;
+        //currentSceneName = "tartarus" + currentSceneIndex;
 
         switch (State)
         {
@@ -178,7 +186,10 @@ public class GameController : MonoBehaviour {
                 switch (TrialSetup())
                 {
                     case "StartTrial":
+                        // ensure the reward is hidden from sight
+                        rewardVisible = false;
                         StateNext(STATE_STARTTRIAL);
+
                         break;
 
                     case "RestBreak":
@@ -199,13 +210,8 @@ public class GameController : MonoBehaviour {
 
                 StartRecording();
 
-                if (stateTimer.ElapsedSeconds() > displayMessageTime)
-                {
-                    // can put a message up about waiting until the go cue
-                }
-
-                // Wait until the goal/target can appear
-                if (stateTimer.ElapsedSeconds() >= goalAppearDelay)
+                // Wait until the goal/target cue appears (will take a TR here)
+                if (stateTimer.ElapsedSeconds() >= preDisplayCueTime)
                 {
                     PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
                     StateNext(STATE_GOALAPPEAR);
@@ -214,21 +220,23 @@ public class GameController : MonoBehaviour {
 
 
             case STATE_GOALAPPEAR:
-                // display the star (so far its already visible so can add this later)
+                // display the reward type cue
+                displayCue = true;
 
-                // Make an image of the star appear in front of the camera (lock
-                // it to the camera so its 2D or make as part of canvas), showing
-                // what type of reward to collect on that trial
-
-
-                starFound = false;
-                StateNext(STATE_DELAY);
+                if (stateTimer.ElapsedSeconds() > displayCueTime)
+                {
+                    displayCue = false;
+                    starFound = false;
+                    StateNext(STATE_DELAY);
+                    break;
+                }
                 break;
 
             case STATE_DELAY:
-                // Wait for the go cue
+                // Wait for the go audio cue (will take a TR here)
                 if (stateTimer.ElapsedSeconds() >= goCueDelay)
                 {
+                    rewardVisible = true;     // make the reward itself appear in the environment
                     source.PlayOneShot(goCueSound, 1F);
                     StateNext(STATE_GO);
                 }
@@ -313,7 +321,7 @@ public class GameController : MonoBehaviour {
                 //NextScene("tartarus" +  1);   // Just loop this map for now for demo
                 //NextScene("tartarus" + (currentSceneIndex + 1));
                 NextScene();
-                Debug.Log("The current map is: " + currentSceneIndex + " and the next map will be: " + (currentSceneIndex + 1));
+                //Debug.Log("The current map is: " + currentSceneIndex + " and the next map will be: " + (currentSceneIndex + 1));
 
                 StateNext(STATE_SETUP);
                 break;
@@ -372,6 +380,8 @@ public class GameController : MonoBehaviour {
                 // Display the total experiment time and wait for the participant to close the application
                 //Cursor.visible = true;
 
+                // ***HRS at the moment this is just to save the correct exiting state transition in the datafile
+
 
                 break;
 
@@ -411,13 +421,14 @@ public class GameController : MonoBehaviour {
 
         // Timer variables
         maxMovementTime = currentTrialData.maxMovementTime;
-        goalAppearDelay = currentTrialData.goalAppearDelay;
+        preDisplayCueTime = currentTrialData.preDisplayCueTime;
+        displayCueTime = currentTrialData.displayCueTime;
         goCueDelay      = currentTrialData.goCueDelay;
-        minDwellAtStar  = currentTrialData.minDwellAtStar;
+        minDwellAtReward  = currentTrialData.minDwellAtReward;
         displayMessageTime = currentTrialData.displayMessageTime;
         waitFinishTime  = currentTrialData.waitFinishTime;
         errorDwellTime  = currentTrialData.errorDwellTime;
-
+        rewardType      = currentTrialData.rewardType;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
@@ -453,7 +464,9 @@ public class GameController : MonoBehaviour {
             stateTransitions.Add("Game State");
             RecordFSMState();                              // catch the current state before the update
             InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);
+            Debug.Log("Found player.");
         }
+
     }
 
     // ********************************************************************** //
@@ -583,7 +596,7 @@ public class GameController : MonoBehaviour {
 
     public void StarFound()
     {
-        starFound = true; // The player has been at the star for minDwellAtStar seconds
+        starFound = true; // The player has been at the star for minDwellAtReward seconds
     }
 
     // ********************************************************************** //
