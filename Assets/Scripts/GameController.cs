@@ -60,8 +60,7 @@ public class GameController : MonoBehaviour {
     public bool FLAG_trialError;
     public bool FLAG_trialTimeout;
     private string displayMessage = "noMessage";
-    private string textMessage = "";
-    public string screenMessageColor;
+    public string textMessage = "";
     public bool displayCue;
     public string rewardType;
     public bool rewardVisible;
@@ -168,8 +167,9 @@ public class GameController : MonoBehaviour {
 
     private void Update()     // Update() executes once per frame
     {
+        UpdateText();
+
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 1; // ***HRS this is a hack but for now it's fine.
-        //currentSceneName = "tartarus" + currentSceneIndex;
 
         switch (State)
         {
@@ -381,10 +381,7 @@ public class GameController : MonoBehaviour {
                 //Cursor.visible = true;
 
                 // ***HRS at the moment this is just to save the correct exiting state transition in the datafile
-
-
                 break;
-
 
         }
     }
@@ -525,7 +522,7 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    private void OnGUI()
+    private void UpdateText()
     {
         switch (displayMessage)
         {
@@ -577,8 +574,8 @@ public class GameController : MonoBehaviour {
                 break;
 
         }
-       
-        GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 25, 200, 100), textMessage);
+      
+        //GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 25, 200, 100), textMessage);
     }
 
     // ********************************************************************** //
