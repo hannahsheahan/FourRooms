@@ -141,7 +141,7 @@ public class GameController : MonoBehaviour {
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
         Debug.Log("File path: " + filepath);
         dataRecordFrequency = dataController.GetRecordFrequency();
-        restbreakDuration = dataController.GetRestBreakDuration();      // **HRS note that the public/private mix of this is a little weird but not important.
+        restbreakDuration = dataController.GetRestBreakDuration();   
 
         // Initialise FSM State
         State = STATE_STARTSCREEN;
@@ -330,11 +330,7 @@ public class GameController : MonoBehaviour {
 
 
             case STATE_ERROR:
-                // Handle error trials by continuing to record data on the same 
-                // trial, so the trial list doesnt get disturbed, but we still record the data
-
-                // ***HRS  Later differentiate between the different errors in save file e.g. timeout
-
+                // Handle error trials by continuing to record data on the same trial
                 FLAG_trialError = true;
 
                 firstMovementTime = movementTimer.ElapsedSeconds();
@@ -349,12 +345,11 @@ public class GameController : MonoBehaviour {
                     Debug.Log("ERROR STATE");
 
                     // Restart the trial
+                    displayMessage = "restartTrialMessage";
                     NextAttempt();
-                    //NextScene();
 
                     StateNext(STATE_SETUP);  
                 }
-
                 break;
 
 
@@ -373,9 +368,9 @@ public class GameController : MonoBehaviour {
 
             case STATE_EXIT:
                 // Display the total experiment time and wait for the participant to close the application
-                //Cursor.visible = true;
 
-                // ***HRS at the moment this is just to save the correct exiting state transition in the datafile
+                // Note: at the moment this is just to save the correct exiting state transition in the datafile
+
                 break;
 
         }
@@ -469,20 +464,11 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    public void SceneContinue()
-    {
-        // Continue by playing the current scene again
-        currentMapName = currentTrialData.mapName;
-        SceneManager.LoadScene(currentMapName);
-    }
-
-    // ********************************************************************** //
-
     public void StartExperiment()
     {
         experimentTimer.Reset();
         NextScene();
-        TrialSetup();
+        TrialSetup();           // start the experiment participant menu etc
     }
 
     // ********************************************************************** //
@@ -501,7 +487,6 @@ public class GameController : MonoBehaviour {
         NextScene();
         SceneManager.LoadScene("InstructionsScreen");
     }
-
 
     // ********************************************************************** //
 
@@ -534,9 +519,9 @@ public class GameController : MonoBehaviour {
 
     private void UpdateText()
     {
+        // Display the right text message to the player
         switch (displayMessage)
         {
-
             case "noMessage":
                 textMessage = "";
                 messageTimer.Reset();
@@ -550,14 +535,13 @@ public class GameController : MonoBehaviour {
                 }
                 break;
 
-            case "findStarMessage":
-                textMessage = "Find the star!";
+            case "findRewardMessage":
+                textMessage = "Find the item:";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
                 }
                 break;
-
 
             case "timeoutMessage":
                 textMessage = "Trial timed out!";
@@ -576,16 +560,13 @@ public class GameController : MonoBehaviour {
                 break;
 
             case "restartTrialMessage":
-                textMessage = "Restarting the trial";
+                textMessage = "Restarting trial";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
                 }
                 break;
-
-        }
-      
-        //GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 25, 200, 100), textMessage);
+        }  
     }
 
     // ********************************************************************** //

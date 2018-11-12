@@ -132,8 +132,7 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].errorDwellTime  = config.errorDwellTime;
 
         }
-
-        SaveData();   // ***HRS Important to keep this here. It seems unimportant, but without it the timing of object initialisation changes somehow(?) and errors emerge. Make sure this isn't too sensitive or figure out a better way to resolve this issue
+        SaveData();   // Note: Important to keep this here. It seems unimportant, but without it the timing of object initialisation changes somehow(?) and errors emerge. Make sure this isn't too sensitive or figure out a better way to resolve this issue
     }
 
     // ********************************************************************** //

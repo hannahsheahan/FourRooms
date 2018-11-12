@@ -62,9 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ContinueInstructionsButtonScript.cs" />
-    <Compile Include="Assets\Scripts\ContinueScreen.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
-    <Compile Include="Assets\Scripts\DisplayExperimentTime.cs" />
     <Compile Include="Assets\Scripts\DisplayRewardCue.cs" />
     <Compile Include="Assets\Scripts\EnterParticipantIDScript.cs" />
     <Compile Include="Assets\Scripts\ExitButtonScript.cs" />
@@ -75,11 +73,7 @@
     <Compile Include="Assets\Scripts\GameData.cs" />
     <Compile Include="Assets\Scripts\HideOrDisplayReward.cs" />
     <Compile Include="Assets\Scripts\LavaDeath.cs" />
-    <Compile Include="Assets\Scripts\NextReminder.cs" />
-    <Compile Include="Assets\Scripts\PanelManager.cs" />
     <Compile Include="Assets\Scripts\ParticipantData.cs" />
-    <Compile Include="Assets\Scripts\ReminderCount.cs" />
-    <Compile Include="Assets\Scripts\ReminderManager.cs" />
     <Compile Include="Assets\Scripts\RestBreakProgress.cs" />
     <Compile Include="Assets\Scripts\RewardAnimationScript.cs" />
     <Compile Include="Assets\Scripts\RewardHitScript.cs" />
