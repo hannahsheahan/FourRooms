@@ -20,9 +20,9 @@ public class ExperimentConfig
 
 
     // Scenes/mazes
-    private const int setupAndCloseTrials = 3;     // Note: there must be 3 extra trials in trial list to account for Persistent, StartScreen and Exit 'trials'.
+    private const int setupAndCloseTrials = 4;     // Note: there must be 3 extra trials in trial list to account for Persistent, StartScreen and Exit 'trials'.
     private const int restbreakOffset = 1;         // Note: makes specifying restbreaks more intuitive
-    private const int setupTrials = 2;
+    private const int setupTrials = setupAndCloseTrials-1;
     private int totalTrials;
     private int restFrequency;
     private int nbreaks;
@@ -74,9 +74,9 @@ public class ExperimentConfig
         restFrequency = 4    + restbreakOffset;            // Take a rest after this many normal trials
 
         // Figure out how many rest breaks we will have and add them to the trial list
-        nbreaks = (int)(totalTrials / restFrequency);  // round down to whole integer
+        nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials) / restFrequency), 0 );  // round down to whole integer
         totalTrials = totalTrials + nbreaks;
-
+       
         // ... ***HRS add other variables to control here
 
 
@@ -121,6 +121,7 @@ public class ExperimentConfig
         // Note: this lets the other variables take their default values on these starting trials
         trialMazes[0] = "Persistent";
         trialMazes[1] = "StartScreen";
+        trialMazes[2] = "InstructionsScreen";
 
         // Define the final exit state
         trialMazes[totalTrials-1] = "Exit";

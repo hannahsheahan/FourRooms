@@ -496,6 +496,15 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
+    public void ShowInstructions()
+    {
+        NextScene();
+        SceneManager.LoadScene("InstructionsScreen");
+    }
+
+
+    // ********************************************************************** //
+
     public void ExitGame()
     {
         Application.Quit();  // close the application
