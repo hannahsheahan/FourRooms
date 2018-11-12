@@ -27,8 +27,8 @@ public class TrialData
 
     // trial event times
     public float maxMovementTime;
-    public float firstMovementTime;       // time until first star collected
-    public float totalMovementTime;       // time until second star collected
+    public List<float> firstMovementTime = new List<float>();       // time until first star collected (kept as list to account for error trials)
+    public List<float> totalMovementTime = new List<float>();       // time until second star collected
 
     // trial configuration times
     public float preDisplayCueTime;
@@ -41,8 +41,8 @@ public class TrialData
 
 
     // trial error flags
-    public bool FLAG_trialTimeout;        
-    public bool FLAG_trialError;
+    public List<bool> FLAG_trialTimeout = new List<bool>();        
+    public List<bool> FLAG_trialError = new List<bool>();
 
     // Tracking data
     public List<string> stateTransitions = new List<string>();

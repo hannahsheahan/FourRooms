@@ -13,6 +13,7 @@ public class SpawnPlayerLocation : MonoBehaviour {
         // Load the player spawn location from the configured datafile
         transform.position = GameController.control.playerSpawnLocation;
         transform.eulerAngles = GameController.control.playerSpawnOrientation;
+        Debug.Log("Player spawned at: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);
     }
 
 }

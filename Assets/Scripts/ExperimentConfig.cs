@@ -91,7 +91,7 @@ public class ExperimentConfig
         minDwellAtReward    = 0.1f;      
         displayMessageTime  = 1.5f;     
         waitFinishTime      = 1.5f;
-        errorDwellTime      = 1.0f;
+        errorDwellTime      = 1.5f;    // Note: should be at least as long as displayMessageTime
 
 
         // These variables define the environment (are less likely to be played with)
@@ -150,9 +150,16 @@ public class ExperimentConfig
 
                 playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length-1)]; // random start position
                 playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
-                star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length-1)];           // random star1 position
+                star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
 
-                if(doubleRewardTask[trial])
+                // ensure reward doesnt spawn on the player position (later this will be pre-determined)
+                while (playerStartPositions[trial] == star1Positions[trial])
+                {
+                    star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
+                }
+
+
+                if (doubleRewardTask[trial])
                 {   // generate another position for star2
                     star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];     // random star2 position
                 }

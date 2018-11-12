@@ -36,7 +36,6 @@ public class GameController : MonoBehaviour {
     private int currentSceneIndex;
     private string currentSceneName;
 
-
     public Vector3 playerSpawnLocation;
     public Vector3 playerSpawnOrientation;
     public Vector3 star1SpawnLocation;
@@ -57,8 +56,6 @@ public class GameController : MonoBehaviour {
     private AudioSource source;
 
     // Messages to the screen
-    public bool FLAG_trialError;
-    public bool FLAG_trialTimeout;
     private string displayMessage = "noMessage";
     public string textMessage = "";
     public bool displayCue;
@@ -89,6 +86,9 @@ public class GameController : MonoBehaviour {
     public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
 
+    // Error flags
+    public bool FLAG_trialError;
+    public bool FLAG_trialTimeout;
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
@@ -208,7 +208,7 @@ public class GameController : MonoBehaviour {
 
             case STATE_STARTTRIAL:
 
-                StartRecording();
+                StartRecording();    
 
                 // Wait until the goal/target cue appears (will take a TR here)
                 if (stateTimer.ElapsedSeconds() >= preDisplayCueTime)
@@ -318,46 +318,45 @@ public class GameController : MonoBehaviour {
                 CancelInvoke("RecordFSMState");
 
                 // end the trial, save the data
-                //NextScene("tartarus" +  1);   // Just loop this map for now for demo
-                //NextScene("tartarus" + (currentSceneIndex + 1));
                 NextScene();
-                //Debug.Log("The current map is: " + currentSceneIndex + " and the next map will be: " + (currentSceneIndex + 1));
-
                 StateNext(STATE_SETUP);
                 break;
 
             case STATE_TIMEOUT:
 
+                FLAG_trialTimeout = true;
+
                 displayMessage = "timeoutMessage";
                 Debug.Log("Trial timed out: (after " + movementTimer.ElapsedSeconds() + " sec)");
-                FLAG_trialTimeout = true;
 
                 StateNext(STATE_ERROR);
                 break;
 
 
             case STATE_ERROR:
-
+                // Handle error trials by continuing to record data on the same 
+                // trial, so the trial list doesnt get disturbed, but we still record the data
 
                 // ***HRS  Later differentiate between the different errors in save file e.g. timeout
 
                 FLAG_trialError = true;
+
                 firstMovementTime = movementTimer.ElapsedSeconds();
                 totalMovementTime = firstMovementTime;
-
 
                 // Wait a little while in the error state
                 if (stateTimer.ElapsedSeconds() > errorDwellTime)
                 {
                     // stop recording the state transitions for this trial
-                    CancelInvoke("RecordFSMState");
-
-                    // save the data and restart the trial
+                    CancelInvoke("RecordFSMState"); 
                     source.PlayOneShot(errorSound, 1F); 
                     Debug.Log("ERROR STATE");
-                    //NextScene(currentSceneName);
-                    NextScene(); // ***HRS Note that this will just move on to the next scene now rather than repeating . Change later
-                    StateNext(STATE_SETUP);
+
+                    // Restart the trial
+                    NextAttempt();
+                    //NextScene();
+
+                    StateNext(STATE_SETUP);  
                 }
 
                 break;
@@ -389,12 +388,20 @@ public class GameController : MonoBehaviour {
 
     public void NextScene()
     {
-        // Save the current trial data and move to the next scene
-        dataController.AddTrial();  // Create a new trial to store data to
+        // Save the current trial data and move data storage to the next trial
+        dataController.AddTrial();  
         dataController.SaveData();
-
-        //nextScene = scene;
     }
+
+    // ********************************************************************** //
+
+    public void NextAttempt()
+    {
+        // Save the current trial data before the participant tries the trial again
+        dataController.AssembleTrialData();
+        dataController.SaveData();
+    }
+
     // ********************************************************************** //
 
     public string TrialSetup()
@@ -463,7 +470,6 @@ public class GameController : MonoBehaviour {
             InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);
             Debug.Log("Found player.");
         }
-
     }
 
     // ********************************************************************** //
@@ -581,11 +587,9 @@ public class GameController : MonoBehaviour {
     // ********************************************************************** //
 
     public void LavaDeath()
-    {
-        //source.PlayOneShot(fallSound, 1F);
+    {   // Disable the player controller, give an error message, save the data and restart the trial
         displayMessage = "lavaDeathMessage";
         Debug.Log("AAAAAAAAAAAAH! You fell and hit the lava!");
-        // You've fallen into the lava, so disable the player controller, give an error message, save the data and restart the trial
         StateNext(STATE_ERROR);
     }
 

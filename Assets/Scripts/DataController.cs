@@ -140,21 +140,27 @@ public class DataController : MonoBehaviour {
 
     public void AddTrial()
     {
+        AssembleTrialData();
+        currentTrialNumber++; 
+    }
+
+    // ********************************************************************** //
+
+    public void AssembleTrialData()
+    {
         // Transfer over the just-finished trial data
-       
         gameData.allTrialData[currentTrialNumber].trialNumber = currentTrialNumber;
-        gameData.allTrialData[currentTrialNumber].firstMovementTime = GameController.control.firstMovementTime;
-        gameData.allTrialData[currentTrialNumber].totalMovementTime = GameController.control.totalMovementTime;
-
-        gameData.allTrialData[currentTrialNumber].FLAG_trialTimeout = GameController.control.FLAG_trialTimeout;
-        gameData.allTrialData[currentTrialNumber].FLAG_trialError = GameController.control.FLAG_trialError;
-
-        // ** HRS watch out for this - potential for conflicts between pregenerated map sequence and gameController 
         gameData.allTrialData[currentTrialNumber].mapName = GameController.control.GetCurrentMapName();
+
+        // Treat these as list elements so that on trials in which we have multiple attempts we save all the data within that trial
+        gameData.allTrialData[currentTrialNumber].FLAG_trialTimeout.Add(GameController.control.FLAG_trialTimeout);
+        gameData.allTrialData[currentTrialNumber].FLAG_trialError.Add(GameController.control.FLAG_trialError);
+        gameData.allTrialData[currentTrialNumber].firstMovementTime.Add(GameController.control.firstMovementTime);
+        gameData.allTrialData[currentTrialNumber].totalMovementTime.Add(GameController.control.totalMovementTime);
 
 
         // Add in the frame-by-frame data (these should be synchronized)
-        if (PlayerFPS != null)     
+        if (PlayerFPS != null)
         {
             // Add in the state transition data
             List<string> trackedStateData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
@@ -180,7 +186,6 @@ public class DataController : MonoBehaviour {
                 gameData.allTrialData[currentTrialNumber].timeStepTrackingData.Add(trackedTrialData[i]);
             }
         }
-        currentTrialNumber++;
     }
 
     // ********************************************************************** //
