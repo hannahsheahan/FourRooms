@@ -32,8 +32,6 @@ public class GameController : MonoBehaviour {
     // Start-of-trial data
     private TrialData currentTrialData;
     private string currentMapName;
-    private int currentTrialNumber;
-    private int currentSceneIndex;
     private string currentSceneName;
 
     public Vector3 playerSpawnLocation;
@@ -168,8 +166,6 @@ public class GameController : MonoBehaviour {
     private void Update()     // Update() executes once per frame
     {
         UpdateText();
-
-        currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 1; // ***HRS this is a hack but for now it's fine.
 
         switch (State)
         {
@@ -413,7 +409,6 @@ public class GameController : MonoBehaviour {
 
         // Load in the trial data
         currentTrialData = dataController.GetCurrentTrialData();
-        currentTrialNumber = currentTrialData.trialNumber;
         nextScene = currentTrialData.mapName;
 
         // Location and orientation variables

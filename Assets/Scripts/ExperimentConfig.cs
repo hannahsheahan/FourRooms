@@ -70,8 +70,8 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        totalTrials   = 20   + setupAndCloseTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-        restFrequency = 3    + restbreakOffset;            // Take a rest after this many normal trials
+        totalTrials   = 2   + setupAndCloseTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+        restFrequency = 4    + restbreakOffset;            // Take a rest after this many normal trials
 
         // Figure out how many rest breaks we will have and add them to the trial list
         nbreaks = (int)(totalTrials / restFrequency);  // round down to whole integer
@@ -171,7 +171,6 @@ public class ExperimentConfig
         }
 
 
-
         // ... ** HRS add any other randomisation etc you want here
 
     }
@@ -221,7 +220,7 @@ public class ExperimentConfig
         }
 
         // Possible reward types
-        possibleRewardTypes = new string[] { "martini", "beer" };
+        possibleRewardTypes = new string[] { "wine", "cheese" };
     }
 
     // ********************************************************************** //

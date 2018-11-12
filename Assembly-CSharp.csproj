@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\DisplayRewardCue.cs" />
     <Compile Include="Assets\Scripts\EnterParticipantIDScript.cs" />
     <Compile Include="Assets\Scripts\ExitButtonScript.cs" />
+    <Compile Include="Assets\Scripts\ExitExperimentDurationScript.cs" />
     <Compile Include="Assets\Scripts\ExperimentConfig.cs" />
     <Compile Include="Assets\Scripts\filepath.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
