@@ -102,6 +102,7 @@ public class DataController : MonoBehaviour {
         gameData.totalTrials = totalTrials;
         gameData.dataRecordFrequency = config.GetDataFrequency();
         gameData.restbreakDuration = config.restbreakDuration;
+        gameData.getReadyDuration = config.getReadyDuration;
 
         Debug.Log("Total number of trials to load: " + totalTrials);
 
@@ -242,5 +243,13 @@ public class DataController : MonoBehaviour {
     {
         // Supply trial-invariant participant information data
         return gameData.restbreakDuration;
+    }
+
+    // ********************************************************************** //
+
+    public float GetGetReadyDuration()
+    {
+        // Supply trial-invariant participant information data
+        return gameData.getReadyDuration;
     }
 }

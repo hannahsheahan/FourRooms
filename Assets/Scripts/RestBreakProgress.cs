@@ -2,12 +2,11 @@
 using UnityEngine.UI;
 
 public class RestBreakProgress : MonoBehaviour {
-    // public GameObject LoadingText;
+   
     public Text ProgressIndicator;
     public Image LoadingBar;
-    float currentValue;
-    public float speed;
-    public int secondsLeft;
+    private float currentValue;
+    private int secondsLeft;
 
     // ********************************************************************** //
 
@@ -19,18 +18,13 @@ public class RestBreakProgress : MonoBehaviour {
     // ********************************************************************** //
 
     void Update () {
+
         currentValue = GameController.control.elapsedRestbreakTime / GameController.control.restbreakDuration;
         secondsLeft = (int)Mathf.Round((GameController.control.restbreakDuration - GameController.control.elapsedRestbreakTime));
         if (currentValue < 100) 
         {
-        //   currentValue += speed * Time.deltaTime;
-             ProgressIndicator.text = (secondsLeft).ToString();
-        // LoadingText.SetActive (true);
+            ProgressIndicator.text = (secondsLeft).ToString();
         }
-        // else {
-        //     LoadingText.SetActive (false);
-        //     ProgressIndicator.text = "Done";
-        //}
         LoadingBar.fillAmount = currentValue; 
     }
     // ********************************************************************** //

@@ -22,8 +22,10 @@ public class ExperimentConfig
     // Scenes/mazes
     private const int setupAndCloseTrials = 4;     // Note: there must be 3 extra trials in trial list to account for Persistent, StartScreen and Exit 'trials'.
     private const int restbreakOffset = 1;         // Note: makes specifying restbreaks more intuitive
+    private const int getReadyTrial = 1;           // Note: this is the get ready screen after the practice
     private const int setupTrials = setupAndCloseTrials-1;
     private int totalTrials;
+    private int practiceTrials;
     private int restFrequency;
     private int nbreaks;
     private string[] trialMazes;
@@ -61,6 +63,7 @@ public class ExperimentConfig
     public float waitFinishTime;
     public float errorDwellTime;
     public float restbreakDuration;
+    public float getReadyDuration;
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
 
 
@@ -70,11 +73,12 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        totalTrials   = 2   + setupAndCloseTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-        restFrequency = 4    + restbreakOffset;            // Take a rest after this many normal trials
+        practiceTrials = 3   + getReadyTrial;
+        totalTrials    = 2   + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+        restFrequency  = 4    + restbreakOffset;            // Take a rest after this many normal trials
 
         // Figure out how many rest breaks we will have and add them to the trial list
-        nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials) / restFrequency), 0 );  // round down to whole integer
+        nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials - practiceTrials) / restFrequency), 0 );  // round down to whole integer
         totalTrials = totalTrials + nbreaks;
        
         // ... ***HRS add other variables to control here
@@ -83,6 +87,7 @@ public class ExperimentConfig
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.04f;
         restbreakDuration   = 5.0f;    // how long are the imposed rest breaks?
+        getReadyDuration    = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         maxMovementTime     = 15.0f;
         preDisplayCueTime   = 1.5f;    // will take a TR during this period
@@ -122,22 +127,43 @@ public class ExperimentConfig
         trialMazes[0] = "Persistent";
         trialMazes[1] = "StartScreen";
         trialMazes[2] = "InstructionsScreen";
+        trialMazes[setupTrials + practiceTrials-1] = "GetReady";
+
+        // Add in the practice/familiarisation trials in an open arena
+        for (int trial = setupTrials; trial < setupTrials + practiceTrials-1; trial++)
+        {
+            trialMazes[trial] = "Practice";
+
+            // Generate some random practice start positions and rewards
+            doubleRewardTask[trial] = false;
+            rewardTypes[trial] = "cheese";
+            playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length - 1)]; // random start position
+            playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
+            star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random reward position
+
+            // ensure reward doesnt spawn on the player position
+            while (playerStartPositions[trial] == star1Positions[trial])
+            {
+                star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
+            }
+        }
 
         // Define the final exit state
         trialMazes[totalTrials-1] = "Exit";
 
         // Let's make the trial content completely random for now
-        for (int trial = setupTrials; trial < totalTrials-1; trial++)
+        for (int trial = setupTrials+ practiceTrials; trial < totalTrials-1; trial++)
         {
             // Deal with restbreaks and regular trials
-            if (  (trial - setupTrials + 1) % restFrequency == 0)  // Time for a rest break
+            if (  (trial - setupTrials - practiceTrials + 1) % restFrequency == 0)  // Time for a rest break
             {  
                 trialMazes[trial] = "RestBreak";
             }
             else                                    // It's a regular trial
             {
-                // For now, change the reward type every second trial
-                if (trial % 2 == 0)          
+                // For now, change the reward type every second trial (if mod 2)
+                //if (trial % 1 == 0)          
+                if (trial<0)  // for now just fix as 'always cheese'
                 {
                     rewardTypes[trial] = "wine";    // use single reward type for now
                 }

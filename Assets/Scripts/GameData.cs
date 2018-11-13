@@ -8,6 +8,7 @@ public class GameData
     public int totalTrials;
     public float dataRecordFrequency;
     public float restbreakDuration;
+    public float getReadyDuration;
 
     public TrialData[] allTrialData;
 

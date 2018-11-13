@@ -66,6 +66,7 @@ public class GameController : MonoBehaviour {
     private Timer movementTimer;
     public Timer messageTimer;
     private Timer restbreakTimer;
+    private Timer getReadyTimer;
     public float firstMovementTime;
     public float totalMovementTime;
     public float totalExperimentTime;
@@ -80,6 +81,8 @@ public class GameController : MonoBehaviour {
     public float errorDwellTime;
     public float restbreakDuration;
     public float elapsedRestbreakTime;
+    public float getReadyTime;
+    public float getReadyDuration;
 
     public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
@@ -105,10 +108,11 @@ public class GameController : MonoBehaviour {
     public const int STATE_TIMEOUT     = 13;
     public const int STATE_ERROR       = 14;
     public const int STATE_REST        = 15;
-    public const int STATE_EXIT        = 16;
-    public const int STATE_MAX         = 17;
+    public const int STATE_GETREADY    = 16;
+    public const int STATE_EXIT        = 17;
+    public const int STATE_MAX         = 18;
 
-    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","Exit","Max" };
+    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","Exit","GetReady","Max" };
     public int State;
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
 
@@ -141,7 +145,8 @@ public class GameController : MonoBehaviour {
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
         Debug.Log("File path: " + filepath);
         dataRecordFrequency = dataController.GetRecordFrequency();
-        restbreakDuration = dataController.GetRestBreakDuration();   
+        restbreakDuration = dataController.GetRestBreakDuration();
+        getReadyDuration = dataController.GetGetReadyDuration();
 
         // Initialise FSM State
         State = STATE_STARTSCREEN;
@@ -152,6 +157,7 @@ public class GameController : MonoBehaviour {
         movementTimer = new Timer();
         messageTimer = new Timer();
         restbreakTimer = new Timer();
+        getReadyTimer = new Timer();
         stateTransitions.Clear();
 
         // Ensure cue images are off
@@ -186,6 +192,11 @@ public class GameController : MonoBehaviour {
                         rewardVisible = false;
                         StateNext(STATE_STARTTRIAL);
 
+                        break;
+
+                    case "GetReady":
+                        getReadyTimer.Reset();
+                        StateNext(STATE_GETREADY);
                         break;
 
                     case "RestBreak":
@@ -352,12 +363,25 @@ public class GameController : MonoBehaviour {
                 }
                 break;
 
-
+          
             case STATE_REST:
 
                 elapsedRestbreakTime = restbreakTimer.ElapsedSeconds();
 
                 if (elapsedRestbreakTime > restbreakDuration)
+                {
+                    NextScene();
+                    StateNext(STATE_SETUP);   // move on to the next trial
+                    break;
+                }
+                break;
+
+
+            case STATE_GETREADY:
+
+                getReadyTime = getReadyTimer.ElapsedSeconds();
+
+                if (getReadyTime > getReadyDuration)
                 {
                     NextScene();
                     StateNext(STATE_SETUP);   // move on to the next trial
@@ -429,7 +453,7 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene(nextScene);
 
 
-        if ( (nextScene == "Exit") || (nextScene == "RestBreak") )
+        if ( (nextScene == "Exit") || (nextScene == "RestBreak") || (nextScene == "GetReady"))
         {
             return nextScene;   // we don't want to record data and do the FSM transitions during the exit and rest break scenes
         }
