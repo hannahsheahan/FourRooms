@@ -1,12 +1,10 @@
 ﻿<Properties StartupConfiguration="{7F1C645E-A8A1-739D-9CEE-42785020E511}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ExperimentStartCountdown.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameController.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameController.cs" Line="382" Column="29" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="602" Column="63" />
       <File FileName="Assets/Scripts/DataController.cs" Line="101" Column="49" />
-      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="90" Column="25" />
-      <File FileName="Assets/Scripts/DisplayRewardCue.cs" Line="27" Column="52" />
-      <File FileName="Assets/Scripts/ExperimentStartCountdown.cs" Line="11" Column="1" />
+      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="99" Column="34" />
       <File FileName="Assets/Scripts/GameData.cs" Line="11" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>

@@ -243,8 +243,8 @@ public class GameController : MonoBehaviour {
                 // Wait for the go audio cue (will take a TR here)
                 if (stateTimer.ElapsedSeconds() >= goCueDelay)
                 {
-                    rewardVisible = true;     // make the reward itself appear in the environment
                     source.PlayOneShot(goCueSound, 1F);
+                    rewardVisible = true;     // make the reward itself appear in the environment
                     StateNext(STATE_GO);
                 }
                 break;
@@ -342,24 +342,26 @@ public class GameController : MonoBehaviour {
 
             case STATE_ERROR:
                 // Handle error trials by continuing to record data on the same trial
+                if (FLAG_trialError == false)
+                {
+                    source.PlayOneShot(errorSound, 1F);
+                    displayMessage = "restartTrialMessage";
+                }
                 FLAG_trialError = true;
 
                 firstMovementTime = movementTimer.ElapsedSeconds();
                 totalMovementTime = firstMovementTime;
 
-                // Wait a little while in the error state
+                // Wait a little while in the error state to display the error message
                 if (stateTimer.ElapsedSeconds() > errorDwellTime)
                 {
                     // stop recording the state transitions for this trial
                     CancelInvoke("RecordFSMState"); 
-                    source.PlayOneShot(errorSound, 1F); 
-                    Debug.Log("ERROR STATE");
 
                     // Restart the trial
-                    displayMessage = "restartTrialMessage";
                     NextAttempt();
+                    StateNext(STATE_SETUP);
 
-                    StateNext(STATE_SETUP);  
                 }
                 break;
 
@@ -595,10 +597,9 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    public void LavaDeath()
+    public void FallDeath()
     {   // Disable the player controller, give an error message, save the data and restart the trial
-        displayMessage = "lavaDeathMessage";
-        Debug.Log("AAAAAAAAAAAAH! You fell and hit the lava!");
+        Debug.Log("AAAAAAAAAAAAH! Player fell off the platform.");
         StateNext(STATE_ERROR);
     }
 
