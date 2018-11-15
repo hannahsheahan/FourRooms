@@ -1,11 +1,9 @@
 OSXStandalone
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/Builds/resolution_test.app
+/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/Builds/foggy_cheese.app
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/StartScreen.unity
-Assets/Scenes/tartarus1.unity
-Assets/Scenes/tartarus2.unity
 Assets/Scenes/Exit.unity
 Assets/Scenes/RestBreak.unity
 Assets/Scenes/FourRooms_wine.unity
@@ -310,7 +308,7 @@ df03e2ffa8b3251f71a6c2235d50c66b Assembly-CSharp-firstpass.dll:UnityStandardAsse
 1ea93faee784a05b93bf0db7ee20c422 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.EdgeDetection
 93307bd34e39d73fd24e00ec39c25a91 Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 985c690377822f41654d5f68210987d9 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ColorCorrectionLookup
+3d0e49a92f5f8f56cbdf33270648e8c5 Assembly-CSharp.dll:.ExperimentStartCountdown
 f59ca19b2477a0f8545617e6a1dec4b4 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Tonemapping
 36ed8d92a07a53bf383bc90e377cc388 Assembly-CSharp-firstpass.dll:UnityStandardAssets._2D.PlatformerCharacter2D
 695c9335429d4798b6f74ca73c042ff4 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.AutoMobileShaderSwitch
-3d0e49a92f5f8f56cbdf33270648e8c5 Assembly-CSharp.dll:.ExperimentStartCountdown
