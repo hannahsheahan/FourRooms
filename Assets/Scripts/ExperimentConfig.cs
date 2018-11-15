@@ -62,11 +62,11 @@ public class ExperimentConfig
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float maxMovementTime;
     public float preDisplayCueTime;
+    public float goalHitPauseTime;
     public float displayCueTime;
     public float goCueDelay;
     public float minDwellAtReward;
     public float displayMessageTime;
-    public float waitFinishTime;
     public float errorDwellTime;
     public float restbreakDuration;
     public float getReadyDuration;
@@ -92,16 +92,17 @@ public class ExperimentConfig
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.04f;
         restbreakDuration   = 5.0f;    // how long are the imposed rest breaks?
-        getReadyDuration    = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
+        getReadyDuration    = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         maxMovementTime     = 30.0f;
         preDisplayCueTime   = 1.5f;    // will take a TR during this period
         displayCueTime      = 2.0f;
         goCueDelay          = 1.5f;    // will take a TR during this period
+        goalHitPauseTime    = 1.5f;    // we will take a TR during this period (this happens twice on 2 reward trials)
         minDwellAtReward    = 0.1f;      
         displayMessageTime  = 1.5f;     
-        waitFinishTime      = 1.5f;
         errorDwellTime      = 1.5f;    // Note: should be at least as long as displayMessageTime
+
 
         // These variables define the environment (are less likely to be played with)
         roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code

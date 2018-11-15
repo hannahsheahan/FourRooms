@@ -75,9 +75,9 @@ public class GameController : MonoBehaviour {
     private float preDisplayCueTime;
     private float goCueDelay;
     private float displayCueTime;
+    private float goalHitPauseTime;
     public  float minDwellAtReward; 
     public float displayMessageTime; 
-    public float waitFinishTime;
     public float errorDwellTime;
     public float restbreakDuration;
     public float elapsedRestbreakTime;
@@ -286,10 +286,17 @@ public class GameController : MonoBehaviour {
 
             case STATE_STAR1FOUND:
 
-                starFound = false;  // reset the starFound trigger ready to collect the next star
-                activeStarSpawnLocation = star2SpawnLocation;
+                // disable the player control and reset the starFound trigger ready to collect the next star
+                starFound = false; 
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = false; 
 
-                StateNext(STATE_MOVING2);
+                // pause here so that we can take a TR
+                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)  // the trial should timeout
+                {
+                    activeStarSpawnLocation = star2SpawnLocation;
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = true; // let the player move again
+                    StateNext(STATE_MOVING2);
+                }
                 break;
 
 
@@ -313,7 +320,7 @@ public class GameController : MonoBehaviour {
                 displayMessage = "wellDoneMessage";      // display a congratulatory message
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
 
-                if (stateTimer.ElapsedSeconds() > waitFinishTime)
+                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
                 {
                     StateNext(STATE_FINISH);
                 }
@@ -443,10 +450,10 @@ public class GameController : MonoBehaviour {
         maxMovementTime = currentTrialData.maxMovementTime;
         preDisplayCueTime = currentTrialData.preDisplayCueTime;
         displayCueTime = currentTrialData.displayCueTime;
+        goalHitPauseTime = currentTrialData.goalHitPauseTime;
         goCueDelay      = currentTrialData.goCueDelay;
         minDwellAtReward  = currentTrialData.minDwellAtReward;
         displayMessageTime = currentTrialData.displayMessageTime;
-        waitFinishTime  = currentTrialData.waitFinishTime;
         errorDwellTime  = currentTrialData.errorDwellTime;
         rewardType      = currentTrialData.rewardType;
 

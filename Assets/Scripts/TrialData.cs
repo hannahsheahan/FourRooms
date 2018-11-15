@@ -36,8 +36,8 @@ public class TrialData
     public float goCueDelay;
     public float minDwellAtReward;      
     public float displayMessageTime;    
-    public float waitFinishTime;
     public float errorDwellTime;
+    public float goalHitPauseTime;
 
 
     // trial error flags
