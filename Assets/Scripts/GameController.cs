@@ -27,7 +27,6 @@ public class GameController : MonoBehaviour {
     private GameObject PlayerFPS;
     private GameData currentGameData;
     private string filepath;
-    private bool doubleRewardTask = false;       // later set this in the config file. If twoRewardTask == false, there is just one star to collect on each trial
 
     // Start-of-trial data
     private TrialData currentTrialData;
@@ -38,7 +37,8 @@ public class GameController : MonoBehaviour {
     public Vector3 playerSpawnOrientation;
     public Vector3 star1SpawnLocation;
     public Vector3 star2SpawnLocation;
-    public Vector3 activeStarSpawnLocation;   // because we have 2 stars, use this to hold the location of the current one (refer to in the star prefab)
+    public Vector3 activeStarSpawnLocation;   // this is obsolete: only used for if we have sequential order on reward collection
+    public bool doubleRewardTask;
 
     private string nextScene;
 
@@ -58,7 +58,8 @@ public class GameController : MonoBehaviour {
     public string textMessage = "";
     public bool displayCue;
     public string rewardType;
-    public bool rewardVisible;
+    public bool reward1Visible;
+    public bool reward2Visible;
 
     // Timer variables
     private Timer experimentTimer;
@@ -76,6 +77,7 @@ public class GameController : MonoBehaviour {
     private float goCueDelay;
     private float displayCueTime;
     private float goalHitPauseTime;
+    private float finalGoalHitPauseTime;
     public  float minDwellAtReward; 
     public float displayMessageTime; 
     public float errorDwellTime;
@@ -162,8 +164,10 @@ public class GameController : MonoBehaviour {
 
         // Ensure cue images are off
         displayCue = false;
+        reward1Visible = false;
+        reward2Visible = false;
 
-        StartExperiment();  
+    StartExperiment();  
 
     }
 
@@ -189,7 +193,8 @@ public class GameController : MonoBehaviour {
                 {
                     case "StartTrial":
                         // ensure the reward is hidden from sight
-                        rewardVisible = false;
+                        reward1Visible = false;
+                        reward2Visible = false;
                         StateNext(STATE_STARTTRIAL);
 
                         break;
@@ -214,6 +219,7 @@ public class GameController : MonoBehaviour {
                 break;
 
             case STATE_STARTTRIAL:
+
 
                 StartRecording();    
 
@@ -241,10 +247,12 @@ public class GameController : MonoBehaviour {
 
             case STATE_DELAY:
                 // Wait for the go audio cue (will take a TR here)
+
                 if (stateTimer.ElapsedSeconds() >= goCueDelay)
                 {
                     source.PlayOneShot(goCueSound, 1F);
-                    rewardVisible = true;     // make the reward itself appear in the environment
+                    reward1Visible = true;     // make the reward itself appear in the environment
+                    reward2Visible = true;     // make the reward itself appear in the environment
                     StateNext(STATE_GO);
                 }
                 break;
@@ -288,12 +296,12 @@ public class GameController : MonoBehaviour {
 
                 // disable the player control and reset the starFound trigger ready to collect the next star
                 starFound = false; 
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false; 
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
 
                 // pause here so that we can take a TR
                 if (stateTimer.ElapsedSeconds() > goalHitPauseTime)  // the trial should timeout
                 {
-                    activeStarSpawnLocation = star2SpawnLocation;
+                    //activeStarSpawnLocation = star2SpawnLocation;
                     PlayerFPS.GetComponent<FirstPersonController>().enabled = true; // let the player move again
                     StateNext(STATE_MOVING2);
                 }
@@ -320,7 +328,7 @@ public class GameController : MonoBehaviour {
                 displayMessage = "wellDoneMessage";      // display a congratulatory message
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
 
-                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
+                if (stateTimer.ElapsedSeconds() > finalGoalHitPauseTime)
                 {
                     StateNext(STATE_FINISH);
                 }
@@ -444,13 +452,16 @@ public class GameController : MonoBehaviour {
         playerSpawnOrientation  = currentTrialData.playerSpawnOrientation;
         star1SpawnLocation      = currentTrialData.star1Location;
         star2SpawnLocation      = currentTrialData.star2Location;
-        activeStarSpawnLocation = star1SpawnLocation;
+        doubleRewardTask        = currentTrialData.doubleRewardTask;
+
+        //activeStarSpawnLocation = star1SpawnLocation;
 
         // Timer variables
         maxMovementTime = currentTrialData.maxMovementTime;
         preDisplayCueTime = currentTrialData.preDisplayCueTime;
         displayCueTime = currentTrialData.displayCueTime;
         goalHitPauseTime = currentTrialData.goalHitPauseTime;
+        finalGoalHitPauseTime = currentTrialData.finalGoalHitPauseTime;
         goCueDelay      = currentTrialData.goCueDelay;
         minDwellAtReward  = currentTrialData.minDwellAtReward;
         displayMessageTime = currentTrialData.displayMessageTime;
@@ -615,6 +626,27 @@ public class GameController : MonoBehaviour {
     public void StarFound()
     {
         starFound = true; // The player has been at the star for minDwellAtReward seconds
+    }
+
+    // ********************************************************************** //
+
+    public void DisableRewardByIndex(int index)
+    {
+        // Disable whichever of the two rewards was just hit. Called from RewardHitScript.cs
+        switch (index)
+        {
+            case 1:
+                reward1Visible = false;
+                break;
+
+            case 2:
+                reward2Visible = false;
+                break;
+            default:
+                reward1Visible = false;
+                reward2Visible = false;
+                break;
+        }
     }
 
     // ********************************************************************** //

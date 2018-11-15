@@ -38,6 +38,7 @@ public class TrialData
     public float displayMessageTime;    
     public float errorDwellTime;
     public float goalHitPauseTime;
+    public float finalGoalHitPauseTime;
 
 
     // trial error flags

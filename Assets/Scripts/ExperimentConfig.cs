@@ -63,6 +63,7 @@ public class ExperimentConfig
     public float maxMovementTime;
     public float preDisplayCueTime;
     public float goalHitPauseTime;
+    public float finalGoalHitPauseTime;
     public float displayCueTime;
     public float goCueDelay;
     public float minDwellAtReward;
@@ -79,9 +80,9 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        practiceTrials = 0   + getReadyTrial;
-        totalTrials    = 10   + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-        restFrequency  = 4    + restbreakOffset;            // Take a rest after this many normal trials
+        practiceTrials     = 0   + getReadyTrial;
+        totalTrials        = 10  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+        restFrequency      = 4   + restbreakOffset;            // Take a rest after this many normal trials
 
         // Figure out how many rest breaks we will have and add them to the trial list
         nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials - practiceTrials) / restFrequency), 0 );  // round down to whole integer
@@ -94,20 +95,22 @@ public class ExperimentConfig
         restbreakDuration   = 5.0f;    // how long are the imposed rest breaks?
         getReadyDuration    = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
-        maxMovementTime     = 30.0f;
-        preDisplayCueTime   = 1.5f;    // will take a TR during this period
-        displayCueTime      = 2.0f;
-        goCueDelay          = 1.5f;    // will take a TR during this period
-        goalHitPauseTime    = 1.5f;    // we will take a TR during this period (this happens twice on 2 reward trials)
-        minDwellAtReward    = 0.1f;      
-        displayMessageTime  = 1.5f;     
-        errorDwellTime      = 1.5f;    // Note: should be at least as long as displayMessageTime
+        // Note that when used, jitters ADD to these values - hence they are minimums
+        maxMovementTime        = 40.0f;   // time allowed to collect both rewards, incl. wait after hitting first one
+        preDisplayCueTime      = 1.5f;    // will take a TR during this period
+        displayCueTime         = 2.0f;
+        goCueDelay             = 1.5f;    // will take a TR during this period
+        goalHitPauseTime       = 2.0f;    // we will take a TR during this period
+        finalGoalHitPauseTime  = 2.0f;    // we will take a TR during this period (but should be independent of first goal hit time in case we want to jitter)
+        minDwellAtReward       = 0.1f;      
+        displayMessageTime     = 1.5f;     
+        errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
 
 
         // These variables define the environment (are less likely to be played with)
         roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
-        starYposition   = 73.5f;
+        starYposition   = 74.0f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
 
 
@@ -136,7 +139,7 @@ public class ExperimentConfig
             trialMazes[trial] = "Practice";
 
             // Generate some random practice start positions and rewards
-            doubleRewardTask[trial] = false;
+            doubleRewardTask[trial] = true;
             rewardTypes[trial] = "cheese";
             playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length - 1)]; // random start position
             playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
@@ -146,6 +149,22 @@ public class ExperimentConfig
             while (playerStartPositions[trial] == star1Positions[trial])
             {
                 star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
+            }
+
+            // One star, or two?
+            if (doubleRewardTask[trial])
+            {   // generate another position for star2
+                star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];     // random star2 position
+
+                // ensure rewards do not spawn on top of each other, or on top of player position
+                while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
+                {
+                    star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];
+                }
+            }
+            else
+            {   // single star to be collected
+                star2Positions[trial] = star1Positions[trial];
             }
         }
 
@@ -276,7 +295,7 @@ public class ExperimentConfig
                 }
 
                 trialMazes[trial] = "FourRooms_" + rewardTypes[trial];   // set this to stay the same, for now
-                doubleRewardTask[trial] = false;   // use only single star trials for now
+                doubleRewardTask[trial] = true;   // use only single star trials for now
 
                 playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length - 1)]; // random start position
                 playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
@@ -288,15 +307,22 @@ public class ExperimentConfig
                     star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
                 }
 
-
+                // One star, or two?
                 if (doubleRewardTask[trial])
                 {   // generate another position for star2
                     star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];     // random star2 position
+
+                    // ensure rewards do not spawn on top of each other, or on top of player position
+                    while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
+                    {
+                        star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];
+                    }
                 }
                 else
                 {   // single star to be collected
                     star2Positions[trial] = star1Positions[trial];
                 }
+
             }
         }
     }
@@ -366,6 +392,14 @@ public class ExperimentConfig
 
     }
 
+    // ********************************************************************** //
+
+    public float JitterTime(float time)
+    {
+        // jitter uniform-randomly from the min value, to 50% higher than the min value
+        System.Random rnd = new System.Random();
+        return time + (0.5f*time)* (float)rnd.NextDouble();
+    }
 
     // ********************************************************************** //
     // Get() and Set() Methods

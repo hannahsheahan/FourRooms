@@ -11,6 +11,7 @@ public class RewardHitScript : MonoBehaviour
 {
     private Timer starTimer;
     private bool starHit = false;
+    public int rewardIndex;
 
     // ********************************************************************** //
 
@@ -35,6 +36,7 @@ public class RewardHitScript : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         starHit = false;
+
     }
 
     // ********************************************************************** //
@@ -45,6 +47,9 @@ public class RewardHitScript : MonoBehaviour
         {
             GameController.control.StarFound();
             starHit = false;
+
+            Debug.Log("Should be disabling reward now");
+            GameController.control.DisableRewardByIndex(rewardIndex);
         }
     }
     // ********************************************************************** //
