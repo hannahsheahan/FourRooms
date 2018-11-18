@@ -19,8 +19,6 @@ public class RewardHitScript : MonoBehaviour
     {
         starTimer = new Timer();
         starTimer.Reset();
-       
-        // ***HRS Set location of the star based on datafile (eventually), or for now, a randomisation process
     }
 
     // ********************************************************************** //
@@ -36,7 +34,6 @@ public class RewardHitScript : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         starHit = false;
-
     }
 
     // ********************************************************************** //

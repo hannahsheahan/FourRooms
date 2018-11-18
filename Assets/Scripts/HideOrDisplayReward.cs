@@ -25,6 +25,5 @@ public class HideOrDisplayReward : MonoBehaviour {
                 reward.SetActive(GameController.control.reward2Visible);
                 break;
         }
-
     }
 }

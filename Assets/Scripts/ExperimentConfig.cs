@@ -20,7 +20,7 @@ public class ExperimentConfig
 
 
     // Scenes/mazes
-    private const int setupAndCloseTrials = 4;     // Note: there must be 3 extra trials in trial list to account for Persistent, StartScreen and Exit 'trials'.
+    private const int setupAndCloseTrials = 5;     // Note: there must be 5 extra trials in trial list to account for Persistent, StartScreen, ConsentScreen, Instructions and Exit 'trials'.
     private const int restbreakOffset = 1;         // Note: makes specifying restbreaks more intuitive
     private const int getReadyTrial = 1;           // Note: this is the get ready screen after the practice
     private const int setupTrials = setupAndCloseTrials-1;
@@ -80,7 +80,7 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        practiceTrials     = 0   + getReadyTrial;
+        practiceTrials     = 2   + getReadyTrial;
         totalTrials        = 10  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
         restFrequency      = 4   + restbreakOffset;            // Take a rest after this many normal trials
 
@@ -88,15 +88,13 @@ public class ExperimentConfig
         nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials - practiceTrials) / restFrequency), 0 );  // round down to whole integer
         totalTrials = totalTrials + nbreaks;
        
-
-
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.04f;
         restbreakDuration   = 5.0f;    // how long are the imposed rest breaks?
         getReadyDuration    = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
-        maxMovementTime        = 40.0f;   // time allowed to collect both rewards, incl. wait after hitting first one
+        maxMovementTime        = 60.0f;   // time allowed to collect both rewards, incl. wait after hitting first one
         preDisplayCueTime      = 1.5f;    // will take a TR during this period
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    // will take a TR during this period
@@ -110,7 +108,7 @@ public class ExperimentConfig
         // These variables define the environment (are less likely to be played with)
         roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
-        starYposition   = 74.0f;
+        starYposition   = 73.5f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
 
 
@@ -130,7 +128,8 @@ public class ExperimentConfig
         // Define the start up menu trials.   Note:  the other variables take their default values on these trials
         trialMazes[0] = "Persistent";
         trialMazes[1] = "StartScreen";
-        trialMazes[2] = "InstructionsScreen";
+        trialMazes[2] = "ConsentScreen";
+        trialMazes[3] = "InstructionsScreen";
         trialMazes[setupTrials + practiceTrials-1] = "GetReady";
 
         // Add in the practice/familiarisation trials in an open arena

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 using UnityStandardAssets.Characters.FirstPerson;
 using System;
 using System.Globalization;
@@ -19,7 +20,7 @@ public class DataController : MonoBehaviour {
 
     public GameData gameData;          // data for the entire game, including all trials
     public ExperimentConfig config;   // experiment details, trial sequence, randomisation etc
-    public ParticipantData participantData;
+    //public ParticipantData participantData;
     private GameObject PlayerFPS;
 
     public int currentTrialNumber = 0;
@@ -30,6 +31,9 @@ public class DataController : MonoBehaviour {
     public DateTime dateTime = DateTime.Now;
     public string stringDateTime; 
     public string filePath;
+    public string fileName;
+    public string dataAsJson;   // can probably make private later
+    public bool writingDataProperly = true;
 
     // Loading trial configuration variables
     public int totalTrials;
@@ -71,7 +75,8 @@ public class DataController : MonoBehaviour {
     private void DataSetup()
     {
         stringDateTime = dateTime.ToString("dd-MM-yy", DateTimeFormatInfo.InvariantInfo) + '_' + dateTime.ToString("t", DateTimeFormatInfo.InvariantInfo);
-        filePath = baseFilePath + "dataFile_" + stringDateTime + ".json";  // later add a timestamp number to this so files arent overwritten
+        fileName = "dataFile_" + stringDateTime + ".json";
+        filePath = baseFilePath + fileName;  // later add a timestamp number to this so files arent overwritten
         if (File.Exists(filePath))
         {
             Debug.Log("Warning: writing over existing datafile.");
@@ -81,10 +86,77 @@ public class DataController : MonoBehaviour {
 
     public void SaveData()
     {
-        // do the saving to the json file here (it should taking the data from fps.coords from the trackingScript)
+        // convert the data to JSON format
         Debug.Log("Saving trial.");
-        string dataAsJson = JsonUtility.ToJson(gameData);
-        File.WriteAllText(filePath, dataAsJson);
+        dataAsJson = JsonUtility.ToJson(gameData);
+
+        WWWForm webData = new WWWForm();
+        webData.AddField("gameData", dataAsJson);
+        webData.AddField("fileName", fileName);
+
+        // v1.0 - local file saving
+        //File.WriteAllText(filePath, dataAsJson);
+
+        //-----------
+        // v2.0 - local server testing (using MAMP)
+        //WWW www = new WWW("http://localhost:8888/fromunity.php", webData);
+
+        //-----------
+        // v2.1 - web server (Summerfield lab one)
+        WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
+
+        StartCoroutine(WaitForRequest(www));
+    }
+
+    // ********************************************************************** //
+
+    // codesource for Post(): https://qiita.com/mattak/items/d01926bc57f8ab1f569a  (received 17/11/2018)
+   
+    IEnumerator Post(string url, string bodyJsonString)
+    {
+        writingDataProperly = true;
+        Debug.Log("Post coroutine started.");
+
+        var request = new UnityWebRequest(url, "POST");
+        byte[] dataRaw = System.Text.Encoding.UTF8.GetBytes(bodyJsonString);
+        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(dataRaw);
+        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        //yield return request.SendWebRequest();
+        yield return request.Send();
+
+        Debug.Log("Status Code: " + request.responseCode);   // Note: code 200 means it has succeeded
+
+        if (request.error != null)
+        {
+            Debug.Log("There was a request error.");
+            writingDataProperly = false;
+        }
+        else
+        {
+            writingDataProperly = true;
+        }
+
+
+    }
+
+    // ********************************************************************** //
+
+    IEnumerator WaitForRequest(WWW data)
+    {
+        writingDataProperly = true;
+
+        yield return data;
+        if (data.error != null)
+        {
+            writingDataProperly = false;
+        }
+        else
+        {
+            Debug.Log(data.text);
+            writingDataProperly = true;
+        }
     }
 
     // ********************************************************************** //
@@ -219,17 +291,17 @@ public class DataController : MonoBehaviour {
         if (ID != "")  // you're not allowed to give a fake ID
         {
             participantIDSet = true;
-            gameData.participantData.id = ID;
+            gameData.participantID = ID;
         }
     }
 
     // ********************************************************************** //
-
-    public ParticipantData GetParticipantData()
-    {
-        // Supply trial-invariant participant information data
-        return gameData.participantData;
-    }
+    // Note: this is obsolete, don't need separate class for this in datafile.
+    //public ParticipantData GetParticipantData()
+    // {
+    //    // Supply trial-invariant participant information data
+    //    return gameData.participantData;
+    //}
 
     // ********************************************************************** //
     // This is obsolete since filePath is public

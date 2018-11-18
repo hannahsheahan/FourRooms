@@ -502,7 +502,7 @@ public class GameController : MonoBehaviour {
             stateTransitions.Add("Game State");
             RecordFSMState();                              // catch the current state before the update
             InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);
-            Debug.Log("Found player.");
+            //Debug.Log("Found player.");
         }
     }
 
@@ -526,10 +526,18 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    public void ShowInstructions()
+    public void ConsentClicked()
     {
         NextScene();
         SceneManager.LoadScene("InstructionsScreen");
+    }
+
+    // ********************************************************************** //
+
+    public void ShowConsentForm()
+    {
+        NextScene();
+        SceneManager.LoadScene("ConsentScreen");
     }
 
     // ********************************************************************** //
@@ -563,7 +571,15 @@ public class GameController : MonoBehaviour {
 
     private void UpdateText()
     {
-        // Display the right text message to the player
+
+        // Display any major errors that require the player to restart the experiment
+        if (!dataController.writingDataProperly)
+        {
+            displayMessage = "dataWritingError";
+        }
+
+
+        // Display regular game messages to the player
         switch (displayMessage)
         {
             case "noMessage":
@@ -609,6 +625,10 @@ public class GameController : MonoBehaviour {
                 {
                     displayMessage = "noMessage"; // reset the message
                 }
+                break;
+
+            case "dataWritingError":
+                textMessage = "There was an error sending data to the web server.  Please exit.";
                 break;
         }  
     }

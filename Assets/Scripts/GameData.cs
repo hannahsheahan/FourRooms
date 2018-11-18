@@ -4,7 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class GameData
 {
-    public ParticipantData participantData;
+    public string participantID;
     public int totalTrials;
     public float dataRecordFrequency;
     public float restbreakDuration;

@@ -12,6 +12,8 @@ public class DisplayRewardCue : MonoBehaviour
     public Sprite cheeseImage;
     private string cue;
 
+    // ********************************************************************** //
+
     void Start()
     {
         //Fetch the Image from the GameObject
@@ -19,9 +21,10 @@ public class DisplayRewardCue : MonoBehaviour
         rewardImage.enabled = false;
     }
 
+    // ********************************************************************** //
+
     void Update()
     {
-
         if ( GameController.control.displayCue )
         {
             cue = GameController.control.rewardType;
@@ -40,6 +43,8 @@ public class DisplayRewardCue : MonoBehaviour
         {
             rewardImage.enabled = false;
         }
-
     }
+
+    // ********************************************************************** //
+
 }

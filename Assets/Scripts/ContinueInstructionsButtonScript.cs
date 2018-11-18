@@ -32,9 +32,16 @@ public class ContinueInstructionsButtonScript : MonoBehaviour
         if (dataController.participantIDSet)  // the player has entered a name (this will avoid multiple datafiles with no participant ID number)
         {
             source.PlayOneShot(buttonClickSound, 1F);
-            GameController.control.ShowInstructions(); // Continue to the instructions page 
+            GameController.control.ShowConsentForm(); // Continue to the consent form page 
         }
+    }
 
+    // ********************************************************************** //
+
+    public void ConsentOnClick()
+    {
+        source.PlayOneShot(buttonClickSound, 1F);
+        GameController.control.ConsentClicked(); // Continue to the instructions page 
     }
 
 }

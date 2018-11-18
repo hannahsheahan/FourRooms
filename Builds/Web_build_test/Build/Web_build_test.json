@@ -1,0 +1,13 @@
+{
+"companyName": "SummerfieldLab",
+"productName": "MartiniTask",
+"dataUrl": "Web_build_test.data.unityweb",
+"asmCodeUrl": "Web_build_test.asm.code.unityweb",
+"asmMemoryUrl": "Web_build_test.asm.memory.unityweb",
+"asmFrameworkUrl": "Web_build_test.asm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}
