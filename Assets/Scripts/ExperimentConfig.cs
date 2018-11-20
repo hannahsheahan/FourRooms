@@ -76,6 +76,8 @@ public class ExperimentConfig
     public float getReadyDuration;
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
 
+    // Randomisation of trial sequence
+    public System.Random rand = new System.Random();
 
     // ********************************************************************** //
     // Use a constructor to set this up
@@ -84,8 +86,8 @@ public class ExperimentConfig
 
         // Set these variables to define your experiment:
         practiceTrials     = 2   + getReadyTrial;
-        totalTrials        = 20  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-        restFrequency      = 4   + restbreakOffset;            // Take a rest after this many normal trials
+        totalTrials        = 16 * 4  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+        restFrequency      = 16   + restbreakOffset;            // Take a rest after this many normal trials
 
         // Figure out how many rest breaks we will have and add them to the trial list
         nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials - practiceTrials) / restFrequency), 0 );  // round down to whole integer
@@ -131,71 +133,46 @@ public class ExperimentConfig
         GeneratePossibleSettings();
 
 
-        // Define the start up menu trials.   Note:  the other variables take their default values on these trials
+        // Define the start up menu and exit trials.   Note:  the other variables take their default values on these trials
         trialMazes[0] = "Persistent";
         trialMazes[1] = "StartScreen";
         trialMazes[2] = "ConsentScreen";
         trialMazes[3] = "InstructionsScreen";
         trialMazes[setupTrials + practiceTrials-1] = "GetReady";
+        trialMazes[totalTrials - 1] = "Exit";
 
-        // Add in the practice/familiarisation trials in an open arena
-        for (int trial = setupTrials; trial < setupTrials + practiceTrials-1; trial++)
-        {
-            trialMazes[trial] = "Practice";
+        // Add in the practice trials in an open arena with little fog and no colour
+        AddPracticeTrials();
 
-            // Generate some random practice start positions and rewards
-            doubleRewardTask[trial] = true;
-            rewardTypes[trial] = "cheese";
+        // Generate the trial randomisation/list that we want.   Note: Ensure this is aligned with the total number of trials
+        int nextTrial = System.Array.IndexOf(trialMazes, null);
 
-            playerStartRooms[trial] = ChooseRandomRoom(); // random start room
-            playerStartPositions[trial] = RandomPositionInRoom( playerStartRooms[trial] ); // random start position in random room
-            playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
+        //RandomPlayerAndRewardPositions();   // works a charm if you want all start and reward locations completely random
 
-            star1Rooms[trial] = ChooseRandomRoom(); // random reward room
-            star2Rooms[trial] = ChooseRandomRoom(); // random reward room
-            star1Positions[trial] = RandomPositionInRoom( star1Rooms[trial] );  // random reward position in random room
+        //---- free foraging block
+        //AddFreeForageBlock();   // ***HRS to make this later
 
-            // ensure reward doesnt spawn on the player position
-            while (playerStartPositions[trial] == star1Positions[trial])
-            {
-                star1Positions[trial] = RandomPositionInRoom( star1Rooms[trial] ); 
-            }
+        //---- training block 1
+        nextTrial = AddTrainingBlock(nextTrial);
+        nextTrial = RestBreakHere(nextTrial); // rest break
 
-            // One star, or two?
-            if (doubleRewardTask[trial])
-            {   // generate another position for star2
-                star2Positions[trial] = RandomPositionInRoom( star2Rooms[trial] );   // random star2 position in random room
+        //---- training block 2
+        nextTrial = AddTrainingBlock(nextTrial);
+        nextTrial = RestBreakHere(nextTrial); // rest break
 
-                // ensure rewards do not spawn on top of each other, or on top of player position
-                while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
-                {
-                    star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);
-                }
-            }
-            else
-            {   // single star to be collected
-                star2Positions[trial] = star1Positions[trial];
-            }
-        }
+        //---- training block 3
+        nextTrial = AddTrainingBlock(nextTrial);
+        nextTrial = RestBreakHere(nextTrial); // rest break
 
-        // Define the final exit state
-        trialMazes[totalTrials-1] = "Exit";
+        //---- training block 4
+        nextTrial = AddTrainingBlock(nextTrial);
+        nextTrial = RestBreakHere(nextTrial); // rest break
 
-
-        // Generate the trial randomisation/list that we want
-
-        //RandomPlayerAndRewardPositions();   // works a charm
-
-
-        //FreeForageBlock();
-        int firstTrial = System.Array.IndexOf(trialMazes, null);  // first non-specified trial
-        Debug.Log("The first block trial is trial " + firstTrial);
-        DoubleRewardGoalDirectedBlock(firstTrial);   // creates a block of balanced double reward trials, shuffles their order and stores them
-
+        //---- free foraging block
+        //AddFreeForageBlock();
 
 
         // For debugging: print out the final trial sequence in readable text to check it looks ok
-        //FillInBlanks();   // set unspecified rewards to default 'none'
         PrintTrialSequence();
 
     }
@@ -210,6 +187,20 @@ public class ExperimentConfig
             Debug.Log("Trial " + trial + ", Maze: " + trialMazes[trial] + ", Reward type: " + rewardTypes[trial]);
             Debug.Log("Start room: " + playerStartRooms[trial] + ", First reward room: " + star1Rooms[trial] + ", Second reward room: " + star2Rooms[trial]);
             Debug.Log("--------");
+        }
+    }
+
+    // ********************************************************************** //
+
+    private void AddPracticeTrials()
+    {
+        // Add in the practice/familiarisation trials in an open arena
+        for (int trial = setupTrials; trial < setupTrials + practiceTrials - 1; trial++)
+        {
+            trialMazes[trial] = "Practice";
+            rewardTypes[trial] = "cheese";
+            doubleRewardTask[trial] = true;
+            GenerateRandomTrialPositions(trial);     // randomly position the start, and reward/s locations
         }
     }
 
@@ -233,7 +224,6 @@ public class ExperimentConfig
         // Choose a random room of the four rooms
         string[] fourRooms = { "blue", "yellow", "red", "green" };
         int n = fourRooms.Length;
-        System.Random rand = new System.Random();
         int ind = rand.Next(n);   // Note: for some reason c# wants this stored to do randomisation, not directly input to fourRooms[rand.Next(n)]
 
         return fourRooms[ind]; 
@@ -326,72 +316,108 @@ public class ExperimentConfig
         spawnOrientation = new Vector3(0.0f, angle, 0.0f);          return spawnOrientation;     } 
     // ********************************************************************** //
 
-    private void RandomPlayerAndRewardPositions()
+    private int RestBreakHere(int firstTrial)
     {
+        // Insert a rest break here and move to the next trial in the sequence
 
-        // Generate trial content that randomly positions the player and reward/s in the different rooms
-        for (int trial = setupTrials + practiceTrials; trial < totalTrials - 1; trial++)
-        {
-            // Deal with restbreaks and regular trials
-            if ((trial - setupTrials - practiceTrials + 1) % restFrequency == 0)  // Time for a rest break
-            {
-                trialMazes[trial] = "RestBreak";
-            }
-            else                                    // It's a regular trial
-            {
-                // For now, change the reward type every second trial (if mod 2)
-                if (trial % 2 == 0)          
-                //if (trial < 0)  // for now just fix as 'always cheese'
-                {
-                    rewardTypes[trial] = "wine";    // use single reward type for now
-                }
-                else
-                {
-                    rewardTypes[trial] = "cheese";    // use single reward type for now
-                }
-
-                trialMazes[trial] = "FourRooms_" + rewardTypes[trial];   
-                doubleRewardTask[trial] = true;
-
-                playerStartRooms[trial] = ChooseRandomRoom();
-                playerStartPositions[trial] = RandomPositionInRoom(playerStartRooms[trial]); // random start position
-                playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
-
-                star1Rooms[trial] = ChooseRandomRoom();
-                star2Rooms[trial] = ChooseRandomRoom();
-                star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);          // random star1 position in random room
-
-                // ensure reward doesnt spawn on the player position (later this will be pre-determined)
-                while (playerStartPositions[trial] == star1Positions[trial])
-                {
-                    star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);   
-                }
-
-                // One star, or two?
-                if (doubleRewardTask[trial])
-                {   // generate another position for star2
-                    star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);      // random star2 position in random room
-
-                    // ensure rewards do not spawn on top of each other, or on top of player position
-                    while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
-                    {
-                        star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);
-                    }
-                }
-                else
-                {   // single star to be collected
-                    star2Positions[trial] = star1Positions[trial];
-                }
-
-            }
-        }
+        trialMazes[firstTrial] = "RestBreak";
+        return firstTrial + 1;
     }
 
     // ********************************************************************** //
 
-    private void DoubleRewardGoalDirectedBlock(int firstTrial)
+    private int AddTrainingBlock(int nextTrial)
     {
+        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+
+        if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
+        {
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese");
+        } else
+        {
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine");
+        }
+        return nextTrial;
+    }
+
+    // ********************************************************************** //
+
+    private int SingleContextDoubleRewardBlock(int firstTrial, string context)
+    {
+        // This function specifies the required trials in the block, and returns the next trial after this block
+
+        // NOTE: Use this function if you want to 'block' by reward type
+
+        string startRoom;
+        int contextSide;
+        int blockLength = 8; // Specify the next 8 trials
+
+        string[] arrayContexts = new string[blockLength];
+        string[] arrayStartRooms = new string[blockLength];
+        int[] arrayContextSides = new int[blockLength];
+
+        for (int i = 0; i < blockLength; i++)
+        {
+            // use a different start location for each trial
+            switch (i % 4)
+            {
+                case 0:
+                    startRoom = "yellow";
+                    break;
+                case 1:
+                    startRoom = "green";
+                    break;
+                case 2:
+                    startRoom = "red";
+                    break;
+                case 3:
+                    startRoom = "blue";
+                    break;
+                default:
+                    startRoom = "error";
+                    Debug.Log("Start room specified incorrectly");
+                    break;
+            }
+
+            // switch the side of the room the rewards are located on for each context
+            if (blockLength % 2 !=0)
+            {
+                Debug.Log("Error: Odd number of trials specified per block. Specify even number for proper counterbalancing");
+            }
+
+            if (i < (blockLength/2)) 
+            {
+                contextSide = 1;
+            }
+            else
+            {
+                contextSide = 2;
+            }
+
+            // Store trial setup in array, for later randomisation
+            arrayContexts[i] = context;
+            arrayStartRooms[i] = startRoom;
+            arrayContextSides[i] = contextSide;
+        }
+
+        // Randomise the trial order and save it
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides);
+
+        return firstTrial + blockLength;
+    }
+
+    // ********************************************************************** //
+
+    private void TwoContextDoubleRewardBlock(int firstTrial)
+    {
+
+        // ***HRS to write this more efficiently using SingleContextDoubleRewardBlock() later
+
+
         // This function specifies the required trials in the block, then randomises the trial order and sets it.
+        // NOTE: Use this function if you want to randomise over cheese/wine ordering too
 
         // This is for a 16 trial block, consisting of 8 double-reward trials in 
         // each context, each split over 2 reward positions (L/L vs R/R), and 
@@ -507,8 +533,7 @@ public class ExperimentConfig
         {
             Debug.Log("Something went wrong specifying the rooms affiliated with each context!");
         }
-}
-
+    }
 
     // ********************************************************************** //
 
@@ -580,9 +605,7 @@ public class ExperimentConfig
         string context;
         int contextSide;
         bool randomiseOrder = true;
-
         int n = arrayContexts.Length;
-        System.Random rand = new System.Random();
 
         if (randomiseOrder)
         {
@@ -617,14 +640,83 @@ public class ExperimentConfig
             SetTrialInContext(i + firstTrial, startRoom, context, contextSide);
         }
     }
-   
+
+    // ********************************************************************** //
+
+    private void GenerateRandomTrialPositions(int trial)
+    {
+        // Generate a trial that randomly positions the player and reward/s
+        playerStartRooms[trial] = ChooseRandomRoom();
+        playerStartPositions[trial] = RandomPositionInRoom(playerStartRooms[trial]); // random start position
+        playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
+
+        star1Rooms[trial] = ChooseRandomRoom();
+        star2Rooms[trial] = ChooseRandomRoom();
+        star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);          // random star1 position in random room
+
+        // ensure reward doesnt spawn on the player position (later this will be pre-determined)
+        while (playerStartPositions[trial] == star1Positions[trial])
+        {
+            star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);
+        }
+
+        // One star, or two?
+        if (doubleRewardTask[trial])
+        {   // generate another position for star2
+            star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);      // random star2 position in random room
+
+            // ensure rewards do not spawn on top of each other, or on top of player position
+            while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
+            {
+                star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);
+            }
+        }
+        else
+        {   // single star to be collected
+            star2Positions[trial] = star1Positions[trial];
+        }
+
+    }
+
+    // ********************************************************************** //
+
+    private void RandomPlayerAndRewardPositions()
+    {
+        // This function generates trial content that randomly positions the player and reward/s in the different rooms
+
+        for (int trial = setupTrials + practiceTrials; trial < totalTrials - 1; trial++)
+        {
+            // Deal with restbreaks and regular trials
+            if ((trial - setupTrials - practiceTrials + 1) % restFrequency == 0)  // Time for a rest break
+            {
+                trialMazes[trial] = "RestBreak";
+            }
+            else                                    // It's a regular trial
+            {
+                // For now, change the reward type every second trial (if mod 2)
+                if (trial % 2 == 0)
+                //if (trial < 0)  // for now just fix as 'always cheese'
+                {
+                    rewardTypes[trial] = "wine";    // use single reward type for now
+                }
+                else
+                {
+                    rewardTypes[trial] = "cheese";    // use single reward type for now
+                }
+
+                trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
+                doubleRewardTask[trial] = true;
+                GenerateRandomTrialPositions(trial);   // randomly position player start and reward/s locations
+            }
+        }
+    }
+
     // ********************************************************************** //
 
     public float JitterTime(float time)
     {
         // jitter uniform-randomly from the min value, to 50% higher than the min value
-        System.Random rnd = new System.Random();
-        return time + (0.5f*time)* (float)rnd.NextDouble();
+        return time + (0.5f*time)* (float)rand.NextDouble();
     }
 
     // ********************************************************************** //
