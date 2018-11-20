@@ -75,6 +75,9 @@ public class DataController : MonoBehaviour {
     private void DataSetup()
     {
         stringDateTime = dateTime.ToString("dd-MM-yy", DateTimeFormatInfo.InvariantInfo) + '_' + dateTime.ToString("t", DateTimeFormatInfo.InvariantInfo);
+        stringDateTime = stringDateTime.Replace("/", "-");   // make sure you don't have conflicting characters for writing to web server
+        stringDateTime = stringDateTime.Replace(":", "-");   // make sure you don't have conflicting characters for writing to web server
+
         fileName = "dataFile_" + stringDateTime + ".json";
         filePath = baseFilePath + fileName;  // later add a timestamp number to this so files arent overwritten
         if (File.Exists(filePath))
@@ -95,7 +98,7 @@ public class DataController : MonoBehaviour {
         webData.AddField("fileName", fileName);
 
         // v1.0 - local file saving
-        //File.WriteAllText(filePath, dataAsJson);
+        File.WriteAllText(filePath, dataAsJson);
 
         //-----------
         // v2.0 - local server testing (using MAMP)
@@ -103,9 +106,8 @@ public class DataController : MonoBehaviour {
 
         //-----------
         // v2.1 - web server (Summerfield lab one)
-        WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
-
-        StartCoroutine(WaitForRequest(www));
+        //WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
+        //StartCoroutine(WaitForRequest(www));
     }
 
     // ********************************************************************** //
@@ -124,7 +126,7 @@ public class DataController : MonoBehaviour {
         request.SetRequestHeader("Content-Type", "application/json");
 
         //yield return request.SendWebRequest();
-        yield return request.Send();
+        yield return request.SendWebRequest();
 
         Debug.Log("Status Code: " + request.responseCode);   // Note: code 200 means it has succeeded
 

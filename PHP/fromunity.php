@@ -12,9 +12,19 @@ $filePath = $serverDataPath . $fileName;
 
 if ($data != "")
 {
-    echo("Message successfully sent!");
+    echo("Trying to write data to server at: " . $filePath);
     $file = fopen($filePath, "w");  // overwrite this file with each update
     fwrite($file, $data);
+    
+    if (is_writable($filePath))
+    {
+        echo("\n The datapath location on server is writable.");
+    }
+    else
+    {
+        echo("\n The datapath location on server is not writable. Please check permissions.");
+    }
+    
     fclose($file);
 } else
 {

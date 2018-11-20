@@ -38,6 +38,9 @@ public class ExperimentConfig
     // Positions and orientations
     private Vector3 mazeCentre;
     private Vector3[] possiblePlayerPositions;
+    private string[] playerStartRooms;
+    private string[] star1Rooms;
+    private string[] star2Rooms;
     private Vector3[] playerStartPositions;
     private Vector3[] playerStartOrientations;
     private Vector3 spawnOrientation;
@@ -81,7 +84,7 @@ public class ExperimentConfig
 
         // Set these variables to define your experiment:
         practiceTrials     = 2   + getReadyTrial;
-        totalTrials        = 10  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+        totalTrials        = 20  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
         restFrequency      = 4   + restbreakOffset;            // Take a rest after this many normal trials
 
         // Figure out how many rest breaks we will have and add them to the trial list
@@ -114,6 +117,9 @@ public class ExperimentConfig
 
         // Define a maze, start and goal positions, and reward type for each trial
         trialMazes = new string[totalTrials];
+        playerStartRooms = new string[totalTrials];
+        star1Rooms = new string[totalTrials];
+        star2Rooms = new string[totalTrials];
         playerStartPositions = new Vector3[totalTrials];
         playerStartOrientations = new Vector3[totalTrials];
         star1Positions = new Vector3[totalTrials];
@@ -140,25 +146,30 @@ public class ExperimentConfig
             // Generate some random practice start positions and rewards
             doubleRewardTask[trial] = true;
             rewardTypes[trial] = "cheese";
-            playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length - 1)]; // random start position
+
+            playerStartRooms[trial] = ChooseRandomRoom(); // random start room
+            playerStartPositions[trial] = RandomPositionInRoom( playerStartRooms[trial] ); // random start position in random room
             playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
-            star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random reward position
+
+            star1Rooms[trial] = ChooseRandomRoom(); // random reward room
+            star2Rooms[trial] = ChooseRandomRoom(); // random reward room
+            star1Positions[trial] = RandomPositionInRoom( star1Rooms[trial] );  // random reward position in random room
 
             // ensure reward doesnt spawn on the player position
             while (playerStartPositions[trial] == star1Positions[trial])
             {
-                star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
+                star1Positions[trial] = RandomPositionInRoom( star1Rooms[trial] ); 
             }
 
             // One star, or two?
             if (doubleRewardTask[trial])
             {   // generate another position for star2
-                star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];     // random star2 position
+                star2Positions[trial] = RandomPositionInRoom( star2Rooms[trial] );   // random star2 position in random room
 
                 // ensure rewards do not spawn on top of each other, or on top of player position
                 while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
                 {
-                    star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];
+                    star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);
                 }
             }
             else
@@ -173,13 +184,59 @@ public class ExperimentConfig
 
         // Generate the trial randomisation/list that we want
 
-        RandomPlayerAndRewardPositions();
+        //RandomPlayerAndRewardPositions();   // works a charm
 
-        // **HRS (later we can generate an array of things to cover and then permute from a function here) 
 
-        //RandomPositionInRoom("blue");
-        //ShuffleTrialOrder();  //***HRS have not written yet
+        //FreeForageBlock();
+        int firstTrial = System.Array.IndexOf(trialMazes, null);  // first non-specified trial
+        Debug.Log("The first block trial is trial " + firstTrial);
+        DoubleRewardGoalDirectedBlock(firstTrial);   // creates a block of balanced double reward trials, shuffles their order and stores them
 
+
+
+        // For debugging: print out the final trial sequence in readable text to check it looks ok
+        //FillInBlanks();   // set unspecified rewards to default 'none'
+        PrintTrialSequence();
+
+    }
+
+    // ********************************************************************** //
+
+    private void PrintTrialSequence()
+    {
+        // This function is for debugging/checking the final trial sequence by printing to console
+        for (int trial = 0; trial < totalTrials; trial++)
+        {
+            Debug.Log("Trial " + trial + ", Maze: " + trialMazes[trial] + ", Reward type: " + rewardTypes[trial]);
+            Debug.Log("Start room: " + playerStartRooms[trial] + ", First reward room: " + star1Rooms[trial] + ", Second reward room: " + star2Rooms[trial]);
+            Debug.Log("--------");
+        }
+    }
+
+    // ********************************************************************** //
+
+    private void FillInBlanks()
+    {
+        for (int trial = 0; trial < totalTrials; trial++)
+        {
+            if (rewardTypes[trial] == "")
+            {
+                rewardTypes[trial] = "none";
+            }
+        }
+    }
+
+    // ********************************************************************** //
+
+    private string ChooseRandomRoom()
+    {
+        // Choose a random room of the four rooms
+        string[] fourRooms = { "blue", "yellow", "red", "green" };
+        int n = fourRooms.Length;
+        System.Random rand = new System.Random();
+        int ind = rand.Next(n);   // Note: for some reason c# wants this stored to do randomisation, not directly input to fourRooms[rand.Next(n)]
+
+        return fourRooms[ind]; 
     }
 
     // ********************************************************************** //
@@ -293,28 +350,32 @@ public class ExperimentConfig
                     rewardTypes[trial] = "cheese";    // use single reward type for now
                 }
 
-                trialMazes[trial] = "FourRooms_" + rewardTypes[trial];   // set this to stay the same, for now
-                doubleRewardTask[trial] = true;   // use only single star trials for now
+                trialMazes[trial] = "FourRooms_" + rewardTypes[trial];   
+                doubleRewardTask[trial] = true;
 
-                playerStartPositions[trial] = possiblePlayerPositions[UnityEngine.Random.Range(0, possiblePlayerPositions.Length - 1)]; // random start position
+                playerStartRooms[trial] = ChooseRandomRoom();
+                playerStartPositions[trial] = RandomPositionInRoom(playerStartRooms[trial]); // random start position
                 playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
-                star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
+
+                star1Rooms[trial] = ChooseRandomRoom();
+                star2Rooms[trial] = ChooseRandomRoom();
+                star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);          // random star1 position in random room
 
                 // ensure reward doesnt spawn on the player position (later this will be pre-determined)
                 while (playerStartPositions[trial] == star1Positions[trial])
                 {
-                    star1Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];           // random star1 position
+                    star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);   
                 }
 
                 // One star, or two?
                 if (doubleRewardTask[trial])
                 {   // generate another position for star2
-                    star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];     // random star2 position
+                    star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);      // random star2 position in random room
 
                     // ensure rewards do not spawn on top of each other, or on top of player position
                     while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
                     {
-                        star2Positions[trial] = possibleStarPositions[UnityEngine.Random.Range(0, possibleStarPositions.Length - 1)];
+                        star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);
                     }
                 }
                 else
@@ -323,6 +384,164 @@ public class ExperimentConfig
                 }
 
             }
+        }
+    }
+
+    // ********************************************************************** //
+
+    private void DoubleRewardGoalDirectedBlock(int firstTrial)
+    {
+        // This function specifies the required trials in the block, then randomises the trial order and sets it.
+
+        // This is for a 16 trial block, consisting of 8 double-reward trials in 
+        // each context, each split over 2 reward positions (L/L vs R/R), and 
+        // across 4 different start locations. 
+
+        string startRoom;
+        string context;
+        int contextSide;
+        int blockLength = 16; // Specify the next 16 trials
+
+        string[] arrayContexts = new string[blockLength];
+        string[] arrayStartRooms = new string[blockLength];
+        int[] arrayContextSides = new int[blockLength];
+        
+        for (int i = 0; i < blockLength; i++)
+        {
+            // separate the trials into two different sub-blocks
+            if (i < 8)
+            {
+                context = "wine";
+            }else
+            {
+                context = "cheese";
+            }
+
+            // use a different start location for each trial
+            switch (i % 4)
+            {
+                case 0:
+                    startRoom = "yellow";
+                    break;
+                case 1:
+                    startRoom = "green";
+                    break;
+                case 2:
+                    startRoom = "red";
+                    break;
+                case 3:
+                    startRoom = "blue";
+                    break;
+                default:
+                    startRoom = "error";
+                    Debug.Log("Start room specified incorrectly");
+                    break;
+            }
+
+            // switch the side of the room the rewards are located on for each context
+            if ( (i < 4) || (i > 11))
+            {
+                contextSide = 1;
+            } else
+            {
+                contextSide = 2;
+            }
+
+            // Store trial setup in array, for later randomisation
+            arrayContexts[i] = context;
+            arrayStartRooms[i] = startRoom;
+            arrayContextSides[i] = contextSide;
+        }
+
+        // Randomise the trial order and save it
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides);
+    }
+
+
+    // ********************************************************************** //
+
+    private void SetTrialInContext(int trial, string startRoom, string context, int contextSide)
+    {
+        // This function specifies the reward covariance
+
+        // Note the variable 'contextSide' specifies whether the two rooms containing the reward will be located on the left or right of the environment
+        // e.g. if cheese context: the y/b side, vs the g/r side. if wine context: the y/g side, vs the b/r side.
+
+        bool trialSetCorrectly = false;
+
+            switch (context)
+            {
+                case "cheese":
+                       
+                    if (contextSide==1)
+                    {
+                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue");
+                        trialSetCorrectly = true;
+                    } 
+                    else if (contextSide==2)
+                    {
+                        SetDoubleRewardTrial(trial, context, startRoom, "green", "red");
+                        trialSetCorrectly = true;
+                    }
+                    break;
+
+                case "wine":
+
+                    if (contextSide == 1)
+                    {
+                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green");
+                        trialSetCorrectly = true;
+                    }
+                    else if (contextSide == 2)
+                    {
+                        SetDoubleRewardTrial(trial, context, startRoom, "blue", "red");
+                        trialSetCorrectly = true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+    
+        if (!trialSetCorrectly)
+        {
+            Debug.Log("Something went wrong specifying the rooms affiliated with each context!");
+        }
+}
+
+
+    // ********************************************************************** //
+
+    private void SetDoubleRewardTrial(int trial, string context, string startRoom, string rewardRoom1, string rewardRoom2)
+    {
+        // This function writes the trial number indicated by the input variable 'trial'.
+        // Note: use this function within another that modulates context such that e.g. for 'cheese', the rooms for room1 and room2 reward are set
+
+        // Check that we've inputted a valid trial number
+        if ( (trial < setupTrials + practiceTrials - 1) || (trial == setupTrials + practiceTrials - 1) )
+        {
+            Debug.Log("Trial randomisation failed: invalid trial number input writing to.");
+        }
+        else
+        {
+            // Write the trial according to context and room/start locations
+
+            rewardTypes[trial] = context;
+
+            // this is a double reward trial
+            trialMazes[trial] = "FourRooms_" + rewardTypes[trial]; 
+            doubleRewardTask[trial] = true;
+
+            // select start location as random position in given room
+            playerStartRooms[trial] = startRoom;
+            playerStartPositions[trial] = RandomPositionInRoom(startRoom);
+            playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]); // orient player towards the centre of the environment
+
+            // select random locations in rooms 1 and 2 for the two rewards (one in each)
+            star1Rooms[trial] = rewardRoom1;
+            star2Rooms[trial] = rewardRoom2;
+            star1Positions[trial] = RandomPositionInRoom(rewardRoom1);
+            star2Positions[trial] = RandomPositionInRoom(rewardRoom2);
         }
     }
 
@@ -352,45 +571,53 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    public void ShuffleTrialOrder( )
+    public void ShuffleTrialOrderAndStoreBlock(int firstTrial, int blockLength, string[] arrayContexts, string[] arrayStartRooms, int[] arrayContextSides)
     {
+        // This function shuffles the prospective trials from firstTrial to firstTrial+blockLength and stores them.
+        // This has been checked and works correctly :)
 
-        // ***HRS to write this another day
+        string startRoom;
+        string context;
+        int contextSide;
+        bool randomiseOrder = true;
 
-        string[] p_trialMazes = new string[totalTrials];
-        bool[] p_doubleRewardTask = new bool[totalTrials];
-        Vector3[] p_playerStartPositions = new Vector3[totalTrials];
-        Vector3[] p_playerStartOrientations = new Vector3[totalTrials];
-        Vector3[] p_star1Positions = new Vector3[totalTrials];
-        Vector3[] p_star2Positions = new Vector3[totalTrials];
+        int n = arrayContexts.Length;
+        System.Random rand = new System.Random();
 
-        // This function will take the existing trial sequence (excluding the menu etc trials), and return a randomly permuted ordering
-
-        for (int trial = setupTrials + practiceTrials; trial < totalTrials - 1; trial++)
+        if (randomiseOrder)
         {
-            if (trialMazes[trial] == "RestBreak")
+            // Perform the Fisher-Yates algorithm for shuffling array elements in place 
+            // (use same sample for each of the 3 arrays to keep order aligned across arrays)
+            for (int i = 0; i < n; i++)
             {
-                // save a version of the trial sequence for messing with, so we don't mess with the rest breaks
-               
+                int k = i + rand.Next(n - i); // select random index in array, less than n-i
 
+                // shuffle contexts
+                string tempContext = arrayContexts[k];
+                arrayContexts[k] = arrayContexts[i];
+                arrayContexts[i] = tempContext;
+
+                // shuffle start room
+                string tempRoom = arrayStartRooms[k];
+                arrayStartRooms[k] = arrayStartRooms[i];
+                arrayStartRooms[i] = tempRoom;
+
+                // shuffle context side
+                int tempContextSide = arrayContextSides[k];
+                arrayContextSides[k] = arrayContextSides[i];
+                arrayContextSides[i] = tempContextSide;
             }
         }
-
-        // Shuffle the sequence
-       /*
-        System.Random random = new System.Random();
-        for (int i = elements.Length - 1; i > 0; i--)
+        // Store the randomised trial order
+        for (int i = 0; i < n; i++)
         {
-            int swapIndex = random.Next(i + 1);
-            string tmp = elements[i];
-            elements[i] = elements[swapIndex];
-            elements[swapIndex] = tmp;
+            startRoom = arrayStartRooms[i];
+            context = arrayContexts[i];
+            contextSide = arrayContextSides[i];
+            SetTrialInContext(i + firstTrial, startRoom, context, contextSide);
         }
-        */
-        // Put it back together with the rest breaks
-
     }
-
+   
     // ********************************************************************** //
 
     public float JitterTime(float time)
