@@ -85,7 +85,7 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        practiceTrials     = 0   + getReadyTrial;
+        practiceTrials     = 1   + getReadyTrial;
         totalTrials        = 16 * 4  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
         restFrequency      = 16   + restbreakOffset;            // Take a rest after this many normal trials
 
@@ -175,7 +175,7 @@ public class ExperimentConfig
 
 
         // For debugging: print out the final trial sequence in readable text to check it looks ok
-        PrintTrialSequence();
+        //PrintTrialSequence();
 
     }
 

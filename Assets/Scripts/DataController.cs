@@ -100,16 +100,16 @@ public class DataController : MonoBehaviour {
         webData.AddField("fileName", fileName);
 
         // v1.0 - local file saving
-        File.WriteAllText(filePath, dataAsJson);
+        //File.WriteAllText(filePath, dataAsJson);
 
         //-----------
         // v2.0 - local server testing (using MAMP)
-        //WWW www = new WWW("http://localhost:8888/fromunity.php", webData);
+        WWW www = new WWW("http://localhost:8888/fromunity.php", webData);
 
         //-----------
         // v2.1 - web server (Summerfield lab one)
         //WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
-        //StartCoroutine(WaitForRequest(www));
+        StartCoroutine(WaitForRequest(www));
     }
 
     // ********************************************************************** //

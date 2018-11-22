@@ -187,6 +187,8 @@ public class GameController : MonoBehaviour {
         UpdateText();
         currentMovementTime = movementTimer.ElapsedSeconds();
 
+        CheckFullScreen();
+
         switch (State)
         {
 
@@ -569,6 +571,16 @@ public class GameController : MonoBehaviour {
     {
         NextScene();
         TrialSetup();
+    }
+
+    // ********************************************************************** //
+
+    public void CheckFullScreen()
+    {
+        if (!Screen.fullScreen)
+        {
+            Debug.Log("Not in full screen mode! Give a warning that it will exit if they dont fix this.");
+        }
     }
 
     // ********************************************************************** //
