@@ -27,8 +27,10 @@ public class TrialData
 
     // trial event times
     public float maxMovementTime;
+    public float trialScore; 
     public List<float> firstMovementTime = new List<float>();       // time until first star collected (kept as list to account for error trials)
     public List<float> totalMovementTime = new List<float>();       // time until second star collected
+
 
     // trial configuration times
     public float preDisplayCueTime;

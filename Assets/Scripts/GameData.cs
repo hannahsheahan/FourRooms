@@ -5,6 +5,8 @@ using System.Collections;
 public class GameData
 {
     public string participantID;
+    public string participantAge;
+    public int participantGender;
     public int totalTrials;
     public float dataRecordFrequency;
     public float restbreakDuration;

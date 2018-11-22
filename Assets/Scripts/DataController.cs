@@ -25,6 +25,8 @@ public class DataController : MonoBehaviour {
 
     public int currentTrialNumber = 0;
     public bool participantIDSet = false;
+    public bool participantAgeSet = false;
+    public bool participantGenderSet = false;
 
     // Data file saving
     private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/data/";
@@ -233,6 +235,8 @@ public class DataController : MonoBehaviour {
         gameData.allTrialData[currentTrialNumber].firstMovementTime.Add(GameController.control.firstMovementTime);
         gameData.allTrialData[currentTrialNumber].totalMovementTime.Add(GameController.control.totalMovementTime);
 
+        // This is only updated if the trial is finished correctly anyway
+        gameData.allTrialData[currentTrialNumber].trialScore = GameController.control.trialScore;
 
         // Add in the frame-by-frame data (these should be synchronized)
         if (PlayerFPS != null)
@@ -297,6 +301,27 @@ public class DataController : MonoBehaviour {
         }
     }
 
+    // ********************************************************************** //
+
+    public void SetParticipantAge(string age)
+    {
+        if (age != "")  // you're not allowed to give a fake age  ***HRS can add check for numbers
+        {
+            participantAgeSet = true;
+            gameData.participantAge = age;
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void SetParticipantGender(int gender)
+    {
+        if (gender != 0) // must make a selection
+        {
+            participantAgeSet = true;
+            gameData.participantGender = gender;
+        }
+    }
     // ********************************************************************** //
     // Note: this is obsolete, don't need separate class for this in datafile.
     //public ParticipantData GetParticipantData()

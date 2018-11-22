@@ -35,4 +35,14 @@ public class EnterParticipantIDScript : MonoBehaviour {
     {
         dataController.SetParticipantID(ID);  // Send participant data to the DataController
     }
+
+    // ********************************************************************** //
+
+    public void CollectParticipantAgeFromInput(string age)
+    {
+        // convert string to numerical age
+        //int numericalAage = int.TryParse(age, );
+        dataController.SetParticipantAge(age);  // Send participant data to the DataController
+    }
+
 }

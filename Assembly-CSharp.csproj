@@ -61,9 +61,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\ContinueInstructionsButtonScript.cs" />
+    <Compile Include="Assets\Scripts\ContinueButtonScript.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
     <Compile Include="Assets\Scripts\DisplayRewardCue.cs" />
+    <Compile Include="Assets\Scripts\DropdownGenderScript.cs" />
     <Compile Include="Assets\Scripts\EnterParticipantIDScript.cs" />
     <Compile Include="Assets\Scripts\ExitButtonScript.cs" />
     <Compile Include="Assets\Scripts\ExitExperimentDurationScript.cs" />
@@ -83,11 +84,13 @@
     <Compile Include="Assets\Scripts\SpawnRewardLocation.cs" />
     <Compile Include="Assets\Scripts\SpawnRewardLocation1.cs" />
     <Compile Include="Assets\Scripts\SpawnRewardLocation2.cs" />
-    <Compile Include="Assets\Scripts\StartButtonScript.cs" />
     <Compile Include="Assets\Scripts\TestSceneSwitchingByButton.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\TrackingScript.cs" />
+    <Compile Include="Assets\Scripts\TrialCountdownScript.cs" />
     <Compile Include="Assets\Scripts\TrialData.cs" />
+    <Compile Include="Assets\TotalScoreUpdateScript.cs" />
+    <Compile Include="Assets\WipeTotalScorePracticeScript.cs" />
     <None Include="Assets\Fonts\Jupiter\LICENSE.txt" />
     <None Include="Assets\Textures and Sprites\SF UI\Background\LICENSE.txt" />
     <None Include="Assets\Materials\UI-Default-No-Alpha.shader" />

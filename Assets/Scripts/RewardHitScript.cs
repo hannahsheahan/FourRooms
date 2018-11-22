@@ -44,8 +44,6 @@ public class RewardHitScript : MonoBehaviour
         {
             GameController.control.StarFound();
             starHit = false;
-
-            Debug.Log("Should be disabling reward now");
             GameController.control.DisableRewardByIndex(rewardIndex);
         }
     }

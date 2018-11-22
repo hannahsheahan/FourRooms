@@ -20,7 +20,7 @@ public class ExperimentConfig
 
 
     // Scenes/mazes
-    private const int setupAndCloseTrials = 5;     // Note: there must be 5 extra trials in trial list to account for Persistent, StartScreen, ConsentScreen, Instructions and Exit 'trials'.
+    private const int setupAndCloseTrials = 7;     // Note: there must be 7 extra trials in trial list to account for Persistent, InformationScreen, BeforeStartingScreen, ConsentScreen, StartScreen, Instructions and Exit 'trials'.
     private const int restbreakOffset = 1;         // Note: makes specifying restbreaks more intuitive
     private const int getReadyTrial = 1;           // Note: this is the get ready screen after the practice
     private const int setupTrials = setupAndCloseTrials-1;
@@ -85,7 +85,7 @@ public class ExperimentConfig
     {
 
         // Set these variables to define your experiment:
-        practiceTrials     = 2   + getReadyTrial;
+        practiceTrials     = 0   + getReadyTrial;
         totalTrials        = 16 * 4  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
         restFrequency      = 16   + restbreakOffset;            // Take a rest after this many normal trials
 
@@ -135,9 +135,11 @@ public class ExperimentConfig
 
         // Define the start up menu and exit trials.   Note:  the other variables take their default values on these trials
         trialMazes[0] = "Persistent";
-        trialMazes[1] = "StartScreen";
-        trialMazes[2] = "ConsentScreen";
-        trialMazes[3] = "InstructionsScreen";
+        trialMazes[1] = "InformationScreen";
+        trialMazes[2] = "BeforeStartingScreen";
+        trialMazes[3] = "ConsentScreen";
+        trialMazes[4] = "StartScreen";
+        trialMazes[5] = "InstructionsScreen";
         trialMazes[setupTrials + practiceTrials-1] = "GetReady";
         trialMazes[totalTrials - 1] = "Exit";
 
@@ -201,19 +203,6 @@ public class ExperimentConfig
             rewardTypes[trial] = "cheese";
             doubleRewardTask[trial] = true;
             GenerateRandomTrialPositions(trial);     // randomly position the start, and reward/s locations
-        }
-    }
-
-    // ********************************************************************** //
-
-    private void FillInBlanks()
-    {
-        for (int trial = 0; trial < totalTrials; trial++)
-        {
-            if (rewardTypes[trial] == "")
-            {
-                rewardTypes[trial] = "none";
-            }
         }
     }
 

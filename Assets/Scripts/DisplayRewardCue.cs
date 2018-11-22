@@ -10,6 +10,7 @@ public class DisplayRewardCue : MonoBehaviour
     //Set this in the Inspector
     public Sprite wineImage;
     public Sprite cheeseImage;
+    public Sprite martiniImage;
     private string cue;
 
     // ********************************************************************** //
@@ -35,6 +36,9 @@ public class DisplayRewardCue : MonoBehaviour
                     break;
                 case "cheese":
                     rewardImage.sprite = cheeseImage;
+                    break;
+                case "martini":
+                    rewardImage.sprite = martiniImage;
                     break;
             }
             rewardImage.enabled = true;

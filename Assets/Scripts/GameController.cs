@@ -7,6 +7,7 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityStandardAssets.Characters.FirstPerson;
 using System.IO;
+using System.Linq;
 
 public class GameController : MonoBehaviour {
     /// <summary>
@@ -60,6 +61,12 @@ public class GameController : MonoBehaviour {
     public string rewardType;
     public bool reward1Visible;
     public bool reward2Visible;
+    public int trialScore = 0;
+    public int totalScore = 0;
+    public int nextScore;
+    public bool flashTotalScore = false;
+    public bool scoreUpdated = false;
+    private float beforeScoreUpdateTime = 1.2f;  // this is just for display
 
     // Timer variables
     private Timer experimentTimer;
@@ -71,6 +78,8 @@ public class GameController : MonoBehaviour {
     public float firstMovementTime;
     public float totalMovementTime;
     public float totalExperimentTime;
+    public float currentMovementTime;
+    public bool displayTimeLeft;
 
     public float maxMovementTime;  
     private float preDisplayCueTime;
@@ -167,7 +176,7 @@ public class GameController : MonoBehaviour {
         reward1Visible = false;
         reward2Visible = false;
 
-    StartExperiment();  
+        StartExperiment();  
 
     }
 
@@ -176,11 +185,13 @@ public class GameController : MonoBehaviour {
     private void Update()     // Update() executes once per frame
     {
         UpdateText();
+        currentMovementTime = movementTimer.ElapsedSeconds();
 
         switch (State)
         {
 
             case STATE_STARTSCREEN:
+                // Note: we chill out here in this state until all the starting info pages are done
                 if (gameStarted)
                 {
                     StateNext(STATE_SETUP);
@@ -197,6 +208,9 @@ public class GameController : MonoBehaviour {
                         reward2Visible = false;
                         StateNext(STATE_STARTTRIAL);
 
+                        break;
+                    case "Menus":
+                        // fix
                         break;
 
                     case "GetReady":
@@ -264,6 +278,7 @@ public class GameController : MonoBehaviour {
 
                 // Make a 'beep' go sound and start the trial timer
                 movementTimer.Reset();
+                displayTimeLeft = true;   // make the trial time countdown visible
                 StateNext(STATE_MOVING1);
                 break;
 
@@ -328,8 +343,14 @@ public class GameController : MonoBehaviour {
                 displayMessage = "wellDoneMessage";      // display a congratulatory message
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
 
+                if (stateTimer.ElapsedSeconds() > beforeScoreUpdateTime)
+                {
+                    // update the total score in a visible way
+                    UpdateScore();
+                }
                 if (stateTimer.ElapsedSeconds() > finalGoalHitPauseTime)
                 {
+                    flashTotalScore = false;
                     StateNext(STATE_FINISH);
                 }
                 break;
@@ -442,6 +463,9 @@ public class GameController : MonoBehaviour {
         FLAG_trialError = false;
         FLAG_trialTimeout = false;
         starFound = false;
+        displayTimeLeft = false;
+        scoreUpdated = false;
+        trialScore = 0;
 
         // Load in the trial data
         currentTrialData = dataController.GetCurrentTrialData();
@@ -472,7 +496,18 @@ public class GameController : MonoBehaviour {
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
 
+        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady"};
 
+        if (menuScenesArray.Contains(nextScene))
+        {
+            return nextScene;   // we don't want to record data and do the FSM transitions during the exit and rest break scenes
+        }
+        else
+        {
+            return "StartTrial";
+        }
+
+        /*
         if ( (nextScene == "Exit") || (nextScene == "RestBreak") || (nextScene == "GetReady"))
         {
             return nextScene;   // we don't want to record data and do the FSM transitions during the exit and rest break scenes
@@ -481,6 +516,9 @@ public class GameController : MonoBehaviour {
         {
             return "StartTrial";
         }
+        */
+
+
     }
 
     // ********************************************************************** //
@@ -519,6 +557,7 @@ public class GameController : MonoBehaviour {
 
     public void StartGame()
     {
+        Debug.Log("The game has started now and into the FSM!");
         NextScene();
         gameStarted = true;     // start the game rolling!
         Cursor.visible = false; 
@@ -526,18 +565,10 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    public void ConsentClicked()
+    public void ContinueToNextMenuScreen()
     {
         NextScene();
-        SceneManager.LoadScene("InstructionsScreen");
-    }
-
-    // ********************************************************************** //
-
-    public void ShowConsentForm()
-    {
-        NextScene();
-        SceneManager.LoadScene("ConsentScreen");
+        TrialSetup();
     }
 
     // ********************************************************************** //
@@ -631,6 +662,20 @@ public class GameController : MonoBehaviour {
                 textMessage = "There was an error sending data to the web server.  Please exit.";
                 break;
         }  
+    }
+
+    // ********************************************************************** //
+
+    public void UpdateScore()
+    {
+        if (!scoreUpdated)  // just do this once
+        {
+            displayTimeLeft = false;   // freeze the visible countdown
+            trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
+            totalScore += trialScore;
+            scoreUpdated = true;
+            flashTotalScore = true;
+        }
     }
 
     // ********************************************************************** //
