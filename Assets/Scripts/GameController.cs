@@ -66,6 +66,7 @@ public class GameController : MonoBehaviour {
     public int nextScore;
     public bool flashTotalScore = false;
     public bool scoreUpdated = false;
+    public bool pauseClock = false;
     private float beforeScoreUpdateTime = 1.2f;  // this is just for display
 
     // Timer variables
@@ -80,6 +81,7 @@ public class GameController : MonoBehaviour {
     public float totalExperimentTime;
     public float currentMovementTime;
     public bool displayTimeLeft;
+
 
     public float maxMovementTime;  
     private float preDisplayCueTime;
@@ -101,6 +103,7 @@ public class GameController : MonoBehaviour {
     // Error flags
     public bool FLAG_trialError;
     public bool FLAG_trialTimeout;
+    public bool FLAG_fullScreenModeError;
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
@@ -120,10 +123,11 @@ public class GameController : MonoBehaviour {
     public const int STATE_ERROR       = 14;
     public const int STATE_REST        = 15;
     public const int STATE_GETREADY    = 16;
-    public const int STATE_EXIT        = 17;
-    public const int STATE_MAX         = 18;
+    public const int STATE_PAUSE       = 17;
+    public const int STATE_EXIT        = 18;
+    public const int STATE_MAX         = 19;
 
-    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","Exit","GetReady","Max" };
+    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","GetReady","Pause","Exit","Max" };
     public int State;
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
 
@@ -185,9 +189,12 @@ public class GameController : MonoBehaviour {
     private void Update()     // Update() executes once per frame
     {
         UpdateText();
-        currentMovementTime = movementTimer.ElapsedSeconds();
-
         CheckFullScreen();
+
+        if (!pauseClock)
+        {
+            currentMovementTime = movementTimer.ElapsedSeconds();
+        }
 
         switch (State)
         {
@@ -429,6 +436,14 @@ public class GameController : MonoBehaviour {
                 }
                 break;
 
+            case STATE_PAUSE:
+                // Note: this state is triggered by exiting fullscreen mode, and can only be escaped from by re-enabling fullscreen mode.
+                // pause the countdown timer display and disable the player controls
+                // Note that the FPSPlayer and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
+                pauseClock = true; 
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                break;
+
 
             case STATE_EXIT:
                 // Display the total experiment time and wait for the participant to close the application
@@ -464,9 +479,11 @@ public class GameController : MonoBehaviour {
         // Start the trial with a clean-slate
         FLAG_trialError = false;
         FLAG_trialTimeout = false;
+        FLAG_fullScreenModeError = false;
         starFound = false;
         displayTimeLeft = false;
         scoreUpdated = false;
+        pauseClock = false;
         trialScore = 0;
 
         // Load in the trial data
@@ -508,18 +525,6 @@ public class GameController : MonoBehaviour {
         {
             return "StartTrial";
         }
-
-        /*
-        if ( (nextScene == "Exit") || (nextScene == "RestBreak") || (nextScene == "GetReady"))
-        {
-            return nextScene;   // we don't want to record data and do the FSM transitions during the exit and rest break scenes
-        }
-        else
-        {
-            return "StartTrial";
-        }
-        */
-
 
     }
 
@@ -577,9 +582,24 @@ public class GameController : MonoBehaviour {
 
     public void CheckFullScreen()
     {
+        // Check if playing in fullscreen mode. If not, give warning until we're back in full screen.
         if (!Screen.fullScreen)
         {
-            Debug.Log("Not in full screen mode! Give a warning that it will exit if they dont fix this.");
+            if(State!=STATE_STARTSCREEN)
+            {
+                // if we're in the middle of the experiment, send them a warning and restart the trial
+                FLAG_fullScreenModeError = true;
+                displayMessage = "notFullScreenError";
+                StateNext(STATE_PAUSE);
+            }
+        }
+        else
+        {
+            if (FLAG_fullScreenModeError)  // they had exited fullscreen mode, but now its back to fullscreen :)
+            {
+                StateNext(STATE_ERROR);    // record that this error happened and restart the trial
+                FLAG_fullScreenModeError = false;
+            }
         }
     }
 
@@ -672,6 +692,10 @@ public class GameController : MonoBehaviour {
 
             case "dataWritingError":
                 textMessage = "There was an error sending data to the web server.  Please exit.";
+                break;
+
+            case "notFullScreenError":
+                textMessage = "Please return the application to full-screen mode to continue.";
                 break;
         }  
     }

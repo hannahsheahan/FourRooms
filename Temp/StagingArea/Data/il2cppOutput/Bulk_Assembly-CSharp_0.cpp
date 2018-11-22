@@ -368,6 +368,7 @@ extern String_t* _stringLiteral1145236420;
 extern String_t* _stringLiteral1190945879;
 extern String_t* _stringLiteral1223051725;
 extern String_t* _stringLiteral1234306991;
+extern String_t* _stringLiteral1274980763;
 extern String_t* _stringLiteral129394769;
 extern String_t* _stringLiteral1300899831;
 extern String_t* _stringLiteral1303718619;
@@ -375,7 +376,6 @@ extern String_t* _stringLiteral1370521657;
 extern String_t* _stringLiteral1393092872;
 extern String_t* _stringLiteral1406464085;
 extern String_t* _stringLiteral1410361278;
-extern String_t* _stringLiteral1495231122;
 extern String_t* _stringLiteral1628809217;
 extern String_t* _stringLiteral1637419115;
 extern String_t* _stringLiteral1641199155;
@@ -383,6 +383,7 @@ extern String_t* _stringLiteral1733236660;
 extern String_t* _stringLiteral1808511342;
 extern String_t* _stringLiteral1883376672;
 extern String_t* _stringLiteral1946891126;
+extern String_t* _stringLiteral1953642114;
 extern String_t* _stringLiteral1969920661;
 extern String_t* _stringLiteral198578185;
 extern String_t* _stringLiteral1986186959;
@@ -417,6 +418,7 @@ extern String_t* _stringLiteral2815275950;
 extern String_t* _stringLiteral2833612887;
 extern String_t* _stringLiteral2844503212;
 extern String_t* _stringLiteral2891090372;
+extern String_t* _stringLiteral29499788;
 extern String_t* _stringLiteral2973403299;
 extern String_t* _stringLiteral3054425384;
 extern String_t* _stringLiteral3068241275;
@@ -6559,72 +6561,76 @@ public:
 	bool ___flashTotalScore_35;
 	// System.Boolean GameController::scoreUpdated
 	bool ___scoreUpdated_36;
+	// System.Boolean GameController::pauseClock
+	bool ___pauseClock_37;
 	// System.Single GameController::beforeScoreUpdateTime
-	float ___beforeScoreUpdateTime_37;
+	float ___beforeScoreUpdateTime_38;
 	// Timer GameController::experimentTimer
-	Timer_t4185932343 * ___experimentTimer_38;
+	Timer_t4185932343 * ___experimentTimer_39;
 	// Timer GameController::stateTimer
-	Timer_t4185932343 * ___stateTimer_39;
+	Timer_t4185932343 * ___stateTimer_40;
 	// Timer GameController::movementTimer
-	Timer_t4185932343 * ___movementTimer_40;
+	Timer_t4185932343 * ___movementTimer_41;
 	// Timer GameController::messageTimer
-	Timer_t4185932343 * ___messageTimer_41;
+	Timer_t4185932343 * ___messageTimer_42;
 	// Timer GameController::restbreakTimer
-	Timer_t4185932343 * ___restbreakTimer_42;
+	Timer_t4185932343 * ___restbreakTimer_43;
 	// Timer GameController::getReadyTimer
-	Timer_t4185932343 * ___getReadyTimer_43;
+	Timer_t4185932343 * ___getReadyTimer_44;
 	// System.Single GameController::firstMovementTime
-	float ___firstMovementTime_44;
+	float ___firstMovementTime_45;
 	// System.Single GameController::totalMovementTime
-	float ___totalMovementTime_45;
+	float ___totalMovementTime_46;
 	// System.Single GameController::totalExperimentTime
-	float ___totalExperimentTime_46;
+	float ___totalExperimentTime_47;
 	// System.Single GameController::currentMovementTime
-	float ___currentMovementTime_47;
+	float ___currentMovementTime_48;
 	// System.Boolean GameController::displayTimeLeft
-	bool ___displayTimeLeft_48;
+	bool ___displayTimeLeft_49;
 	// System.Single GameController::maxMovementTime
-	float ___maxMovementTime_49;
+	float ___maxMovementTime_50;
 	// System.Single GameController::preDisplayCueTime
-	float ___preDisplayCueTime_50;
+	float ___preDisplayCueTime_51;
 	// System.Single GameController::goCueDelay
-	float ___goCueDelay_51;
+	float ___goCueDelay_52;
 	// System.Single GameController::displayCueTime
-	float ___displayCueTime_52;
+	float ___displayCueTime_53;
 	// System.Single GameController::goalHitPauseTime
-	float ___goalHitPauseTime_53;
+	float ___goalHitPauseTime_54;
 	// System.Single GameController::finalGoalHitPauseTime
-	float ___finalGoalHitPauseTime_54;
+	float ___finalGoalHitPauseTime_55;
 	// System.Single GameController::minDwellAtReward
-	float ___minDwellAtReward_55;
+	float ___minDwellAtReward_56;
 	// System.Single GameController::displayMessageTime
-	float ___displayMessageTime_56;
+	float ___displayMessageTime_57;
 	// System.Single GameController::errorDwellTime
-	float ___errorDwellTime_57;
+	float ___errorDwellTime_58;
 	// System.Single GameController::restbreakDuration
-	float ___restbreakDuration_58;
+	float ___restbreakDuration_59;
 	// System.Single GameController::elapsedRestbreakTime
-	float ___elapsedRestbreakTime_59;
+	float ___elapsedRestbreakTime_60;
 	// System.Single GameController::getReadyTime
-	float ___getReadyTime_60;
+	float ___getReadyTime_61;
 	// System.Single GameController::getReadyDuration
-	float ___getReadyDuration_61;
+	float ___getReadyDuration_62;
 	// System.Single GameController::dataRecordFrequency
-	float ___dataRecordFrequency_62;
+	float ___dataRecordFrequency_63;
 	// System.Single GameController::timeRemaining
-	float ___timeRemaining_63;
+	float ___timeRemaining_64;
 	// System.Boolean GameController::FLAG_trialError
-	bool ___FLAG_trialError_64;
+	bool ___FLAG_trialError_65;
 	// System.Boolean GameController::FLAG_trialTimeout
-	bool ___FLAG_trialTimeout_65;
+	bool ___FLAG_trialTimeout_66;
+	// System.Boolean GameController::FLAG_fullScreenModeError
+	bool ___FLAG_fullScreenModeError_67;
 	// System.String[] GameController::stateText
-	StringU5BU5D_t1281789340* ___stateText_85;
+	StringU5BU5D_t1281789340* ___stateText_88;
 	// System.Int32 GameController::State
-	int32_t ___State_86;
+	int32_t ___State_89;
 	// System.Collections.Generic.List`1<System.String> GameController::stateTransitions
-	List_1_t3319525431 * ___stateTransitions_87;
+	List_1_t3319525431 * ___stateTransitions_90;
 	// System.Boolean GameController::gameStarted
-	bool ___gameStarted_88;
+	bool ___gameStarted_91;
 
 public:
 	inline static int32_t get_offset_of_dataController_4() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___dataController_4)); }
@@ -6899,276 +6905,292 @@ public:
 		___scoreUpdated_36 = value;
 	}
 
-	inline static int32_t get_offset_of_beforeScoreUpdateTime_37() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___beforeScoreUpdateTime_37)); }
-	inline float get_beforeScoreUpdateTime_37() const { return ___beforeScoreUpdateTime_37; }
-	inline float* get_address_of_beforeScoreUpdateTime_37() { return &___beforeScoreUpdateTime_37; }
-	inline void set_beforeScoreUpdateTime_37(float value)
+	inline static int32_t get_offset_of_pauseClock_37() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___pauseClock_37)); }
+	inline bool get_pauseClock_37() const { return ___pauseClock_37; }
+	inline bool* get_address_of_pauseClock_37() { return &___pauseClock_37; }
+	inline void set_pauseClock_37(bool value)
 	{
-		___beforeScoreUpdateTime_37 = value;
+		___pauseClock_37 = value;
 	}
 
-	inline static int32_t get_offset_of_experimentTimer_38() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___experimentTimer_38)); }
-	inline Timer_t4185932343 * get_experimentTimer_38() const { return ___experimentTimer_38; }
-	inline Timer_t4185932343 ** get_address_of_experimentTimer_38() { return &___experimentTimer_38; }
-	inline void set_experimentTimer_38(Timer_t4185932343 * value)
+	inline static int32_t get_offset_of_beforeScoreUpdateTime_38() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___beforeScoreUpdateTime_38)); }
+	inline float get_beforeScoreUpdateTime_38() const { return ___beforeScoreUpdateTime_38; }
+	inline float* get_address_of_beforeScoreUpdateTime_38() { return &___beforeScoreUpdateTime_38; }
+	inline void set_beforeScoreUpdateTime_38(float value)
 	{
-		___experimentTimer_38 = value;
-		Il2CppCodeGenWriteBarrier((&___experimentTimer_38), value);
+		___beforeScoreUpdateTime_38 = value;
 	}
 
-	inline static int32_t get_offset_of_stateTimer_39() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___stateTimer_39)); }
-	inline Timer_t4185932343 * get_stateTimer_39() const { return ___stateTimer_39; }
-	inline Timer_t4185932343 ** get_address_of_stateTimer_39() { return &___stateTimer_39; }
-	inline void set_stateTimer_39(Timer_t4185932343 * value)
+	inline static int32_t get_offset_of_experimentTimer_39() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___experimentTimer_39)); }
+	inline Timer_t4185932343 * get_experimentTimer_39() const { return ___experimentTimer_39; }
+	inline Timer_t4185932343 ** get_address_of_experimentTimer_39() { return &___experimentTimer_39; }
+	inline void set_experimentTimer_39(Timer_t4185932343 * value)
 	{
-		___stateTimer_39 = value;
-		Il2CppCodeGenWriteBarrier((&___stateTimer_39), value);
+		___experimentTimer_39 = value;
+		Il2CppCodeGenWriteBarrier((&___experimentTimer_39), value);
 	}
 
-	inline static int32_t get_offset_of_movementTimer_40() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___movementTimer_40)); }
-	inline Timer_t4185932343 * get_movementTimer_40() const { return ___movementTimer_40; }
-	inline Timer_t4185932343 ** get_address_of_movementTimer_40() { return &___movementTimer_40; }
-	inline void set_movementTimer_40(Timer_t4185932343 * value)
+	inline static int32_t get_offset_of_stateTimer_40() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___stateTimer_40)); }
+	inline Timer_t4185932343 * get_stateTimer_40() const { return ___stateTimer_40; }
+	inline Timer_t4185932343 ** get_address_of_stateTimer_40() { return &___stateTimer_40; }
+	inline void set_stateTimer_40(Timer_t4185932343 * value)
 	{
-		___movementTimer_40 = value;
-		Il2CppCodeGenWriteBarrier((&___movementTimer_40), value);
+		___stateTimer_40 = value;
+		Il2CppCodeGenWriteBarrier((&___stateTimer_40), value);
 	}
 
-	inline static int32_t get_offset_of_messageTimer_41() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___messageTimer_41)); }
-	inline Timer_t4185932343 * get_messageTimer_41() const { return ___messageTimer_41; }
-	inline Timer_t4185932343 ** get_address_of_messageTimer_41() { return &___messageTimer_41; }
-	inline void set_messageTimer_41(Timer_t4185932343 * value)
+	inline static int32_t get_offset_of_movementTimer_41() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___movementTimer_41)); }
+	inline Timer_t4185932343 * get_movementTimer_41() const { return ___movementTimer_41; }
+	inline Timer_t4185932343 ** get_address_of_movementTimer_41() { return &___movementTimer_41; }
+	inline void set_movementTimer_41(Timer_t4185932343 * value)
 	{
-		___messageTimer_41 = value;
-		Il2CppCodeGenWriteBarrier((&___messageTimer_41), value);
+		___movementTimer_41 = value;
+		Il2CppCodeGenWriteBarrier((&___movementTimer_41), value);
 	}
 
-	inline static int32_t get_offset_of_restbreakTimer_42() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___restbreakTimer_42)); }
-	inline Timer_t4185932343 * get_restbreakTimer_42() const { return ___restbreakTimer_42; }
-	inline Timer_t4185932343 ** get_address_of_restbreakTimer_42() { return &___restbreakTimer_42; }
-	inline void set_restbreakTimer_42(Timer_t4185932343 * value)
+	inline static int32_t get_offset_of_messageTimer_42() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___messageTimer_42)); }
+	inline Timer_t4185932343 * get_messageTimer_42() const { return ___messageTimer_42; }
+	inline Timer_t4185932343 ** get_address_of_messageTimer_42() { return &___messageTimer_42; }
+	inline void set_messageTimer_42(Timer_t4185932343 * value)
 	{
-		___restbreakTimer_42 = value;
-		Il2CppCodeGenWriteBarrier((&___restbreakTimer_42), value);
+		___messageTimer_42 = value;
+		Il2CppCodeGenWriteBarrier((&___messageTimer_42), value);
 	}
 
-	inline static int32_t get_offset_of_getReadyTimer_43() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___getReadyTimer_43)); }
-	inline Timer_t4185932343 * get_getReadyTimer_43() const { return ___getReadyTimer_43; }
-	inline Timer_t4185932343 ** get_address_of_getReadyTimer_43() { return &___getReadyTimer_43; }
-	inline void set_getReadyTimer_43(Timer_t4185932343 * value)
+	inline static int32_t get_offset_of_restbreakTimer_43() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___restbreakTimer_43)); }
+	inline Timer_t4185932343 * get_restbreakTimer_43() const { return ___restbreakTimer_43; }
+	inline Timer_t4185932343 ** get_address_of_restbreakTimer_43() { return &___restbreakTimer_43; }
+	inline void set_restbreakTimer_43(Timer_t4185932343 * value)
 	{
-		___getReadyTimer_43 = value;
-		Il2CppCodeGenWriteBarrier((&___getReadyTimer_43), value);
+		___restbreakTimer_43 = value;
+		Il2CppCodeGenWriteBarrier((&___restbreakTimer_43), value);
 	}
 
-	inline static int32_t get_offset_of_firstMovementTime_44() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___firstMovementTime_44)); }
-	inline float get_firstMovementTime_44() const { return ___firstMovementTime_44; }
-	inline float* get_address_of_firstMovementTime_44() { return &___firstMovementTime_44; }
-	inline void set_firstMovementTime_44(float value)
+	inline static int32_t get_offset_of_getReadyTimer_44() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___getReadyTimer_44)); }
+	inline Timer_t4185932343 * get_getReadyTimer_44() const { return ___getReadyTimer_44; }
+	inline Timer_t4185932343 ** get_address_of_getReadyTimer_44() { return &___getReadyTimer_44; }
+	inline void set_getReadyTimer_44(Timer_t4185932343 * value)
 	{
-		___firstMovementTime_44 = value;
+		___getReadyTimer_44 = value;
+		Il2CppCodeGenWriteBarrier((&___getReadyTimer_44), value);
 	}
 
-	inline static int32_t get_offset_of_totalMovementTime_45() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___totalMovementTime_45)); }
-	inline float get_totalMovementTime_45() const { return ___totalMovementTime_45; }
-	inline float* get_address_of_totalMovementTime_45() { return &___totalMovementTime_45; }
-	inline void set_totalMovementTime_45(float value)
+	inline static int32_t get_offset_of_firstMovementTime_45() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___firstMovementTime_45)); }
+	inline float get_firstMovementTime_45() const { return ___firstMovementTime_45; }
+	inline float* get_address_of_firstMovementTime_45() { return &___firstMovementTime_45; }
+	inline void set_firstMovementTime_45(float value)
 	{
-		___totalMovementTime_45 = value;
+		___firstMovementTime_45 = value;
 	}
 
-	inline static int32_t get_offset_of_totalExperimentTime_46() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___totalExperimentTime_46)); }
-	inline float get_totalExperimentTime_46() const { return ___totalExperimentTime_46; }
-	inline float* get_address_of_totalExperimentTime_46() { return &___totalExperimentTime_46; }
-	inline void set_totalExperimentTime_46(float value)
+	inline static int32_t get_offset_of_totalMovementTime_46() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___totalMovementTime_46)); }
+	inline float get_totalMovementTime_46() const { return ___totalMovementTime_46; }
+	inline float* get_address_of_totalMovementTime_46() { return &___totalMovementTime_46; }
+	inline void set_totalMovementTime_46(float value)
 	{
-		___totalExperimentTime_46 = value;
+		___totalMovementTime_46 = value;
 	}
 
-	inline static int32_t get_offset_of_currentMovementTime_47() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___currentMovementTime_47)); }
-	inline float get_currentMovementTime_47() const { return ___currentMovementTime_47; }
-	inline float* get_address_of_currentMovementTime_47() { return &___currentMovementTime_47; }
-	inline void set_currentMovementTime_47(float value)
+	inline static int32_t get_offset_of_totalExperimentTime_47() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___totalExperimentTime_47)); }
+	inline float get_totalExperimentTime_47() const { return ___totalExperimentTime_47; }
+	inline float* get_address_of_totalExperimentTime_47() { return &___totalExperimentTime_47; }
+	inline void set_totalExperimentTime_47(float value)
 	{
-		___currentMovementTime_47 = value;
+		___totalExperimentTime_47 = value;
 	}
 
-	inline static int32_t get_offset_of_displayTimeLeft_48() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___displayTimeLeft_48)); }
-	inline bool get_displayTimeLeft_48() const { return ___displayTimeLeft_48; }
-	inline bool* get_address_of_displayTimeLeft_48() { return &___displayTimeLeft_48; }
-	inline void set_displayTimeLeft_48(bool value)
+	inline static int32_t get_offset_of_currentMovementTime_48() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___currentMovementTime_48)); }
+	inline float get_currentMovementTime_48() const { return ___currentMovementTime_48; }
+	inline float* get_address_of_currentMovementTime_48() { return &___currentMovementTime_48; }
+	inline void set_currentMovementTime_48(float value)
 	{
-		___displayTimeLeft_48 = value;
+		___currentMovementTime_48 = value;
 	}
 
-	inline static int32_t get_offset_of_maxMovementTime_49() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___maxMovementTime_49)); }
-	inline float get_maxMovementTime_49() const { return ___maxMovementTime_49; }
-	inline float* get_address_of_maxMovementTime_49() { return &___maxMovementTime_49; }
-	inline void set_maxMovementTime_49(float value)
+	inline static int32_t get_offset_of_displayTimeLeft_49() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___displayTimeLeft_49)); }
+	inline bool get_displayTimeLeft_49() const { return ___displayTimeLeft_49; }
+	inline bool* get_address_of_displayTimeLeft_49() { return &___displayTimeLeft_49; }
+	inline void set_displayTimeLeft_49(bool value)
 	{
-		___maxMovementTime_49 = value;
+		___displayTimeLeft_49 = value;
 	}
 
-	inline static int32_t get_offset_of_preDisplayCueTime_50() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___preDisplayCueTime_50)); }
-	inline float get_preDisplayCueTime_50() const { return ___preDisplayCueTime_50; }
-	inline float* get_address_of_preDisplayCueTime_50() { return &___preDisplayCueTime_50; }
-	inline void set_preDisplayCueTime_50(float value)
+	inline static int32_t get_offset_of_maxMovementTime_50() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___maxMovementTime_50)); }
+	inline float get_maxMovementTime_50() const { return ___maxMovementTime_50; }
+	inline float* get_address_of_maxMovementTime_50() { return &___maxMovementTime_50; }
+	inline void set_maxMovementTime_50(float value)
 	{
-		___preDisplayCueTime_50 = value;
+		___maxMovementTime_50 = value;
 	}
 
-	inline static int32_t get_offset_of_goCueDelay_51() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___goCueDelay_51)); }
-	inline float get_goCueDelay_51() const { return ___goCueDelay_51; }
-	inline float* get_address_of_goCueDelay_51() { return &___goCueDelay_51; }
-	inline void set_goCueDelay_51(float value)
+	inline static int32_t get_offset_of_preDisplayCueTime_51() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___preDisplayCueTime_51)); }
+	inline float get_preDisplayCueTime_51() const { return ___preDisplayCueTime_51; }
+	inline float* get_address_of_preDisplayCueTime_51() { return &___preDisplayCueTime_51; }
+	inline void set_preDisplayCueTime_51(float value)
 	{
-		___goCueDelay_51 = value;
+		___preDisplayCueTime_51 = value;
 	}
 
-	inline static int32_t get_offset_of_displayCueTime_52() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___displayCueTime_52)); }
-	inline float get_displayCueTime_52() const { return ___displayCueTime_52; }
-	inline float* get_address_of_displayCueTime_52() { return &___displayCueTime_52; }
-	inline void set_displayCueTime_52(float value)
+	inline static int32_t get_offset_of_goCueDelay_52() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___goCueDelay_52)); }
+	inline float get_goCueDelay_52() const { return ___goCueDelay_52; }
+	inline float* get_address_of_goCueDelay_52() { return &___goCueDelay_52; }
+	inline void set_goCueDelay_52(float value)
 	{
-		___displayCueTime_52 = value;
+		___goCueDelay_52 = value;
 	}
 
-	inline static int32_t get_offset_of_goalHitPauseTime_53() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___goalHitPauseTime_53)); }
-	inline float get_goalHitPauseTime_53() const { return ___goalHitPauseTime_53; }
-	inline float* get_address_of_goalHitPauseTime_53() { return &___goalHitPauseTime_53; }
-	inline void set_goalHitPauseTime_53(float value)
+	inline static int32_t get_offset_of_displayCueTime_53() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___displayCueTime_53)); }
+	inline float get_displayCueTime_53() const { return ___displayCueTime_53; }
+	inline float* get_address_of_displayCueTime_53() { return &___displayCueTime_53; }
+	inline void set_displayCueTime_53(float value)
 	{
-		___goalHitPauseTime_53 = value;
+		___displayCueTime_53 = value;
 	}
 
-	inline static int32_t get_offset_of_finalGoalHitPauseTime_54() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___finalGoalHitPauseTime_54)); }
-	inline float get_finalGoalHitPauseTime_54() const { return ___finalGoalHitPauseTime_54; }
-	inline float* get_address_of_finalGoalHitPauseTime_54() { return &___finalGoalHitPauseTime_54; }
-	inline void set_finalGoalHitPauseTime_54(float value)
+	inline static int32_t get_offset_of_goalHitPauseTime_54() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___goalHitPauseTime_54)); }
+	inline float get_goalHitPauseTime_54() const { return ___goalHitPauseTime_54; }
+	inline float* get_address_of_goalHitPauseTime_54() { return &___goalHitPauseTime_54; }
+	inline void set_goalHitPauseTime_54(float value)
 	{
-		___finalGoalHitPauseTime_54 = value;
+		___goalHitPauseTime_54 = value;
 	}
 
-	inline static int32_t get_offset_of_minDwellAtReward_55() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___minDwellAtReward_55)); }
-	inline float get_minDwellAtReward_55() const { return ___minDwellAtReward_55; }
-	inline float* get_address_of_minDwellAtReward_55() { return &___minDwellAtReward_55; }
-	inline void set_minDwellAtReward_55(float value)
+	inline static int32_t get_offset_of_finalGoalHitPauseTime_55() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___finalGoalHitPauseTime_55)); }
+	inline float get_finalGoalHitPauseTime_55() const { return ___finalGoalHitPauseTime_55; }
+	inline float* get_address_of_finalGoalHitPauseTime_55() { return &___finalGoalHitPauseTime_55; }
+	inline void set_finalGoalHitPauseTime_55(float value)
 	{
-		___minDwellAtReward_55 = value;
+		___finalGoalHitPauseTime_55 = value;
 	}
 
-	inline static int32_t get_offset_of_displayMessageTime_56() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___displayMessageTime_56)); }
-	inline float get_displayMessageTime_56() const { return ___displayMessageTime_56; }
-	inline float* get_address_of_displayMessageTime_56() { return &___displayMessageTime_56; }
-	inline void set_displayMessageTime_56(float value)
+	inline static int32_t get_offset_of_minDwellAtReward_56() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___minDwellAtReward_56)); }
+	inline float get_minDwellAtReward_56() const { return ___minDwellAtReward_56; }
+	inline float* get_address_of_minDwellAtReward_56() { return &___minDwellAtReward_56; }
+	inline void set_minDwellAtReward_56(float value)
 	{
-		___displayMessageTime_56 = value;
+		___minDwellAtReward_56 = value;
 	}
 
-	inline static int32_t get_offset_of_errorDwellTime_57() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___errorDwellTime_57)); }
-	inline float get_errorDwellTime_57() const { return ___errorDwellTime_57; }
-	inline float* get_address_of_errorDwellTime_57() { return &___errorDwellTime_57; }
-	inline void set_errorDwellTime_57(float value)
+	inline static int32_t get_offset_of_displayMessageTime_57() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___displayMessageTime_57)); }
+	inline float get_displayMessageTime_57() const { return ___displayMessageTime_57; }
+	inline float* get_address_of_displayMessageTime_57() { return &___displayMessageTime_57; }
+	inline void set_displayMessageTime_57(float value)
 	{
-		___errorDwellTime_57 = value;
+		___displayMessageTime_57 = value;
 	}
 
-	inline static int32_t get_offset_of_restbreakDuration_58() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___restbreakDuration_58)); }
-	inline float get_restbreakDuration_58() const { return ___restbreakDuration_58; }
-	inline float* get_address_of_restbreakDuration_58() { return &___restbreakDuration_58; }
-	inline void set_restbreakDuration_58(float value)
+	inline static int32_t get_offset_of_errorDwellTime_58() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___errorDwellTime_58)); }
+	inline float get_errorDwellTime_58() const { return ___errorDwellTime_58; }
+	inline float* get_address_of_errorDwellTime_58() { return &___errorDwellTime_58; }
+	inline void set_errorDwellTime_58(float value)
 	{
-		___restbreakDuration_58 = value;
+		___errorDwellTime_58 = value;
 	}
 
-	inline static int32_t get_offset_of_elapsedRestbreakTime_59() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___elapsedRestbreakTime_59)); }
-	inline float get_elapsedRestbreakTime_59() const { return ___elapsedRestbreakTime_59; }
-	inline float* get_address_of_elapsedRestbreakTime_59() { return &___elapsedRestbreakTime_59; }
-	inline void set_elapsedRestbreakTime_59(float value)
+	inline static int32_t get_offset_of_restbreakDuration_59() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___restbreakDuration_59)); }
+	inline float get_restbreakDuration_59() const { return ___restbreakDuration_59; }
+	inline float* get_address_of_restbreakDuration_59() { return &___restbreakDuration_59; }
+	inline void set_restbreakDuration_59(float value)
 	{
-		___elapsedRestbreakTime_59 = value;
+		___restbreakDuration_59 = value;
 	}
 
-	inline static int32_t get_offset_of_getReadyTime_60() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___getReadyTime_60)); }
-	inline float get_getReadyTime_60() const { return ___getReadyTime_60; }
-	inline float* get_address_of_getReadyTime_60() { return &___getReadyTime_60; }
-	inline void set_getReadyTime_60(float value)
+	inline static int32_t get_offset_of_elapsedRestbreakTime_60() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___elapsedRestbreakTime_60)); }
+	inline float get_elapsedRestbreakTime_60() const { return ___elapsedRestbreakTime_60; }
+	inline float* get_address_of_elapsedRestbreakTime_60() { return &___elapsedRestbreakTime_60; }
+	inline void set_elapsedRestbreakTime_60(float value)
 	{
-		___getReadyTime_60 = value;
+		___elapsedRestbreakTime_60 = value;
 	}
 
-	inline static int32_t get_offset_of_getReadyDuration_61() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___getReadyDuration_61)); }
-	inline float get_getReadyDuration_61() const { return ___getReadyDuration_61; }
-	inline float* get_address_of_getReadyDuration_61() { return &___getReadyDuration_61; }
-	inline void set_getReadyDuration_61(float value)
+	inline static int32_t get_offset_of_getReadyTime_61() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___getReadyTime_61)); }
+	inline float get_getReadyTime_61() const { return ___getReadyTime_61; }
+	inline float* get_address_of_getReadyTime_61() { return &___getReadyTime_61; }
+	inline void set_getReadyTime_61(float value)
 	{
-		___getReadyDuration_61 = value;
+		___getReadyTime_61 = value;
 	}
 
-	inline static int32_t get_offset_of_dataRecordFrequency_62() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___dataRecordFrequency_62)); }
-	inline float get_dataRecordFrequency_62() const { return ___dataRecordFrequency_62; }
-	inline float* get_address_of_dataRecordFrequency_62() { return &___dataRecordFrequency_62; }
-	inline void set_dataRecordFrequency_62(float value)
+	inline static int32_t get_offset_of_getReadyDuration_62() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___getReadyDuration_62)); }
+	inline float get_getReadyDuration_62() const { return ___getReadyDuration_62; }
+	inline float* get_address_of_getReadyDuration_62() { return &___getReadyDuration_62; }
+	inline void set_getReadyDuration_62(float value)
 	{
-		___dataRecordFrequency_62 = value;
+		___getReadyDuration_62 = value;
 	}
 
-	inline static int32_t get_offset_of_timeRemaining_63() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___timeRemaining_63)); }
-	inline float get_timeRemaining_63() const { return ___timeRemaining_63; }
-	inline float* get_address_of_timeRemaining_63() { return &___timeRemaining_63; }
-	inline void set_timeRemaining_63(float value)
+	inline static int32_t get_offset_of_dataRecordFrequency_63() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___dataRecordFrequency_63)); }
+	inline float get_dataRecordFrequency_63() const { return ___dataRecordFrequency_63; }
+	inline float* get_address_of_dataRecordFrequency_63() { return &___dataRecordFrequency_63; }
+	inline void set_dataRecordFrequency_63(float value)
 	{
-		___timeRemaining_63 = value;
+		___dataRecordFrequency_63 = value;
 	}
 
-	inline static int32_t get_offset_of_FLAG_trialError_64() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___FLAG_trialError_64)); }
-	inline bool get_FLAG_trialError_64() const { return ___FLAG_trialError_64; }
-	inline bool* get_address_of_FLAG_trialError_64() { return &___FLAG_trialError_64; }
-	inline void set_FLAG_trialError_64(bool value)
+	inline static int32_t get_offset_of_timeRemaining_64() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___timeRemaining_64)); }
+	inline float get_timeRemaining_64() const { return ___timeRemaining_64; }
+	inline float* get_address_of_timeRemaining_64() { return &___timeRemaining_64; }
+	inline void set_timeRemaining_64(float value)
 	{
-		___FLAG_trialError_64 = value;
+		___timeRemaining_64 = value;
 	}
 
-	inline static int32_t get_offset_of_FLAG_trialTimeout_65() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___FLAG_trialTimeout_65)); }
-	inline bool get_FLAG_trialTimeout_65() const { return ___FLAG_trialTimeout_65; }
-	inline bool* get_address_of_FLAG_trialTimeout_65() { return &___FLAG_trialTimeout_65; }
-	inline void set_FLAG_trialTimeout_65(bool value)
+	inline static int32_t get_offset_of_FLAG_trialError_65() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___FLAG_trialError_65)); }
+	inline bool get_FLAG_trialError_65() const { return ___FLAG_trialError_65; }
+	inline bool* get_address_of_FLAG_trialError_65() { return &___FLAG_trialError_65; }
+	inline void set_FLAG_trialError_65(bool value)
 	{
-		___FLAG_trialTimeout_65 = value;
+		___FLAG_trialError_65 = value;
 	}
 
-	inline static int32_t get_offset_of_stateText_85() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___stateText_85)); }
-	inline StringU5BU5D_t1281789340* get_stateText_85() const { return ___stateText_85; }
-	inline StringU5BU5D_t1281789340** get_address_of_stateText_85() { return &___stateText_85; }
-	inline void set_stateText_85(StringU5BU5D_t1281789340* value)
+	inline static int32_t get_offset_of_FLAG_trialTimeout_66() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___FLAG_trialTimeout_66)); }
+	inline bool get_FLAG_trialTimeout_66() const { return ___FLAG_trialTimeout_66; }
+	inline bool* get_address_of_FLAG_trialTimeout_66() { return &___FLAG_trialTimeout_66; }
+	inline void set_FLAG_trialTimeout_66(bool value)
 	{
-		___stateText_85 = value;
-		Il2CppCodeGenWriteBarrier((&___stateText_85), value);
+		___FLAG_trialTimeout_66 = value;
 	}
 
-	inline static int32_t get_offset_of_State_86() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___State_86)); }
-	inline int32_t get_State_86() const { return ___State_86; }
-	inline int32_t* get_address_of_State_86() { return &___State_86; }
-	inline void set_State_86(int32_t value)
+	inline static int32_t get_offset_of_FLAG_fullScreenModeError_67() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___FLAG_fullScreenModeError_67)); }
+	inline bool get_FLAG_fullScreenModeError_67() const { return ___FLAG_fullScreenModeError_67; }
+	inline bool* get_address_of_FLAG_fullScreenModeError_67() { return &___FLAG_fullScreenModeError_67; }
+	inline void set_FLAG_fullScreenModeError_67(bool value)
 	{
-		___State_86 = value;
+		___FLAG_fullScreenModeError_67 = value;
 	}
 
-	inline static int32_t get_offset_of_stateTransitions_87() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___stateTransitions_87)); }
-	inline List_1_t3319525431 * get_stateTransitions_87() const { return ___stateTransitions_87; }
-	inline List_1_t3319525431 ** get_address_of_stateTransitions_87() { return &___stateTransitions_87; }
-	inline void set_stateTransitions_87(List_1_t3319525431 * value)
+	inline static int32_t get_offset_of_stateText_88() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___stateText_88)); }
+	inline StringU5BU5D_t1281789340* get_stateText_88() const { return ___stateText_88; }
+	inline StringU5BU5D_t1281789340** get_address_of_stateText_88() { return &___stateText_88; }
+	inline void set_stateText_88(StringU5BU5D_t1281789340* value)
 	{
-		___stateTransitions_87 = value;
-		Il2CppCodeGenWriteBarrier((&___stateTransitions_87), value);
+		___stateText_88 = value;
+		Il2CppCodeGenWriteBarrier((&___stateText_88), value);
 	}
 
-	inline static int32_t get_offset_of_gameStarted_88() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___gameStarted_88)); }
-	inline bool get_gameStarted_88() const { return ___gameStarted_88; }
-	inline bool* get_address_of_gameStarted_88() { return &___gameStarted_88; }
-	inline void set_gameStarted_88(bool value)
+	inline static int32_t get_offset_of_State_89() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___State_89)); }
+	inline int32_t get_State_89() const { return ___State_89; }
+	inline int32_t* get_address_of_State_89() { return &___State_89; }
+	inline void set_State_89(int32_t value)
 	{
-		___gameStarted_88 = value;
+		___State_89 = value;
+	}
+
+	inline static int32_t get_offset_of_stateTransitions_90() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___stateTransitions_90)); }
+	inline List_1_t3319525431 * get_stateTransitions_90() const { return ___stateTransitions_90; }
+	inline List_1_t3319525431 ** get_address_of_stateTransitions_90() { return &___stateTransitions_90; }
+	inline void set_stateTransitions_90(List_1_t3319525431 * value)
+	{
+		___stateTransitions_90 = value;
+		Il2CppCodeGenWriteBarrier((&___stateTransitions_90), value);
+	}
+
+	inline static int32_t get_offset_of_gameStarted_91() { return static_cast<int32_t>(offsetof(GameController_t2330501625, ___gameStarted_91)); }
+	inline bool get_gameStarted_91() const { return ___gameStarted_91; }
+	inline bool* get_address_of_gameStarted_91() { return &___gameStarted_91; }
+	inline void set_gameStarted_91(bool value)
+	{
+		___gameStarted_91 = value;
 	}
 };
 
@@ -7178,7 +7200,7 @@ public:
 	// GameController GameController::control
 	GameController_t2330501625 * ___control_5;
 	// System.Collections.Generic.Dictionary`2<System.String,System.Int32> GameController::<>f__switch$map0
-	Dictionary_2_t2736202052 * ___U3CU3Ef__switchU24map0_89;
+	Dictionary_2_t2736202052 * ___U3CU3Ef__switchU24map0_92;
 
 public:
 	inline static int32_t get_offset_of_control_5() { return static_cast<int32_t>(offsetof(GameController_t2330501625_StaticFields, ___control_5)); }
@@ -7190,13 +7212,13 @@ public:
 		Il2CppCodeGenWriteBarrier((&___control_5), value);
 	}
 
-	inline static int32_t get_offset_of_U3CU3Ef__switchU24map0_89() { return static_cast<int32_t>(offsetof(GameController_t2330501625_StaticFields, ___U3CU3Ef__switchU24map0_89)); }
-	inline Dictionary_2_t2736202052 * get_U3CU3Ef__switchU24map0_89() const { return ___U3CU3Ef__switchU24map0_89; }
-	inline Dictionary_2_t2736202052 ** get_address_of_U3CU3Ef__switchU24map0_89() { return &___U3CU3Ef__switchU24map0_89; }
-	inline void set_U3CU3Ef__switchU24map0_89(Dictionary_2_t2736202052 * value)
+	inline static int32_t get_offset_of_U3CU3Ef__switchU24map0_92() { return static_cast<int32_t>(offsetof(GameController_t2330501625_StaticFields, ___U3CU3Ef__switchU24map0_92)); }
+	inline Dictionary_2_t2736202052 * get_U3CU3Ef__switchU24map0_92() const { return ___U3CU3Ef__switchU24map0_92; }
+	inline Dictionary_2_t2736202052 ** get_address_of_U3CU3Ef__switchU24map0_92() { return &___U3CU3Ef__switchU24map0_92; }
+	inline void set_U3CU3Ef__switchU24map0_92(Dictionary_2_t2736202052 * value)
 	{
-		___U3CU3Ef__switchU24map0_89 = value;
-		Il2CppCodeGenWriteBarrier((&___U3CU3Ef__switchU24map0_89), value);
+		___U3CU3Ef__switchU24map0_92 = value;
+		Il2CppCodeGenWriteBarrier((&___U3CU3Ef__switchU24map0_92), value);
 	}
 };
 
@@ -9812,10 +9834,10 @@ inline void List_1_Clear_m2548850424 (List_1_t3319525431 * __this, const Runtime
 extern "C" IL2CPP_METHOD_ATTR void GameController_StartExperiment_m2193395914 (GameController_t2330501625 * __this, const RuntimeMethod* method);
 // System.Void GameController::UpdateText()
 extern "C" IL2CPP_METHOD_ATTR void GameController_UpdateText_m3165738843 (GameController_t2330501625 * __this, const RuntimeMethod* method);
-// System.Single Timer::ElapsedSeconds()
-extern "C" IL2CPP_METHOD_ATTR float Timer_ElapsedSeconds_m2867649321 (Timer_t4185932343 * __this, const RuntimeMethod* method);
 // System.Void GameController::CheckFullScreen()
 extern "C" IL2CPP_METHOD_ATTR void GameController_CheckFullScreen_m398219436 (GameController_t2330501625 * __this, const RuntimeMethod* method);
+// System.Single Timer::ElapsedSeconds()
+extern "C" IL2CPP_METHOD_ATTR float Timer_ElapsedSeconds_m2867649321 (Timer_t4185932343 * __this, const RuntimeMethod* method);
 // System.Void GameController::StateNext(System.Int32)
 extern "C" IL2CPP_METHOD_ATTR void GameController_StateNext_m818714139 (GameController_t2330501625 * __this, int32_t ___state0, const RuntimeMethod* method);
 // System.String GameController::TrialSetup()
@@ -10570,7 +10592,7 @@ extern "C" IL2CPP_METHOD_ATTR void DataController_AssembleTrialData_m649823016 (
 		TrialData_t4014857301 * L_17 = (L_14)->GetAtUnchecked(static_cast<il2cpp_array_size_t>(L_16));
 		List_1_t1569362707 * L_18 = L_17->get_FLAG_trialTimeout_20();
 		GameController_t2330501625 * L_19 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		bool L_20 = L_19->get_FLAG_trialTimeout_65();
+		bool L_20 = L_19->get_FLAG_trialTimeout_66();
 		List_1_Add_m1544293466(L_18, L_20, /*hidden argument*/List_1_Add_m1544293466_RuntimeMethod_var);
 		GameData_t415813024 * L_21 = __this->get_gameData_4();
 		TrialDataU5BU5D_t1946896056* L_22 = L_21->get_allTrialData_7();
@@ -10579,7 +10601,7 @@ extern "C" IL2CPP_METHOD_ATTR void DataController_AssembleTrialData_m649823016 (
 		TrialData_t4014857301 * L_25 = (L_22)->GetAtUnchecked(static_cast<il2cpp_array_size_t>(L_24));
 		List_1_t1569362707 * L_26 = L_25->get_FLAG_trialError_21();
 		GameController_t2330501625 * L_27 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		bool L_28 = L_27->get_FLAG_trialError_64();
+		bool L_28 = L_27->get_FLAG_trialError_65();
 		List_1_Add_m1544293466(L_26, L_28, /*hidden argument*/List_1_Add_m1544293466_RuntimeMethod_var);
 		GameData_t415813024 * L_29 = __this->get_gameData_4();
 		TrialDataU5BU5D_t1946896056* L_30 = L_29->get_allTrialData_7();
@@ -10588,7 +10610,7 @@ extern "C" IL2CPP_METHOD_ATTR void DataController_AssembleTrialData_m649823016 (
 		TrialData_t4014857301 * L_33 = (L_30)->GetAtUnchecked(static_cast<il2cpp_array_size_t>(L_32));
 		List_1_t2869341516 * L_34 = L_33->get_firstMovementTime_10();
 		GameController_t2330501625 * L_35 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_36 = L_35->get_firstMovementTime_44();
+		float L_36 = L_35->get_firstMovementTime_45();
 		List_1_Add_m2024781851(L_34, L_36, /*hidden argument*/List_1_Add_m2024781851_RuntimeMethod_var);
 		GameData_t415813024 * L_37 = __this->get_gameData_4();
 		TrialDataU5BU5D_t1946896056* L_38 = L_37->get_allTrialData_7();
@@ -10597,7 +10619,7 @@ extern "C" IL2CPP_METHOD_ATTR void DataController_AssembleTrialData_m649823016 (
 		TrialData_t4014857301 * L_41 = (L_38)->GetAtUnchecked(static_cast<il2cpp_array_size_t>(L_40));
 		List_1_t2869341516 * L_42 = L_41->get_totalMovementTime_11();
 		GameController_t2330501625 * L_43 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_44 = L_43->get_totalMovementTime_45();
+		float L_44 = L_43->get_totalMovementTime_46();
 		List_1_Add_m2024781851(L_42, L_44, /*hidden argument*/List_1_Add_m2024781851_RuntimeMethod_var);
 		GameData_t415813024 * L_45 = __this->get_gameData_4();
 		TrialDataU5BU5D_t1946896056* L_46 = L_45->get_allTrialData_7();
@@ -10620,7 +10642,7 @@ extern "C" IL2CPP_METHOD_ATTR void DataController_AssembleTrialData_m649823016 (
 		List_1__ctor_m706204246(L_54, /*hidden argument*/List_1__ctor_m706204246_RuntimeMethod_var);
 		V_0 = L_54;
 		GameController_t2330501625 * L_55 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		List_1_t3319525431 * L_56 = L_55->get_stateTransitions_87();
+		List_1_t3319525431 * L_56 = L_55->get_stateTransitions_90();
 		V_0 = L_56;
 		List_1_t3319525431 * L_57 = V_0;
 		int32_t L_58 = List_1_get_Count_m2276455407(L_57, /*hidden argument*/List_1_get_Count_m2276455407_RuntimeMethod_var);
@@ -11576,7 +11598,7 @@ extern "C" IL2CPP_METHOD_ATTR void ExitExperimentDurationScript_Update_m24581956
 	float V_0 = 0.0f;
 	{
 		GameController_t2330501625 * L_0 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_1 = L_0->get_totalExperimentTime_46();
+		float L_1 = L_0->get_totalExperimentTime_47();
 		__this->set_totalExperimentTime_5(L_1);
 		float L_2 = __this->get_totalExperimentTime_5();
 		if ((!(((float)L_2) > ((float)(0.0f)))))
@@ -13525,14 +13547,14 @@ extern "C" IL2CPP_METHOD_ATTR void ExperimentStartCountdown_Update_m198313040 (E
 	}
 	{
 		GameController_t2330501625 * L_0 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_1 = L_0->get_getReadyTime_60();
+		float L_1 = L_0->get_getReadyTime_61();
 		__this->set_elapsedTime_6(L_1);
 		float L_2 = __this->get_elapsedTime_6();
 		GameController_t2330501625 * L_3 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_4 = L_3->get_getReadyDuration_61();
+		float L_4 = L_3->get_getReadyDuration_62();
 		__this->set_currentValue_7(((float)((float)L_2/(float)L_4)));
 		GameController_t2330501625 * L_5 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_6 = L_5->get_getReadyDuration_61();
+		float L_6 = L_5->get_getReadyDuration_62();
 		float L_7 = __this->get_elapsedTime_6();
 		IL2CPP_RUNTIME_CLASS_INIT(Mathf_t3464937446_il2cpp_TypeInfo_var);
 		float L_8 = bankers_roundf(((float)il2cpp_codegen_subtract((float)L_6, (float)L_7)));
@@ -13580,8 +13602,8 @@ extern "C" IL2CPP_METHOD_ATTR void GameController__ctor_m1587060996 (GameControl
 		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
 		String_t* L_0 = ((String_t_StaticFields*)il2cpp_codegen_static_fields_for(String_t_il2cpp_TypeInfo_var))->get_Empty_2();
 		__this->set_textMessage_27(L_0);
-		__this->set_beforeScoreUpdateTime_37((1.2f));
-		StringU5BU5D_t1281789340* L_1 = (StringU5BU5D_t1281789340*)SZArrayNew(StringU5BU5D_t1281789340_il2cpp_TypeInfo_var, (uint32_t)((int32_t)19));
+		__this->set_beforeScoreUpdateTime_38((1.2f));
+		StringU5BU5D_t1281789340* L_1 = (StringU5BU5D_t1281789340*)SZArrayNew(StringU5BU5D_t1281789340_il2cpp_TypeInfo_var, (uint32_t)((int32_t)20));
 		StringU5BU5D_t1281789340* L_2 = L_1;
 		ArrayElementTypeCheck (L_2, _stringLiteral3155597720);
 		(L_2)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(0), (String_t*)_stringLiteral3155597720);
@@ -13631,18 +13653,21 @@ extern "C" IL2CPP_METHOD_ATTR void GameController__ctor_m1587060996 (GameControl
 		ArrayElementTypeCheck (L_17, _stringLiteral3940781721);
 		(L_17)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)15)), (String_t*)_stringLiteral3940781721);
 		StringU5BU5D_t1281789340* L_18 = L_17;
-		ArrayElementTypeCheck (L_18, _stringLiteral3136113192);
-		(L_18)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)16)), (String_t*)_stringLiteral3136113192);
+		ArrayElementTypeCheck (L_18, _stringLiteral4263481108);
+		(L_18)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)16)), (String_t*)_stringLiteral4263481108);
 		StringU5BU5D_t1281789340* L_19 = L_18;
-		ArrayElementTypeCheck (L_19, _stringLiteral4263481108);
-		(L_19)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)17)), (String_t*)_stringLiteral4263481108);
+		ArrayElementTypeCheck (L_19, _stringLiteral1953642114);
+		(L_19)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)17)), (String_t*)_stringLiteral1953642114);
 		StringU5BU5D_t1281789340* L_20 = L_19;
-		ArrayElementTypeCheck (L_20, _stringLiteral4166618085);
-		(L_20)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)18)), (String_t*)_stringLiteral4166618085);
-		__this->set_stateText_85(L_20);
-		List_1_t3319525431 * L_21 = (List_1_t3319525431 *)il2cpp_codegen_object_new(List_1_t3319525431_il2cpp_TypeInfo_var);
-		List_1__ctor_m706204246(L_21, /*hidden argument*/List_1__ctor_m706204246_RuntimeMethod_var);
-		__this->set_stateTransitions_87(L_21);
+		ArrayElementTypeCheck (L_20, _stringLiteral3136113192);
+		(L_20)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)18)), (String_t*)_stringLiteral3136113192);
+		StringU5BU5D_t1281789340* L_21 = L_20;
+		ArrayElementTypeCheck (L_21, _stringLiteral4166618085);
+		(L_21)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(((int32_t)19)), (String_t*)_stringLiteral4166618085);
+		__this->set_stateText_88(L_21);
+		List_1_t3319525431 * L_22 = (List_1_t3319525431 *)il2cpp_codegen_object_new(List_1_t3319525431_il2cpp_TypeInfo_var);
+		List_1__ctor_m706204246(L_22, /*hidden argument*/List_1__ctor_m706204246_RuntimeMethod_var);
+		__this->set_stateTransitions_90(L_22);
 		MonoBehaviour__ctor_m1579109191(__this, /*hidden argument*/NULL);
 		return;
 	}
@@ -13719,35 +13744,35 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_Start_m1173294274 (GameControl
 		Debug_Log_m4051431634(NULL /*static, unused*/, L_5, /*hidden argument*/NULL);
 		DataController_t353634109 * L_6 = __this->get_dataController_4();
 		float L_7 = DataController_GetRecordFrequency_m992775940(L_6, /*hidden argument*/NULL);
-		__this->set_dataRecordFrequency_62(L_7);
+		__this->set_dataRecordFrequency_63(L_7);
 		DataController_t353634109 * L_8 = __this->get_dataController_4();
 		float L_9 = DataController_GetRestBreakDuration_m3146910753(L_8, /*hidden argument*/NULL);
-		__this->set_restbreakDuration_58(L_9);
+		__this->set_restbreakDuration_59(L_9);
 		DataController_t353634109 * L_10 = __this->get_dataController_4();
 		float L_11 = DataController_GetGetReadyDuration_m2639760416(L_10, /*hidden argument*/NULL);
-		__this->set_getReadyDuration_61(L_11);
-		__this->set_State_86(0);
+		__this->set_getReadyDuration_62(L_11);
+		__this->set_State_89(0);
 		Timer_t4185932343 * L_12 = (Timer_t4185932343 *)il2cpp_codegen_object_new(Timer_t4185932343_il2cpp_TypeInfo_var);
 		Timer__ctor_m1596977667(L_12, /*hidden argument*/NULL);
-		__this->set_stateTimer_39(L_12);
-		Timer_t4185932343 * L_13 = __this->get_stateTimer_39();
+		__this->set_stateTimer_40(L_12);
+		Timer_t4185932343 * L_13 = __this->get_stateTimer_40();
 		Timer_Reset_m2102623995(L_13, /*hidden argument*/NULL);
 		Timer_t4185932343 * L_14 = (Timer_t4185932343 *)il2cpp_codegen_object_new(Timer_t4185932343_il2cpp_TypeInfo_var);
 		Timer__ctor_m1596977667(L_14, /*hidden argument*/NULL);
-		__this->set_experimentTimer_38(L_14);
+		__this->set_experimentTimer_39(L_14);
 		Timer_t4185932343 * L_15 = (Timer_t4185932343 *)il2cpp_codegen_object_new(Timer_t4185932343_il2cpp_TypeInfo_var);
 		Timer__ctor_m1596977667(L_15, /*hidden argument*/NULL);
-		__this->set_movementTimer_40(L_15);
+		__this->set_movementTimer_41(L_15);
 		Timer_t4185932343 * L_16 = (Timer_t4185932343 *)il2cpp_codegen_object_new(Timer_t4185932343_il2cpp_TypeInfo_var);
 		Timer__ctor_m1596977667(L_16, /*hidden argument*/NULL);
-		__this->set_messageTimer_41(L_16);
+		__this->set_messageTimer_42(L_16);
 		Timer_t4185932343 * L_17 = (Timer_t4185932343 *)il2cpp_codegen_object_new(Timer_t4185932343_il2cpp_TypeInfo_var);
 		Timer__ctor_m1596977667(L_17, /*hidden argument*/NULL);
-		__this->set_restbreakTimer_42(L_17);
+		__this->set_restbreakTimer_43(L_17);
 		Timer_t4185932343 * L_18 = (Timer_t4185932343 *)il2cpp_codegen_object_new(Timer_t4185932343_il2cpp_TypeInfo_var);
 		Timer__ctor_m1596977667(L_18, /*hidden argument*/NULL);
-		__this->set_getReadyTimer_43(L_18);
-		List_1_t3319525431 * L_19 = __this->get_stateTransitions_87();
+		__this->set_getReadyTimer_44(L_18);
+		List_1_t3319525431 * L_19 = __this->get_stateTransitions_90();
 		List_1_Clear_m2548850424(L_19, /*hidden argument*/List_1_Clear_m2548850424_RuntimeMethod_var);
 		__this->set_displayCue_28((bool)0);
 		__this->set_reward1Visible_30((bool)0);
@@ -13769,436 +13794,451 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_Update_m217025042 (GameControl
 	String_t* V_1 = NULL;
 	{
 		GameController_UpdateText_m3165738843(__this, /*hidden argument*/NULL);
-		Timer_t4185932343 * L_0 = __this->get_movementTimer_40();
-		float L_1 = Timer_ElapsedSeconds_m2867649321(L_0, /*hidden argument*/NULL);
-		__this->set_currentMovementTime_47(L_1);
 		GameController_CheckFullScreen_m398219436(__this, /*hidden argument*/NULL);
-		int32_t L_2 = __this->get_State_86();
-		V_0 = L_2;
-		int32_t L_3 = V_0;
-		switch (L_3)
+		bool L_0 = __this->get_pauseClock_37();
+		if (L_0)
+		{
+			goto IL_0028;
+		}
+	}
+	{
+		Timer_t4185932343 * L_1 = __this->get_movementTimer_41();
+		float L_2 = Timer_ElapsedSeconds_m2867649321(L_1, /*hidden argument*/NULL);
+		__this->set_currentMovementTime_48(L_2);
+	}
+
+IL_0028:
+	{
+		int32_t L_3 = __this->get_State_89();
+		V_0 = L_3;
+		int32_t L_4 = V_0;
+		switch (L_4)
 		{
 			case 0:
 			{
-				goto IL_0077;
+				goto IL_0086;
 			}
 			case 1:
 			{
-				goto IL_008e;
+				goto IL_009d;
 			}
 			case 2:
 			{
-				goto IL_0168;
+				goto IL_0177;
 			}
 			case 3:
 			{
-				goto IL_01a1;
+				goto IL_01b0;
 			}
 			case 4:
 			{
-				goto IL_01dd;
+				goto IL_01ec;
 			}
 			case 5:
 			{
-				goto IL_0223;
+				goto IL_0232;
 			}
 			case 6:
 			{
-				goto IL_0252;
+				goto IL_0261;
 			}
 			case 7:
 			{
-				goto IL_02d2;
+				goto IL_02e1;
 			}
 			case 8:
 			{
-				goto IL_031d;
+				goto IL_032c;
 			}
 			case 9:
 			{
-				goto IL_037a;
+				goto IL_0389;
 			}
 			case 10:
 			{
-				goto IL_03dc;
+				goto IL_03eb;
 			}
 			case 11:
 			{
-				goto IL_0536;
+				goto IL_0562;
 			}
 			case 12:
 			{
-				goto IL_0536;
+				goto IL_0562;
 			}
 			case 13:
 			{
-				goto IL_03f9;
+				goto IL_0408;
 			}
 			case 14:
 			{
-				goto IL_043c;
+				goto IL_044b;
 			}
 			case 15:
 			{
-				goto IL_04bf;
+				goto IL_04ce;
 			}
 			case 16:
 			{
-				goto IL_04f8;
+				goto IL_0507;
 			}
 			case 17:
 			{
-				goto IL_0531;
+				goto IL_0540;
+			}
+			case 18:
+			{
+				goto IL_055d;
 			}
 		}
 	}
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_0077:
+IL_0086:
 	{
-		bool L_4 = __this->get_gameStarted_88();
-		if (!L_4)
+		bool L_5 = __this->get_gameStarted_91();
+		if (!L_5)
 		{
-			goto IL_0089;
+			goto IL_0098;
 		}
 	}
 	{
 		GameController_StateNext_m818714139(__this, 1, /*hidden argument*/NULL);
 	}
 
-IL_0089:
+IL_0098:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_008e:
+IL_009d:
 	{
-		String_t* L_5 = GameController_TrialSetup_m2966161748(__this, /*hidden argument*/NULL);
-		V_1 = L_5;
-		String_t* L_6 = V_1;
-		if (!L_6)
-		{
-			goto IL_0163;
-		}
-	}
-	{
+		String_t* L_6 = GameController_TrialSetup_m2966161748(__this, /*hidden argument*/NULL);
+		V_1 = L_6;
 		String_t* L_7 = V_1;
-		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		bool L_8 = String_op_Equality_m920492651(NULL /*static, unused*/, L_7, _stringLiteral2073492755, /*hidden argument*/NULL);
-		if (L_8)
+		if (!L_7)
 		{
-			goto IL_00f0;
+			goto IL_0172;
 		}
 	}
 	{
-		String_t* L_9 = V_1;
+		String_t* L_8 = V_1;
 		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		bool L_10 = String_op_Equality_m920492651(NULL /*static, unused*/, L_9, _stringLiteral352800416, /*hidden argument*/NULL);
-		if (L_10)
+		bool L_9 = String_op_Equality_m920492651(NULL /*static, unused*/, L_8, _stringLiteral2073492755, /*hidden argument*/NULL);
+		if (L_9)
 		{
-			goto IL_010a;
+			goto IL_00ff;
 		}
 	}
 	{
-		String_t* L_11 = V_1;
+		String_t* L_10 = V_1;
 		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		bool L_12 = String_op_Equality_m920492651(NULL /*static, unused*/, L_11, _stringLiteral4263481108, /*hidden argument*/NULL);
-		if (L_12)
+		bool L_11 = String_op_Equality_m920492651(NULL /*static, unused*/, L_10, _stringLiteral352800416, /*hidden argument*/NULL);
+		if (L_11)
 		{
-			goto IL_010f;
+			goto IL_0119;
 		}
 	}
 	{
-		String_t* L_13 = V_1;
+		String_t* L_12 = V_1;
 		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		bool L_14 = String_op_Equality_m920492651(NULL /*static, unused*/, L_13, _stringLiteral3054425384, /*hidden argument*/NULL);
-		if (L_14)
+		bool L_13 = String_op_Equality_m920492651(NULL /*static, unused*/, L_12, _stringLiteral4263481108, /*hidden argument*/NULL);
+		if (L_13)
 		{
-			goto IL_0127;
+			goto IL_011e;
 		}
 	}
 	{
-		String_t* L_15 = V_1;
+		String_t* L_14 = V_1;
 		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		bool L_16 = String_op_Equality_m920492651(NULL /*static, unused*/, L_15, _stringLiteral3136113192, /*hidden argument*/NULL);
-		if (L_16)
+		bool L_15 = String_op_Equality_m920492651(NULL /*static, unused*/, L_14, _stringLiteral3054425384, /*hidden argument*/NULL);
+		if (L_15)
 		{
-			goto IL_013f;
+			goto IL_0136;
 		}
 	}
 	{
-		goto IL_0163;
+		String_t* L_16 = V_1;
+		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
+		bool L_17 = String_op_Equality_m920492651(NULL /*static, unused*/, L_16, _stringLiteral3136113192, /*hidden argument*/NULL);
+		if (L_17)
+		{
+			goto IL_014e;
+		}
+	}
+	{
+		goto IL_0172;
 	}
 
-IL_00f0:
+IL_00ff:
 	{
 		__this->set_reward1Visible_30((bool)0);
 		__this->set_reward2Visible_31((bool)0);
 		GameController_StateNext_m818714139(__this, 2, /*hidden argument*/NULL);
-		goto IL_0163;
+		goto IL_0172;
 	}
 
-IL_010a:
+IL_0119:
 	{
-		goto IL_0163;
+		goto IL_0172;
 	}
 
-IL_010f:
+IL_011e:
 	{
-		Timer_t4185932343 * L_17 = __this->get_getReadyTimer_43();
-		Timer_Reset_m2102623995(L_17, /*hidden argument*/NULL);
-		GameController_StateNext_m818714139(__this, ((int32_t)16), /*hidden argument*/NULL);
-		goto IL_0163;
-	}
-
-IL_0127:
-	{
-		Timer_t4185932343 * L_18 = __this->get_restbreakTimer_42();
+		Timer_t4185932343 * L_18 = __this->get_getReadyTimer_44();
 		Timer_Reset_m2102623995(L_18, /*hidden argument*/NULL);
+		GameController_StateNext_m818714139(__this, ((int32_t)16), /*hidden argument*/NULL);
+		goto IL_0172;
+	}
+
+IL_0136:
+	{
+		Timer_t4185932343 * L_19 = __this->get_restbreakTimer_43();
+		Timer_Reset_m2102623995(L_19, /*hidden argument*/NULL);
 		GameController_StateNext_m818714139(__this, ((int32_t)15), /*hidden argument*/NULL);
-		goto IL_0163;
+		goto IL_0172;
 	}
 
-IL_013f:
+IL_014e:
 	{
-		Timer_t4185932343 * L_19 = __this->get_experimentTimer_38();
-		float L_20 = Timer_ElapsedSeconds_m2867649321(L_19, /*hidden argument*/NULL);
-		__this->set_totalExperimentTime_46(L_20);
+		Timer_t4185932343 * L_20 = __this->get_experimentTimer_39();
+		float L_21 = Timer_ElapsedSeconds_m2867649321(L_20, /*hidden argument*/NULL);
+		__this->set_totalExperimentTime_47(L_21);
 		Cursor_set_visible_m2693238713(NULL /*static, unused*/, (bool)1, /*hidden argument*/NULL);
-		GameController_StateNext_m818714139(__this, ((int32_t)17), /*hidden argument*/NULL);
-		goto IL_0163;
+		GameController_StateNext_m818714139(__this, ((int32_t)18), /*hidden argument*/NULL);
+		goto IL_0172;
 	}
 
-IL_0163:
+IL_0172:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_0168:
+IL_0177:
 	{
 		GameController_StartRecording_m1371787612(__this, /*hidden argument*/NULL);
-		Timer_t4185932343 * L_21 = __this->get_stateTimer_39();
-		float L_22 = Timer_ElapsedSeconds_m2867649321(L_21, /*hidden argument*/NULL);
-		float L_23 = __this->get_preDisplayCueTime_50();
-		if ((!(((float)L_22) >= ((float)L_23))))
+		Timer_t4185932343 * L_22 = __this->get_stateTimer_40();
+		float L_23 = Timer_ElapsedSeconds_m2867649321(L_22, /*hidden argument*/NULL);
+		float L_24 = __this->get_preDisplayCueTime_51();
+		if ((!(((float)L_23) >= ((float)L_24))))
 		{
-			goto IL_019c;
+			goto IL_01ab;
 		}
 	}
 	{
-		GameObject_t1113636619 * L_24 = __this->get_PlayerFPS_6();
-		FirstPersonController_t2020989554 * L_25 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_24, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
-		Behaviour_set_enabled_m20417929(L_25, (bool)0, /*hidden argument*/NULL);
+		GameObject_t1113636619 * L_25 = __this->get_PlayerFPS_6();
+		FirstPersonController_t2020989554 * L_26 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_25, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
+		Behaviour_set_enabled_m20417929(L_26, (bool)0, /*hidden argument*/NULL);
 		GameController_StateNext_m818714139(__this, 3, /*hidden argument*/NULL);
 	}
 
-IL_019c:
+IL_01ab:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_01a1:
+IL_01b0:
 	{
 		__this->set_displayCue_28((bool)1);
-		Timer_t4185932343 * L_26 = __this->get_stateTimer_39();
-		float L_27 = Timer_ElapsedSeconds_m2867649321(L_26, /*hidden argument*/NULL);
-		float L_28 = __this->get_displayCueTime_52();
-		if ((!(((float)L_27) > ((float)L_28))))
+		Timer_t4185932343 * L_27 = __this->get_stateTimer_40();
+		float L_28 = Timer_ElapsedSeconds_m2867649321(L_27, /*hidden argument*/NULL);
+		float L_29 = __this->get_displayCueTime_53();
+		if ((!(((float)L_28) > ((float)L_29))))
 		{
-			goto IL_01d8;
+			goto IL_01e7;
 		}
 	}
 	{
 		__this->set_displayCue_28((bool)0);
 		__this->set_starFound_20((bool)0);
 		GameController_StateNext_m818714139(__this, 4, /*hidden argument*/NULL);
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_01d8:
+IL_01e7:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_01dd:
+IL_01ec:
 	{
-		Timer_t4185932343 * L_29 = __this->get_stateTimer_39();
-		float L_30 = Timer_ElapsedSeconds_m2867649321(L_29, /*hidden argument*/NULL);
-		float L_31 = __this->get_goCueDelay_51();
-		if ((!(((float)L_30) >= ((float)L_31))))
+		Timer_t4185932343 * L_30 = __this->get_stateTimer_40();
+		float L_31 = Timer_ElapsedSeconds_m2867649321(L_30, /*hidden argument*/NULL);
+		float L_32 = __this->get_goCueDelay_52();
+		if ((!(((float)L_31) >= ((float)L_32))))
 		{
-			goto IL_021e;
+			goto IL_022d;
 		}
 	}
 	{
-		AudioSource_t3935305588 * L_32 = __this->get_source_25();
-		AudioClip_t3680889665 * L_33 = __this->get_goCueSound_22();
-		AudioSource_PlayOneShot_m2678069419(L_32, L_33, (1.0f), /*hidden argument*/NULL);
+		AudioSource_t3935305588 * L_33 = __this->get_source_25();
+		AudioClip_t3680889665 * L_34 = __this->get_goCueSound_22();
+		AudioSource_PlayOneShot_m2678069419(L_33, L_34, (1.0f), /*hidden argument*/NULL);
 		__this->set_reward1Visible_30((bool)1);
 		__this->set_reward2Visible_31((bool)1);
 		GameController_StateNext_m818714139(__this, 5, /*hidden argument*/NULL);
 	}
 
-IL_021e:
+IL_022d:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_0223:
+IL_0232:
 	{
-		GameObject_t1113636619 * L_34 = __this->get_PlayerFPS_6();
-		FirstPersonController_t2020989554 * L_35 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_34, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
-		Behaviour_set_enabled_m20417929(L_35, (bool)1, /*hidden argument*/NULL);
-		Timer_t4185932343 * L_36 = __this->get_movementTimer_40();
-		Timer_Reset_m2102623995(L_36, /*hidden argument*/NULL);
-		__this->set_displayTimeLeft_48((bool)1);
+		GameObject_t1113636619 * L_35 = __this->get_PlayerFPS_6();
+		FirstPersonController_t2020989554 * L_36 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_35, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
+		Behaviour_set_enabled_m20417929(L_36, (bool)1, /*hidden argument*/NULL);
+		Timer_t4185932343 * L_37 = __this->get_movementTimer_41();
+		Timer_Reset_m2102623995(L_37, /*hidden argument*/NULL);
+		__this->set_displayTimeLeft_49((bool)1);
 		GameController_StateNext_m818714139(__this, 6, /*hidden argument*/NULL);
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_0252:
+IL_0261:
 	{
-		Timer_t4185932343 * L_37 = __this->get_movementTimer_40();
-		float L_38 = Timer_ElapsedSeconds_m2867649321(L_37, /*hidden argument*/NULL);
-		float L_39 = __this->get_maxMovementTime_49();
-		if ((!(((float)L_38) > ((float)L_39))))
+		Timer_t4185932343 * L_38 = __this->get_movementTimer_41();
+		float L_39 = Timer_ElapsedSeconds_m2867649321(L_38, /*hidden argument*/NULL);
+		float L_40 = __this->get_maxMovementTime_50();
+		if ((!(((float)L_39) > ((float)L_40))))
 		{
-			goto IL_0270;
+			goto IL_027f;
 		}
 	}
 	{
 		GameController_StateNext_m818714139(__this, ((int32_t)13), /*hidden argument*/NULL);
 	}
 
-IL_0270:
+IL_027f:
 	{
-		bool L_40 = __this->get_starFound_20();
-		if (!L_40)
+		bool L_41 = __this->get_starFound_20();
+		if (!L_41)
 		{
-			goto IL_02cd;
+			goto IL_02dc;
 		}
 	}
 	{
-		AudioSource_t3935305588 * L_41 = __this->get_source_25();
-		AudioClip_t3680889665 * L_42 = __this->get_starFoundSound_21();
-		AudioSource_PlayOneShot_m2678069419(L_41, L_42, (1.0f), /*hidden argument*/NULL);
-		Timer_t4185932343 * L_43 = __this->get_movementTimer_40();
-		float L_44 = Timer_ElapsedSeconds_m2867649321(L_43, /*hidden argument*/NULL);
-		__this->set_firstMovementTime_44(L_44);
-		bool L_45 = __this->get_doubleRewardTask_17();
-		if (!L_45)
+		AudioSource_t3935305588 * L_42 = __this->get_source_25();
+		AudioClip_t3680889665 * L_43 = __this->get_starFoundSound_21();
+		AudioSource_PlayOneShot_m2678069419(L_42, L_43, (1.0f), /*hidden argument*/NULL);
+		Timer_t4185932343 * L_44 = __this->get_movementTimer_41();
+		float L_45 = Timer_ElapsedSeconds_m2867649321(L_44, /*hidden argument*/NULL);
+		__this->set_firstMovementTime_45(L_45);
+		bool L_46 = __this->get_doubleRewardTask_17();
+		if (!L_46)
 		{
-			goto IL_02b9;
+			goto IL_02c8;
 		}
 	}
 	{
 		GameController_StateNext_m818714139(__this, 7, /*hidden argument*/NULL);
-		goto IL_02cd;
+		goto IL_02dc;
 	}
 
-IL_02b9:
+IL_02c8:
 	{
-		float L_46 = __this->get_firstMovementTime_44();
-		__this->set_totalMovementTime_45(L_46);
+		float L_47 = __this->get_firstMovementTime_45();
+		__this->set_totalMovementTime_46(L_47);
 		GameController_StateNext_m818714139(__this, ((int32_t)9), /*hidden argument*/NULL);
 	}
 
-IL_02cd:
+IL_02dc:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_02d2:
+IL_02e1:
 	{
 		__this->set_starFound_20((bool)0);
-		GameObject_t1113636619 * L_47 = __this->get_PlayerFPS_6();
-		FirstPersonController_t2020989554 * L_48 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_47, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
-		Behaviour_set_enabled_m20417929(L_48, (bool)0, /*hidden argument*/NULL);
-		Timer_t4185932343 * L_49 = __this->get_stateTimer_39();
-		float L_50 = Timer_ElapsedSeconds_m2867649321(L_49, /*hidden argument*/NULL);
-		float L_51 = __this->get_goalHitPauseTime_53();
-		if ((!(((float)L_50) > ((float)L_51))))
+		GameObject_t1113636619 * L_48 = __this->get_PlayerFPS_6();
+		FirstPersonController_t2020989554 * L_49 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_48, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
+		Behaviour_set_enabled_m20417929(L_49, (bool)0, /*hidden argument*/NULL);
+		Timer_t4185932343 * L_50 = __this->get_stateTimer_40();
+		float L_51 = Timer_ElapsedSeconds_m2867649321(L_50, /*hidden argument*/NULL);
+		float L_52 = __this->get_goalHitPauseTime_54();
+		if ((!(((float)L_51) > ((float)L_52))))
 		{
-			goto IL_0318;
+			goto IL_0327;
 		}
 	}
 	{
-		GameObject_t1113636619 * L_52 = __this->get_PlayerFPS_6();
-		FirstPersonController_t2020989554 * L_53 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_52, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
-		Behaviour_set_enabled_m20417929(L_53, (bool)1, /*hidden argument*/NULL);
+		GameObject_t1113636619 * L_53 = __this->get_PlayerFPS_6();
+		FirstPersonController_t2020989554 * L_54 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_53, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
+		Behaviour_set_enabled_m20417929(L_54, (bool)1, /*hidden argument*/NULL);
 		GameController_StateNext_m818714139(__this, 8, /*hidden argument*/NULL);
 	}
 
-IL_0318:
+IL_0327:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_031d:
+IL_032c:
 	{
-		Timer_t4185932343 * L_54 = __this->get_movementTimer_40();
-		float L_55 = Timer_ElapsedSeconds_m2867649321(L_54, /*hidden argument*/NULL);
-		float L_56 = __this->get_maxMovementTime_49();
-		if ((!(((float)L_55) > ((float)L_56))))
+		Timer_t4185932343 * L_55 = __this->get_movementTimer_41();
+		float L_56 = Timer_ElapsedSeconds_m2867649321(L_55, /*hidden argument*/NULL);
+		float L_57 = __this->get_maxMovementTime_50();
+		if ((!(((float)L_56) > ((float)L_57))))
 		{
-			goto IL_033b;
+			goto IL_034a;
 		}
 	}
 	{
 		GameController_StateNext_m818714139(__this, ((int32_t)13), /*hidden argument*/NULL);
 	}
 
-IL_033b:
+IL_034a:
 	{
-		bool L_57 = __this->get_starFound_20();
-		if (!L_57)
+		bool L_58 = __this->get_starFound_20();
+		if (!L_58)
 		{
-			goto IL_0375;
+			goto IL_0384;
 		}
 	}
 	{
-		AudioSource_t3935305588 * L_58 = __this->get_source_25();
-		AudioClip_t3680889665 * L_59 = __this->get_starFoundSound_21();
-		AudioSource_PlayOneShot_m2678069419(L_58, L_59, (1.0f), /*hidden argument*/NULL);
-		Timer_t4185932343 * L_60 = __this->get_movementTimer_40();
-		float L_61 = Timer_ElapsedSeconds_m2867649321(L_60, /*hidden argument*/NULL);
-		__this->set_totalMovementTime_45(L_61);
+		AudioSource_t3935305588 * L_59 = __this->get_source_25();
+		AudioClip_t3680889665 * L_60 = __this->get_starFoundSound_21();
+		AudioSource_PlayOneShot_m2678069419(L_59, L_60, (1.0f), /*hidden argument*/NULL);
+		Timer_t4185932343 * L_61 = __this->get_movementTimer_41();
+		float L_62 = Timer_ElapsedSeconds_m2867649321(L_61, /*hidden argument*/NULL);
+		__this->set_totalMovementTime_46(L_62);
 		GameController_StateNext_m818714139(__this, ((int32_t)9), /*hidden argument*/NULL);
 	}
 
-IL_0375:
+IL_0384:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_037a:
+IL_0389:
 	{
 		__this->set_displayMessage_26(_stringLiteral799414004);
-		GameObject_t1113636619 * L_62 = __this->get_PlayerFPS_6();
-		FirstPersonController_t2020989554 * L_63 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_62, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
-		Behaviour_set_enabled_m20417929(L_63, (bool)0, /*hidden argument*/NULL);
-		Timer_t4185932343 * L_64 = __this->get_stateTimer_39();
-		float L_65 = Timer_ElapsedSeconds_m2867649321(L_64, /*hidden argument*/NULL);
-		float L_66 = __this->get_beforeScoreUpdateTime_37();
-		if ((!(((float)L_65) > ((float)L_66))))
+		GameObject_t1113636619 * L_63 = __this->get_PlayerFPS_6();
+		FirstPersonController_t2020989554 * L_64 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_63, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
+		Behaviour_set_enabled_m20417929(L_64, (bool)0, /*hidden argument*/NULL);
+		Timer_t4185932343 * L_65 = __this->get_stateTimer_40();
+		float L_66 = Timer_ElapsedSeconds_m2867649321(L_65, /*hidden argument*/NULL);
+		float L_67 = __this->get_beforeScoreUpdateTime_38();
+		if ((!(((float)L_66) > ((float)L_67))))
 		{
-			goto IL_03b2;
+			goto IL_03c1;
 		}
 	}
 	{
 		GameController_UpdateScore_m1658535028(__this, /*hidden argument*/NULL);
 	}
 
-IL_03b2:
+IL_03c1:
 	{
-		Timer_t4185932343 * L_67 = __this->get_stateTimer_39();
-		float L_68 = Timer_ElapsedSeconds_m2867649321(L_67, /*hidden argument*/NULL);
-		float L_69 = __this->get_finalGoalHitPauseTime_54();
-		if ((!(((float)L_68) > ((float)L_69))))
+		Timer_t4185932343 * L_68 = __this->get_stateTimer_40();
+		float L_69 = Timer_ElapsedSeconds_m2867649321(L_68, /*hidden argument*/NULL);
+		float L_70 = __this->get_finalGoalHitPauseTime_55();
+		if ((!(((float)L_69) > ((float)L_70))))
 		{
-			goto IL_03d7;
+			goto IL_03e6;
 		}
 	}
 	{
@@ -14206,64 +14246,64 @@ IL_03b2:
 		GameController_StateNext_m818714139(__this, ((int32_t)10), /*hidden argument*/NULL);
 	}
 
-IL_03d7:
+IL_03e6:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_03dc:
+IL_03eb:
 	{
 		MonoBehaviour_CancelInvoke_m2180046661(__this, _stringLiteral1300899831, /*hidden argument*/NULL);
 		GameController_NextScene_m2074728395(__this, /*hidden argument*/NULL);
 		GameController_StateNext_m818714139(__this, 1, /*hidden argument*/NULL);
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_03f9:
+IL_0408:
 	{
-		__this->set_FLAG_trialTimeout_65((bool)1);
+		__this->set_FLAG_trialTimeout_66((bool)1);
 		__this->set_displayMessage_26(_stringLiteral545640734);
-		Timer_t4185932343 * L_70 = __this->get_movementTimer_40();
-		float L_71 = Timer_ElapsedSeconds_m2867649321(L_70, /*hidden argument*/NULL);
-		float L_72 = L_71;
-		RuntimeObject * L_73 = Box(Single_t1397266774_il2cpp_TypeInfo_var, &L_72);
+		Timer_t4185932343 * L_71 = __this->get_movementTimer_41();
+		float L_72 = Timer_ElapsedSeconds_m2867649321(L_71, /*hidden argument*/NULL);
+		float L_73 = L_72;
+		RuntimeObject * L_74 = Box(Single_t1397266774_il2cpp_TypeInfo_var, &L_73);
 		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		String_t* L_74 = String_Concat_m1715369213(NULL /*static, unused*/, _stringLiteral2111252837, L_73, _stringLiteral3932647934, /*hidden argument*/NULL);
+		String_t* L_75 = String_Concat_m1715369213(NULL /*static, unused*/, _stringLiteral2111252837, L_74, _stringLiteral3932647934, /*hidden argument*/NULL);
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t3317548046_il2cpp_TypeInfo_var);
-		Debug_Log_m4051431634(NULL /*static, unused*/, L_74, /*hidden argument*/NULL);
+		Debug_Log_m4051431634(NULL /*static, unused*/, L_75, /*hidden argument*/NULL);
 		GameController_StateNext_m818714139(__this, ((int32_t)14), /*hidden argument*/NULL);
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_043c:
+IL_044b:
 	{
-		bool L_75 = __this->get_FLAG_trialError_64();
-		if (L_75)
+		bool L_76 = __this->get_FLAG_trialError_65();
+		if (L_76)
 		{
-			goto IL_0468;
+			goto IL_0477;
 		}
 	}
 	{
-		AudioSource_t3935305588 * L_76 = __this->get_source_25();
-		AudioClip_t3680889665 * L_77 = __this->get_errorSound_23();
-		AudioSource_PlayOneShot_m2678069419(L_76, L_77, (1.0f), /*hidden argument*/NULL);
+		AudioSource_t3935305588 * L_77 = __this->get_source_25();
+		AudioClip_t3680889665 * L_78 = __this->get_errorSound_23();
+		AudioSource_PlayOneShot_m2678069419(L_77, L_78, (1.0f), /*hidden argument*/NULL);
 		__this->set_displayMessage_26(_stringLiteral3579088987);
 	}
 
-IL_0468:
+IL_0477:
 	{
-		__this->set_FLAG_trialError_64((bool)1);
-		Timer_t4185932343 * L_78 = __this->get_movementTimer_40();
-		float L_79 = Timer_ElapsedSeconds_m2867649321(L_78, /*hidden argument*/NULL);
-		__this->set_firstMovementTime_44(L_79);
-		float L_80 = __this->get_firstMovementTime_44();
-		__this->set_totalMovementTime_45(L_80);
-		Timer_t4185932343 * L_81 = __this->get_stateTimer_39();
-		float L_82 = Timer_ElapsedSeconds_m2867649321(L_81, /*hidden argument*/NULL);
-		float L_83 = __this->get_errorDwellTime_57();
-		if ((!(((float)L_82) > ((float)L_83))))
+		__this->set_FLAG_trialError_65((bool)1);
+		Timer_t4185932343 * L_79 = __this->get_movementTimer_41();
+		float L_80 = Timer_ElapsedSeconds_m2867649321(L_79, /*hidden argument*/NULL);
+		__this->set_firstMovementTime_45(L_80);
+		float L_81 = __this->get_firstMovementTime_45();
+		__this->set_totalMovementTime_46(L_81);
+		Timer_t4185932343 * L_82 = __this->get_stateTimer_40();
+		float L_83 = Timer_ElapsedSeconds_m2867649321(L_82, /*hidden argument*/NULL);
+		float L_84 = __this->get_errorDwellTime_58();
+		if ((!(((float)L_83) > ((float)L_84))))
 		{
-			goto IL_04ba;
+			goto IL_04c9;
 		}
 	}
 	{
@@ -14272,63 +14312,72 @@ IL_0468:
 		GameController_StateNext_m818714139(__this, 1, /*hidden argument*/NULL);
 	}
 
-IL_04ba:
+IL_04c9:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_04bf:
+IL_04ce:
 	{
-		Timer_t4185932343 * L_84 = __this->get_restbreakTimer_42();
-		float L_85 = Timer_ElapsedSeconds_m2867649321(L_84, /*hidden argument*/NULL);
-		__this->set_elapsedRestbreakTime_59(L_85);
-		float L_86 = __this->get_elapsedRestbreakTime_59();
-		float L_87 = __this->get_restbreakDuration_58();
-		if ((!(((float)L_86) > ((float)L_87))))
+		Timer_t4185932343 * L_85 = __this->get_restbreakTimer_43();
+		float L_86 = Timer_ElapsedSeconds_m2867649321(L_85, /*hidden argument*/NULL);
+		__this->set_elapsedRestbreakTime_60(L_86);
+		float L_87 = __this->get_elapsedRestbreakTime_60();
+		float L_88 = __this->get_restbreakDuration_59();
+		if ((!(((float)L_87) > ((float)L_88))))
 		{
-			goto IL_04f3;
+			goto IL_0502;
 		}
 	}
 	{
 		GameController_NextScene_m2074728395(__this, /*hidden argument*/NULL);
 		GameController_StateNext_m818714139(__this, 1, /*hidden argument*/NULL);
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_04f3:
+IL_0502:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_04f8:
+IL_0507:
 	{
-		Timer_t4185932343 * L_88 = __this->get_getReadyTimer_43();
-		float L_89 = Timer_ElapsedSeconds_m2867649321(L_88, /*hidden argument*/NULL);
-		__this->set_getReadyTime_60(L_89);
-		float L_90 = __this->get_getReadyTime_60();
-		float L_91 = __this->get_getReadyDuration_61();
-		if ((!(((float)L_90) > ((float)L_91))))
+		Timer_t4185932343 * L_89 = __this->get_getReadyTimer_44();
+		float L_90 = Timer_ElapsedSeconds_m2867649321(L_89, /*hidden argument*/NULL);
+		__this->set_getReadyTime_61(L_90);
+		float L_91 = __this->get_getReadyTime_61();
+		float L_92 = __this->get_getReadyDuration_62();
+		if ((!(((float)L_91) > ((float)L_92))))
 		{
-			goto IL_052c;
+			goto IL_053b;
 		}
 	}
 	{
 		GameController_NextScene_m2074728395(__this, /*hidden argument*/NULL);
 		GameController_StateNext_m818714139(__this, 1, /*hidden argument*/NULL);
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_052c:
+IL_053b:
 	{
-		goto IL_0536;
+		goto IL_0562;
 	}
 
-IL_0531:
+IL_0540:
 	{
-		goto IL_0536;
+		__this->set_pauseClock_37((bool)1);
+		GameObject_t1113636619 * L_93 = __this->get_PlayerFPS_6();
+		FirstPersonController_t2020989554 * L_94 = GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398(L_93, /*hidden argument*/GameObject_GetComponent_TisFirstPersonController_t2020989554_m398213398_RuntimeMethod_var);
+		Behaviour_set_enabled_m20417929(L_94, (bool)0, /*hidden argument*/NULL);
+		goto IL_0562;
 	}
 
-IL_0536:
+IL_055d:
+	{
+		goto IL_0562;
+	}
+
+IL_0562:
 	{
 		return;
 	}
@@ -14366,11 +14415,13 @@ extern "C" IL2CPP_METHOD_ATTR String_t* GameController_TrialSetup_m2966161748 (G
 	}
 	StringU5BU5D_t1281789340* V_0 = NULL;
 	{
-		__this->set_FLAG_trialError_64((bool)0);
-		__this->set_FLAG_trialTimeout_65((bool)0);
+		__this->set_FLAG_trialError_65((bool)0);
+		__this->set_FLAG_trialTimeout_66((bool)0);
+		__this->set_FLAG_fullScreenModeError_67((bool)0);
 		__this->set_starFound_20((bool)0);
-		__this->set_displayTimeLeft_48((bool)0);
+		__this->set_displayTimeLeft_49((bool)0);
 		__this->set_scoreUpdated_36((bool)0);
+		__this->set_pauseClock_37((bool)0);
 		__this->set_trialScore_32(0);
 		DataController_t353634109 * L_0 = __this->get_dataController_4();
 		TrialData_t4014857301 * L_1 = DataController_GetCurrentTrialData_m2908874111(L_0, /*hidden argument*/NULL);
@@ -14395,31 +14446,31 @@ extern "C" IL2CPP_METHOD_ATTR String_t* GameController_TrialSetup_m2966161748 (G
 		__this->set_doubleRewardTask_17(L_13);
 		TrialData_t4014857301 * L_14 = __this->get_currentTrialData_9();
 		float L_15 = L_14->get_maxMovementTime_8();
-		__this->set_maxMovementTime_49(L_15);
+		__this->set_maxMovementTime_50(L_15);
 		TrialData_t4014857301 * L_16 = __this->get_currentTrialData_9();
 		float L_17 = L_16->get_preDisplayCueTime_12();
-		__this->set_preDisplayCueTime_50(L_17);
+		__this->set_preDisplayCueTime_51(L_17);
 		TrialData_t4014857301 * L_18 = __this->get_currentTrialData_9();
 		float L_19 = L_18->get_displayCueTime_13();
-		__this->set_displayCueTime_52(L_19);
+		__this->set_displayCueTime_53(L_19);
 		TrialData_t4014857301 * L_20 = __this->get_currentTrialData_9();
 		float L_21 = L_20->get_goalHitPauseTime_18();
-		__this->set_goalHitPauseTime_53(L_21);
+		__this->set_goalHitPauseTime_54(L_21);
 		TrialData_t4014857301 * L_22 = __this->get_currentTrialData_9();
 		float L_23 = L_22->get_finalGoalHitPauseTime_19();
-		__this->set_finalGoalHitPauseTime_54(L_23);
+		__this->set_finalGoalHitPauseTime_55(L_23);
 		TrialData_t4014857301 * L_24 = __this->get_currentTrialData_9();
 		float L_25 = L_24->get_goCueDelay_14();
-		__this->set_goCueDelay_51(L_25);
+		__this->set_goCueDelay_52(L_25);
 		TrialData_t4014857301 * L_26 = __this->get_currentTrialData_9();
 		float L_27 = L_26->get_minDwellAtReward_15();
-		__this->set_minDwellAtReward_55(L_27);
+		__this->set_minDwellAtReward_56(L_27);
 		TrialData_t4014857301 * L_28 = __this->get_currentTrialData_9();
 		float L_29 = L_28->get_displayMessageTime_16();
-		__this->set_displayMessageTime_56(L_29);
+		__this->set_displayMessageTime_57(L_29);
 		TrialData_t4014857301 * L_30 = __this->get_currentTrialData_9();
 		float L_31 = L_30->get_errorDwellTime_17();
-		__this->set_errorDwellTime_57(L_31);
+		__this->set_errorDwellTime_58(L_31);
 		TrialData_t4014857301 * L_32 = __this->get_currentTrialData_9();
 		String_t* L_33 = L_32->get_rewardType_3();
 		__this->set_rewardType_29(L_33);
@@ -14446,7 +14497,7 @@ extern "C" IL2CPP_METHOD_ATTR String_t* GameController_TrialSetup_m2966161748 (G
 		bool L_43 = Enumerable_Contains_TisString_t_m1131914166(NULL /*static, unused*/, (RuntimeObject*)(RuntimeObject*)L_41, L_42, /*hidden argument*/Enumerable_Contains_TisString_t_m1131914166_RuntimeMethod_var);
 		if (!L_43)
 		{
-			goto IL_01a2;
+			goto IL_01b0;
 		}
 	}
 	{
@@ -14454,7 +14505,7 @@ extern "C" IL2CPP_METHOD_ATTR String_t* GameController_TrialSetup_m2966161748 (G
 		return L_44;
 	}
 
-IL_01a2:
+IL_01b0:
 	{
 		return _stringLiteral2073492755;
 	}
@@ -14501,12 +14552,12 @@ IL_003c:
 	{
 		GameObject_t1113636619 * L_7 = GameObject_Find_m2032535176(NULL /*static, unused*/, _stringLiteral22373147, /*hidden argument*/NULL);
 		__this->set_PlayerFPS_6(L_7);
-		List_1_t3319525431 * L_8 = __this->get_stateTransitions_87();
+		List_1_t3319525431 * L_8 = __this->get_stateTransitions_90();
 		List_1_Clear_m2548850424(L_8, /*hidden argument*/List_1_Clear_m2548850424_RuntimeMethod_var);
-		List_1_t3319525431 * L_9 = __this->get_stateTransitions_87();
+		List_1_t3319525431 * L_9 = __this->get_stateTransitions_90();
 		List_1_Add_m1685793073(L_9, _stringLiteral3068241275, /*hidden argument*/List_1_Add_m1685793073_RuntimeMethod_var);
 		GameController_RecordFSMState_m1169784434(__this, /*hidden argument*/NULL);
-		float L_10 = __this->get_dataRecordFrequency_62();
+		float L_10 = __this->get_dataRecordFrequency_63();
 		MonoBehaviour_InvokeRepeating_m650519629(__this, _stringLiteral1300899831, (0.0f), L_10, /*hidden argument*/NULL);
 	}
 
@@ -14519,7 +14570,7 @@ IL_0083:
 extern "C" IL2CPP_METHOD_ATTR void GameController_StartExperiment_m2193395914 (GameController_t2330501625 * __this, const RuntimeMethod* method)
 {
 	{
-		Timer_t4185932343 * L_0 = __this->get_experimentTimer_38();
+		Timer_t4185932343 * L_0 = __this->get_experimentTimer_39();
 		Timer_Reset_m2102623995(L_0, /*hidden argument*/NULL);
 		GameController_NextScene_m2074728395(__this, /*hidden argument*/NULL);
 		GameController_TrialSetup_m2966161748(__this, /*hidden argument*/NULL);
@@ -14539,7 +14590,7 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_StartGame_m2172304344 (GameCon
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t3317548046_il2cpp_TypeInfo_var);
 		Debug_Log_m4051431634(NULL /*static, unused*/, _stringLiteral225310226, /*hidden argument*/NULL);
 		GameController_NextScene_m2074728395(__this, /*hidden argument*/NULL);
-		__this->set_gameStarted_88((bool)1);
+		__this->set_gameStarted_91((bool)1);
 		Cursor_set_visible_m2693238713(NULL /*static, unused*/, (bool)0, /*hidden argument*/NULL);
 		return;
 	}
@@ -14566,15 +14617,41 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_CheckFullScreen_m398219436 (Ga
 		bool L_0 = Screen_get_fullScreen_m2154041680(NULL /*static, unused*/, /*hidden argument*/NULL);
 		if (L_0)
 		{
-			goto IL_0014;
+			goto IL_0034;
 		}
 	}
 	{
-		IL2CPP_RUNTIME_CLASS_INIT(Debug_t3317548046_il2cpp_TypeInfo_var);
-		Debug_Log_m4051431634(NULL /*static, unused*/, _stringLiteral1495231122, /*hidden argument*/NULL);
+		int32_t L_1 = __this->get_State_89();
+		if (!L_1)
+		{
+			goto IL_002f;
+		}
+	}
+	{
+		__this->set_FLAG_fullScreenModeError_67((bool)1);
+		__this->set_displayMessage_26(_stringLiteral1274980763);
+		GameController_StateNext_m818714139(__this, ((int32_t)17), /*hidden argument*/NULL);
 	}
 
-IL_0014:
+IL_002f:
+	{
+		goto IL_004e;
+	}
+
+IL_0034:
+	{
+		bool L_2 = __this->get_FLAG_fullScreenModeError_67();
+		if (!L_2)
+		{
+			goto IL_004e;
+		}
+	}
+	{
+		GameController_StateNext_m818714139(__this, ((int32_t)14), /*hidden argument*/NULL);
+		__this->set_FLAG_fullScreenModeError_67((bool)0);
+	}
+
+IL_004e:
 	{
 		return;
 	}
@@ -14598,7 +14675,7 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_StateNext_m818714139 (GameCont
 	}
 	float V_0 = 0.0f;
 	{
-		int32_t L_0 = __this->get_State_86();
+		int32_t L_0 = __this->get_State_89();
 		int32_t L_1 = ___state0;
 		if ((((int32_t)L_0) == ((int32_t)L_1)))
 		{
@@ -14611,8 +14688,8 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_StateNext_m818714139 (GameCont
 		ArrayElementTypeCheck (L_3, _stringLiteral4151895699);
 		(L_3)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(0), (String_t*)_stringLiteral4151895699);
 		StringU5BU5D_t1281789340* L_4 = L_3;
-		StringU5BU5D_t1281789340* L_5 = __this->get_stateText_85();
-		int32_t L_6 = __this->get_State_86();
+		StringU5BU5D_t1281789340* L_5 = __this->get_stateText_88();
+		int32_t L_6 = __this->get_State_89();
 		int32_t L_7 = L_6;
 		String_t* L_8 = (L_5)->GetAtUnchecked(static_cast<il2cpp_array_size_t>(L_7));
 		ArrayElementTypeCheck (L_4, L_8);
@@ -14621,7 +14698,7 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_StateNext_m818714139 (GameCont
 		ArrayElementTypeCheck (L_9, _stringLiteral88567268);
 		(L_9)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(2), (String_t*)_stringLiteral88567268);
 		StringU5BU5D_t1281789340* L_10 = L_9;
-		StringU5BU5D_t1281789340* L_11 = __this->get_stateText_85();
+		StringU5BU5D_t1281789340* L_11 = __this->get_stateText_88();
 		int32_t L_12 = ___state0;
 		int32_t L_13 = L_12;
 		String_t* L_14 = (L_11)->GetAtUnchecked(static_cast<il2cpp_array_size_t>(L_13));
@@ -14631,7 +14708,7 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_StateNext_m818714139 (GameCont
 		ArrayElementTypeCheck (L_15, _stringLiteral3429825544);
 		(L_15)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(4), (String_t*)_stringLiteral3429825544);
 		StringU5BU5D_t1281789340* L_16 = L_15;
-		Timer_t4185932343 * L_17 = __this->get_stateTimer_39();
+		Timer_t4185932343 * L_17 = __this->get_stateTimer_40();
 		float L_18 = Timer_ElapsedSeconds_m2867649321(L_17, /*hidden argument*/NULL);
 		V_0 = L_18;
 		String_t* L_19 = Single_ToString_m3489843083((float*)(&V_0), _stringLiteral3451434970, /*hidden argument*/NULL);
@@ -14645,8 +14722,8 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_StateNext_m818714139 (GameCont
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t3317548046_il2cpp_TypeInfo_var);
 		Debug_Log_m4051431634(NULL /*static, unused*/, L_21, /*hidden argument*/NULL);
 		int32_t L_22 = ___state0;
-		__this->set_State_86(L_22);
-		Timer_t4185932343 * L_23 = __this->get_stateTimer_39();
+		__this->set_State_89(L_22);
+		Timer_t4185932343 * L_23 = __this->get_stateTimer_40();
 		Timer_Reset_m2102623995(L_23, /*hidden argument*/NULL);
 	}
 
@@ -14665,8 +14742,8 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_RecordFSMState_m1169784434 (Ga
 		s_Il2CppMethodInitialized = true;
 	}
 	{
-		List_1_t3319525431 * L_0 = __this->get_stateTransitions_87();
-		int32_t* L_1 = __this->get_address_of_State_86();
+		List_1_t3319525431 * L_0 = __this->get_stateTransitions_90();
+		int32_t* L_1 = __this->get_address_of_State_89();
 		String_t* L_2 = Int32_ToString_m141394615((int32_t*)L_1, /*hidden argument*/NULL);
 		List_1_Add_m1685793073(L_0, L_2, /*hidden argument*/List_1_Add_m1685793073_RuntimeMethod_var);
 		return;
@@ -14703,19 +14780,19 @@ IL_001b:
 		String_t* L_3 = V_0;
 		if (!L_3)
 		{
-			goto IL_01ec;
+			goto IL_020c;
 		}
 	}
 	{
-		Dictionary_2_t2736202052 * L_4 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_U3CU3Ef__switchU24map0_89();
+		Dictionary_2_t2736202052 * L_4 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_U3CU3Ef__switchU24map0_92();
 		if (L_4)
 		{
-			goto IL_0093;
+			goto IL_009f;
 		}
 	}
 	{
 		Dictionary_2_t2736202052 * L_5 = (Dictionary_2_t2736202052 *)il2cpp_codegen_object_new(Dictionary_2_t2736202052_il2cpp_TypeInfo_var);
-		Dictionary_2__ctor_m2392909825(L_5, 7, /*hidden argument*/Dictionary_2__ctor_m2392909825_RuntimeMethod_var);
+		Dictionary_2__ctor_m2392909825(L_5, 8, /*hidden argument*/Dictionary_2__ctor_m2392909825_RuntimeMethod_var);
 		V_1 = L_5;
 		Dictionary_2_t2736202052 * L_6 = V_1;
 		Dictionary_2_Add_m282647386(L_6, _stringLiteral3221882881, 0, /*hidden argument*/Dictionary_2_Add_m282647386_RuntimeMethod_var);
@@ -14732,174 +14809,186 @@ IL_001b:
 		Dictionary_2_t2736202052 * L_12 = V_1;
 		Dictionary_2_Add_m282647386(L_12, _stringLiteral2808534741, 6, /*hidden argument*/Dictionary_2_Add_m282647386_RuntimeMethod_var);
 		Dictionary_2_t2736202052 * L_13 = V_1;
-		((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->set_U3CU3Ef__switchU24map0_89(L_13);
+		Dictionary_2_Add_m282647386(L_13, _stringLiteral1274980763, 7, /*hidden argument*/Dictionary_2_Add_m282647386_RuntimeMethod_var);
+		Dictionary_2_t2736202052 * L_14 = V_1;
+		((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->set_U3CU3Ef__switchU24map0_92(L_14);
 	}
 
-IL_0093:
+IL_009f:
 	{
-		Dictionary_2_t2736202052 * L_14 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_U3CU3Ef__switchU24map0_89();
-		String_t* L_15 = V_0;
-		bool L_16 = Dictionary_2_TryGetValue_m1013208020(L_14, L_15, (int32_t*)(&V_2), /*hidden argument*/Dictionary_2_TryGetValue_m1013208020_RuntimeMethod_var);
-		if (!L_16)
+		Dictionary_2_t2736202052 * L_15 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_U3CU3Ef__switchU24map0_92();
+		String_t* L_16 = V_0;
+		bool L_17 = Dictionary_2_TryGetValue_m1013208020(L_15, L_16, (int32_t*)(&V_2), /*hidden argument*/Dictionary_2_TryGetValue_m1013208020_RuntimeMethod_var);
+		if (!L_17)
 		{
-			goto IL_01ec;
+			goto IL_020c;
 		}
 	}
 	{
-		int32_t L_17 = V_2;
-		switch (L_17)
+		int32_t L_18 = V_2;
+		switch (L_18)
 		{
 			case 0:
 			{
-				goto IL_00cc;
+				goto IL_00dc;
 			}
 			case 1:
 			{
-				goto IL_00e7;
+				goto IL_00f7;
 			}
 			case 2:
 			{
-				goto IL_0118;
+				goto IL_0128;
 			}
 			case 3:
 			{
-				goto IL_0149;
+				goto IL_0159;
 			}
 			case 4:
 			{
-				goto IL_017a;
+				goto IL_018a;
 			}
 			case 5:
 			{
-				goto IL_01ab;
+				goto IL_01bb;
 			}
 			case 6:
 			{
-				goto IL_01dc;
+				goto IL_01ec;
+			}
+			case 7:
+			{
+				goto IL_01fc;
 			}
 		}
 	}
 	{
-		goto IL_01ec;
+		goto IL_020c;
 	}
 
-IL_00cc:
+IL_00dc:
 	{
 		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		String_t* L_18 = ((String_t_StaticFields*)il2cpp_codegen_static_fields_for(String_t_il2cpp_TypeInfo_var))->get_Empty_2();
-		__this->set_textMessage_27(L_18);
-		Timer_t4185932343 * L_19 = __this->get_messageTimer_41();
-		Timer_Reset_m2102623995(L_19, /*hidden argument*/NULL);
-		goto IL_01ec;
+		String_t* L_19 = ((String_t_StaticFields*)il2cpp_codegen_static_fields_for(String_t_il2cpp_TypeInfo_var))->get_Empty_2();
+		__this->set_textMessage_27(L_19);
+		Timer_t4185932343 * L_20 = __this->get_messageTimer_42();
+		Timer_Reset_m2102623995(L_20, /*hidden argument*/NULL);
+		goto IL_020c;
 	}
 
-IL_00e7:
+IL_00f7:
 	{
 		__this->set_textMessage_27(_stringLiteral3553767612);
-		Timer_t4185932343 * L_20 = __this->get_messageTimer_41();
-		float L_21 = Timer_ElapsedSeconds_m2867649321(L_20, /*hidden argument*/NULL);
-		float L_22 = __this->get_displayMessageTime_56();
-		if ((!(((float)L_21) > ((float)L_22))))
+		Timer_t4185932343 * L_21 = __this->get_messageTimer_42();
+		float L_22 = Timer_ElapsedSeconds_m2867649321(L_21, /*hidden argument*/NULL);
+		float L_23 = __this->get_displayMessageTime_57();
+		if ((!(((float)L_22) > ((float)L_23))))
 		{
-			goto IL_0113;
+			goto IL_0123;
 		}
 	}
 	{
 		__this->set_displayMessage_26(_stringLiteral3221882881);
 	}
 
-IL_0113:
+IL_0123:
 	{
-		goto IL_01ec;
+		goto IL_020c;
 	}
 
-IL_0118:
+IL_0128:
 	{
 		__this->set_textMessage_27(_stringLiteral4221682732);
-		Timer_t4185932343 * L_23 = __this->get_messageTimer_41();
-		float L_24 = Timer_ElapsedSeconds_m2867649321(L_23, /*hidden argument*/NULL);
-		float L_25 = __this->get_displayMessageTime_56();
-		if ((!(((float)L_24) > ((float)L_25))))
+		Timer_t4185932343 * L_24 = __this->get_messageTimer_42();
+		float L_25 = Timer_ElapsedSeconds_m2867649321(L_24, /*hidden argument*/NULL);
+		float L_26 = __this->get_displayMessageTime_57();
+		if ((!(((float)L_25) > ((float)L_26))))
 		{
-			goto IL_0144;
+			goto IL_0154;
 		}
 	}
 	{
 		__this->set_displayMessage_26(_stringLiteral3221882881);
 	}
 
-IL_0144:
+IL_0154:
 	{
-		goto IL_01ec;
+		goto IL_020c;
 	}
 
-IL_0149:
+IL_0159:
 	{
 		__this->set_textMessage_27(_stringLiteral4076784079);
-		Timer_t4185932343 * L_26 = __this->get_messageTimer_41();
-		float L_27 = Timer_ElapsedSeconds_m2867649321(L_26, /*hidden argument*/NULL);
-		float L_28 = __this->get_displayMessageTime_56();
-		if ((!(((float)L_27) > ((float)L_28))))
+		Timer_t4185932343 * L_27 = __this->get_messageTimer_42();
+		float L_28 = Timer_ElapsedSeconds_m2867649321(L_27, /*hidden argument*/NULL);
+		float L_29 = __this->get_displayMessageTime_57();
+		if ((!(((float)L_28) > ((float)L_29))))
 		{
-			goto IL_0175;
+			goto IL_0185;
 		}
 	}
 	{
 		__this->set_displayMessage_26(_stringLiteral3221882881);
 	}
 
-IL_0175:
+IL_0185:
 	{
-		goto IL_01ec;
+		goto IL_020c;
 	}
 
-IL_017a:
+IL_018a:
 	{
 		__this->set_textMessage_27(_stringLiteral266766816);
-		Timer_t4185932343 * L_29 = __this->get_messageTimer_41();
-		float L_30 = Timer_ElapsedSeconds_m2867649321(L_29, /*hidden argument*/NULL);
-		float L_31 = __this->get_displayMessageTime_56();
-		if ((!(((float)L_30) > ((float)L_31))))
+		Timer_t4185932343 * L_30 = __this->get_messageTimer_42();
+		float L_31 = Timer_ElapsedSeconds_m2867649321(L_30, /*hidden argument*/NULL);
+		float L_32 = __this->get_displayMessageTime_57();
+		if ((!(((float)L_31) > ((float)L_32))))
 		{
-			goto IL_01a6;
+			goto IL_01b6;
 		}
 	}
 	{
 		__this->set_displayMessage_26(_stringLiteral3221882881);
 	}
 
-IL_01a6:
+IL_01b6:
 	{
-		goto IL_01ec;
+		goto IL_020c;
 	}
 
-IL_01ab:
+IL_01bb:
 	{
 		__this->set_textMessage_27(_stringLiteral2296245849);
-		Timer_t4185932343 * L_32 = __this->get_messageTimer_41();
-		float L_33 = Timer_ElapsedSeconds_m2867649321(L_32, /*hidden argument*/NULL);
-		float L_34 = __this->get_displayMessageTime_56();
-		if ((!(((float)L_33) > ((float)L_34))))
+		Timer_t4185932343 * L_33 = __this->get_messageTimer_42();
+		float L_34 = Timer_ElapsedSeconds_m2867649321(L_33, /*hidden argument*/NULL);
+		float L_35 = __this->get_displayMessageTime_57();
+		if ((!(((float)L_34) > ((float)L_35))))
 		{
-			goto IL_01d7;
+			goto IL_01e7;
 		}
 	}
 	{
 		__this->set_displayMessage_26(_stringLiteral3221882881);
 	}
 
-IL_01d7:
+IL_01e7:
 	{
-		goto IL_01ec;
-	}
-
-IL_01dc:
-	{
-		__this->set_textMessage_27(_stringLiteral2844503212);
-		goto IL_01ec;
+		goto IL_020c;
 	}
 
 IL_01ec:
+	{
+		__this->set_textMessage_27(_stringLiteral2844503212);
+		goto IL_020c;
+	}
+
+IL_01fc:
+	{
+		__this->set_textMessage_27(_stringLiteral29499788);
+		goto IL_020c;
+	}
+
+IL_020c:
 	{
 		return;
 	}
@@ -14921,9 +15010,9 @@ extern "C" IL2CPP_METHOD_ATTR void GameController_UpdateScore_m1658535028 (GameC
 		}
 	}
 	{
-		__this->set_displayTimeLeft_48((bool)0);
-		float L_1 = __this->get_maxMovementTime_49();
-		float L_2 = __this->get_totalMovementTime_45();
+		__this->set_displayTimeLeft_49((bool)0);
+		float L_1 = __this->get_maxMovementTime_50();
+		float L_2 = __this->get_totalMovementTime_46();
 		IL2CPP_RUNTIME_CLASS_INIT(Mathf_t3464937446_il2cpp_TypeInfo_var);
 		float L_3 = bankers_roundf(((float)il2cpp_codegen_subtract((float)L_1, (float)L_2)));
 		__this->set_trialScore_32((((int32_t)((int32_t)L_3))));
@@ -15232,14 +15321,14 @@ extern "C" IL2CPP_METHOD_ATTR void RestBreakProgress_Update_m3649164069 (RestBre
 	}
 	{
 		GameController_t2330501625 * L_0 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_1 = L_0->get_elapsedRestbreakTime_59();
+		float L_1 = L_0->get_elapsedRestbreakTime_60();
 		GameController_t2330501625 * L_2 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_3 = L_2->get_restbreakDuration_58();
+		float L_3 = L_2->get_restbreakDuration_59();
 		__this->set_currentValue_6(((float)((float)L_1/(float)L_3)));
 		GameController_t2330501625 * L_4 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_5 = L_4->get_restbreakDuration_58();
+		float L_5 = L_4->get_restbreakDuration_59();
 		GameController_t2330501625 * L_6 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_7 = L_6->get_elapsedRestbreakTime_59();
+		float L_7 = L_6->get_elapsedRestbreakTime_60();
 		IL2CPP_RUNTIME_CLASS_INIT(Mathf_t3464937446_il2cpp_TypeInfo_var);
 		float L_8 = bankers_roundf(((float)il2cpp_codegen_subtract((float)L_5, (float)L_7)));
 		__this->set_secondsLeft_7((((int32_t)((int32_t)L_8))));
@@ -15546,7 +15635,7 @@ extern "C" IL2CPP_METHOD_ATTR void RewardHitScript_Update_m1486219296 (RewardHit
 		Timer_t4185932343 * L_0 = __this->get_starTimer_4();
 		float L_1 = Timer_ElapsedSeconds_m2867649321(L_0, /*hidden argument*/NULL);
 		GameController_t2330501625 * L_2 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_3 = L_2->get_minDwellAtReward_55();
+		float L_3 = L_2->get_minDwellAtReward_56();
 		if ((!(((float)L_1) > ((float)L_3))))
 		{
 			goto IL_0046;
@@ -16229,7 +16318,7 @@ extern "C" IL2CPP_METHOD_ATTR void TrackingScript_Start_m1312794051 (TrackingScr
 		String_t* L_9 = String_Format_m630303134(NULL /*static, unused*/, _stringLiteral750734932, L_8, /*hidden argument*/NULL);
 		List_1_Add_m1685793073(L_0, L_9, /*hidden argument*/List_1_Add_m1685793073_RuntimeMethod_var);
 		GameController_t2330501625 * L_10 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_11 = L_10->get_dataRecordFrequency_62();
+		float L_11 = L_10->get_dataRecordFrequency_63();
 		MonoBehaviour_InvokeRepeating_m650519629(__this, _stringLiteral269467250, (0.0f), L_11, /*hidden argument*/NULL);
 		return;
 	}
@@ -16356,16 +16445,16 @@ extern "C" IL2CPP_METHOD_ATTR void TrialCountdownScript_Update_m1781702298 (Tria
 	}
 	{
 		GameController_t2330501625 * L_0 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_1 = L_0->get_maxMovementTime_49();
+		float L_1 = L_0->get_maxMovementTime_50();
 		GameController_t2330501625 * L_2 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		float L_3 = L_2->get_currentMovementTime_47();
+		float L_3 = L_2->get_currentMovementTime_48();
 		__this->set_timeLeft_5(((float)il2cpp_codegen_subtract((float)L_1, (float)L_3)));
 		float L_4 = __this->get_timeLeft_5();
 		IL2CPP_RUNTIME_CLASS_INIT(Mathf_t3464937446_il2cpp_TypeInfo_var);
 		float L_5 = bankers_roundf(L_4);
 		__this->set_secondsLeft_6((((int32_t)((int32_t)L_5))));
 		GameController_t2330501625 * L_6 = ((GameController_t2330501625_StaticFields*)il2cpp_codegen_static_fields_for(GameController_t2330501625_il2cpp_TypeInfo_var))->get_control_5();
-		bool L_7 = L_6->get_displayTimeLeft_48();
+		bool L_7 = L_6->get_displayTimeLeft_49();
 		if (!L_7)
 		{
 			goto IL_0064;
