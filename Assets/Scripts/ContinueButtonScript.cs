@@ -43,7 +43,7 @@ public class ContinueButtonScript : MonoBehaviour
 
     public void ContinueToInstructionsOnClick()
     {
-        if (dataController.participantIDSet)  // the player has entered a name (this will avoid multiple datafiles with no participant ID number)
+        if ( (dataController.participantIDSet && dataController.participantAgeSet) && dataController.participantGenderSet)  // the player has entered a name (this will avoid multiple datafiles with no participant ID number)
         {
             source.PlayOneShot(buttonClickSound, 1F);
             GameController.control.ContinueToNextMenuScreen(); // Continue to the instructions page 

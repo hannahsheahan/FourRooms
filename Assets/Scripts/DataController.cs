@@ -316,7 +316,7 @@ public class DataController : MonoBehaviour {
     {
         if (gender != 0) // must make a selection
         {
-            participantAgeSet = true;
+            participantGenderSet = true;
             gameData.participantGender = gender;
         }
     }
