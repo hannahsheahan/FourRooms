@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/PHP/build_test
+/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/PHP/build_labserver
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity

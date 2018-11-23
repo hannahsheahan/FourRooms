@@ -67,6 +67,8 @@ public class GameController : MonoBehaviour {
     public bool flashTotalScore = false;
     public bool scoreUpdated = false;
     public bool pauseClock = false;
+    public bool flashCongratulations = false;
+    public bool congratulated = false;
     private float beforeScoreUpdateTime = 1.2f;  // this is just for display
 
     // Timer variables
@@ -258,7 +260,6 @@ public class GameController : MonoBehaviour {
             case STATE_GOALAPPEAR:
                 // display the reward type cue
                 displayCue = true;
-
                 if (stateTimer.ElapsedSeconds() > displayCueTime)
                 {
                     displayCue = false;
@@ -322,6 +323,11 @@ public class GameController : MonoBehaviour {
                 starFound = false; 
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
 
+                // Guide a player a little more on practice trials
+                if (currentTrialData.mapName == "Practice")
+                {
+                    displayMessage = "keepSearchingMessage";
+                }
                 // pause here so that we can take a TR
                 if (stateTimer.ElapsedSeconds() > goalHitPauseTime)  // the trial should timeout
                 {
@@ -349,17 +355,17 @@ public class GameController : MonoBehaviour {
 
             case STATE_STAR2FOUND:
 
-                displayMessage = "wellDoneMessage";      // display a congratulatory message
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
+                CongratulatePlayer();                // display a big congratulatory message
 
                 if (stateTimer.ElapsedSeconds() > beforeScoreUpdateTime)
                 {
-                    // update the total score in a visible way
-                    UpdateScore();
+                    UpdateScore();  // update the total score and flash it on the screen
                 }
                 if (stateTimer.ElapsedSeconds() > finalGoalHitPauseTime)
                 {
                     flashTotalScore = false;
+                    flashCongratulations = false;
                     StateNext(STATE_FINISH);
                 }
                 break;
@@ -483,6 +489,7 @@ public class GameController : MonoBehaviour {
         starFound = false;
         displayTimeLeft = false;
         scoreUpdated = false;
+        congratulated = false;
         pauseClock = false;
         trialScore = 0;
 
@@ -634,6 +641,8 @@ public class GameController : MonoBehaviour {
 
     private void UpdateText()
     {
+        // This is used for displaying boring, white text messages to the player, such as warnings
+
 
         // Display any major errors that require the player to restart the experiment
         if (!dataController.writingDataProperly)
@@ -658,14 +667,6 @@ public class GameController : MonoBehaviour {
                 }
                 break;
 
-            case "findRewardMessage":
-                textMessage = "Find the item:";
-                if (messageTimer.ElapsedSeconds() > displayMessageTime)
-                {
-                    displayMessage = "noMessage"; // reset the message
-                }
-                break;
-
             case "timeoutMessage":
                 textMessage = "Trial timed out!";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
@@ -674,7 +675,7 @@ public class GameController : MonoBehaviour {
                 }
                 break;
 
-            case "lavaDeathMessage":
+            case "lavaDeathMessage":   // obsolete
                 textMessage = "Aaaaaaaaaaaaaaaahhhh!";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
@@ -691,11 +692,19 @@ public class GameController : MonoBehaviour {
                 break;
 
             case "dataWritingError":
-                textMessage = "There was an error sending data to the web server.  Please exit.";
+                textMessage = "There was an error sending data to the web server. \n Please exit.";
                 break;
 
             case "notFullScreenError":
                 textMessage = "Please return the application to full-screen mode to continue.";
+                break;
+
+            case "keepSearchingMessage":
+                textMessage = "Well done! \n There is one more cheese to find.";
+                if (messageTimer.ElapsedSeconds() > displayMessageTime)
+                {
+                    displayMessage = "noMessage"; // reset the message
+                }
                 break;
         }  
     }
@@ -703,14 +712,28 @@ public class GameController : MonoBehaviour {
     // ********************************************************************** //
 
     public void UpdateScore()
-    {
-        if (!scoreUpdated)  // just do this once
+    {   // Note that these bools are read in the script TotalScoreUpdateScript.cs
+        if (currentTrialData.mapName != "Practice") // Don't count the practice trials
         {
-            displayTimeLeft = false;   // freeze the visible countdown
-            trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
-            totalScore += trialScore;
-            scoreUpdated = true;
-            flashTotalScore = true;
+            if (!scoreUpdated)  // just do this once per trial
+            {
+                displayTimeLeft = false;   // freeze the visible countdown
+                trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
+                totalScore += trialScore;
+                scoreUpdated = true;
+                flashTotalScore = true;
+            }
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void CongratulatePlayer()
+    {   // Note that we are doing this separately from textMessage because we want it to be a bigger, more dramatic font
+        if (!congratulated) // just run this once per trial
+        {
+            congratulated = true;
+            flashCongratulations = true;
         }
     }
 

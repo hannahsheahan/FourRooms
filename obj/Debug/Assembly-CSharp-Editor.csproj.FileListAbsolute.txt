@@ -308,3 +308,4 @@
 /Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/obj/Debug/Assembly-CSharp-Editor.csproj.CopyComplete
 /Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/obj/Debug/Assembly-CSharp-Editor.dll
 /Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/obj/Debug/Assembly-CSharp-Editor.pdb
+/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/Temp/bin/Debug/UnityEngine.WebGLModule.dll

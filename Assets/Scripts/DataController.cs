@@ -104,11 +104,11 @@ public class DataController : MonoBehaviour {
 
         //-----------
         // v2.0 - local server testing (using MAMP)
-        WWW www = new WWW("http://localhost:8888/fromunity.php", webData);
+        //WWW www = new WWW("http://localhost:8888/fromunity.php", webData);
 
         //-----------
         // v2.1 - web server (Summerfield lab one)
-        //WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
+        WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
         StartCoroutine(WaitForRequest(www));
     }
 
@@ -141,8 +141,6 @@ public class DataController : MonoBehaviour {
         {
             writingDataProperly = true;
         }
-
-
     }
 
     // ********************************************************************** //

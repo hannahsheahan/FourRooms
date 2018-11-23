@@ -251,3 +251,4 @@
 /Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/obj/Debug/Assembly-CSharp.csproj.CopyComplete
 /Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/obj/Debug/Assembly-CSharp.dll
 /Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/obj/Debug/Assembly-CSharp.pdb
+/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/Temp/bin/Debug/UnityEngine.WebGLModule.dll
