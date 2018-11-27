@@ -49,6 +49,15 @@ public class DataController : MonoBehaviour {
     {
         DontDestroyOnLoad(gameObject);  // when we load new scenes DataController will persist
 
+        // Create a random subject completion/confirmation code
+        int code = rnd.Next(0, 1000000);          // This will specify a subject-unique (probably) confirmation code for them to enter after finishing experiment to show completion
+        confirmationCode = code.ToString();
+
+        while (confirmationCode.Length < 7)       // pad the code string with zeros until its 7 digits
+        {
+            confirmationCode = "0" + confirmationCode;
+        }
+
         // Set up the save file and load in the pre-determined trial sequence. (Note: doing this upfront helps for testing randomisation)
         DataSetup();
         LoadTrialSequence();
@@ -59,15 +68,6 @@ public class DataController : MonoBehaviour {
     void Start()
     {
         PlayerFPS = GameObject.Find("FPSController");     // This will yield null but its on purpose :)
-
-        // Create a random subject completion/confirmation code
-        int code = rnd.Next(0, 10000000);          // This will specify a subject-unique (probably) confirmation code for them to enter after finishing experiment to show completion
-        confirmationCode = code.ToString();
-
-        while (confirmationCode.Length <= 8)       // pad the code string until its 8 digits
-        {
-            confirmationCode = " " + confirmationCode;
-        }
     }
 
     // ********************************************************************** //
@@ -185,6 +185,7 @@ public class DataController : MonoBehaviour {
 
         // Data that is consistent across trials
         gameData.confirmationCode = confirmationCode;
+        gameData.experimentVersion = config.experimentVersion;
         gameData.totalTrials = totalTrials;
         gameData.dataRecordFrequency = config.GetDataFrequency();
         gameData.restbreakDuration = config.restbreakDuration;

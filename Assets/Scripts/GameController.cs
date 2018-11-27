@@ -221,7 +221,7 @@ public class GameController : MonoBehaviour {
 
                         break;
                     case "Menus":
-                        // fix
+                        // fix.  ***HRS this should never have to do anything
                         break;
 
                     case "GetReady":
@@ -244,7 +244,6 @@ public class GameController : MonoBehaviour {
                 break;
 
             case STATE_STARTTRIAL:
-
 
                 StartRecording();    
 

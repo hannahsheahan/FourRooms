@@ -4,6 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class GameData
 {
+    public string experimentVersion;
     public string participantID;
     public string participantAge;
     public int participantGender;

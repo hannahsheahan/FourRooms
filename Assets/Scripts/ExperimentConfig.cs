@@ -80,7 +80,7 @@ public class ExperimentConfig
     public System.Random rand = new System.Random();
 
     // Preset experiments
-    private string experimentVersion;
+    public string experimentVersion;
 
     // ********************************************************************** //
     // Use a constructor to set this up
@@ -110,7 +110,7 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 practiceTrials = 1 + getReadyTrial;
-                totalTrials = 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                totalTrials = 3 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                           // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                      // how long are the imposed rest breaks?
                 break;
