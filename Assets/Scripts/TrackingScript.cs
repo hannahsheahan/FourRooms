@@ -31,8 +31,8 @@ public class TrackingScript : MonoBehaviour
         // Here define location transform.position and euler angles
         Vector3 pos = transform.position;
         Vector3 rot = transform.eulerAngles;
-
-		string locString = string.Format("{0} {1} {2} {3} {4} {5} {6}", Time.time, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z);
+        // Note that the ':0.0#' part of the formatting means "require at least one DP but not more than 2"
+        string locString = string.Format("{0:0.00} {1:0.0#} {2:0.0#} {3:0.0#} {4:0.0#} {5:0.0#} {6:0.0#}", Time.time, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z);
         return locString;
     }
 

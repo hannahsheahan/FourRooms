@@ -36,10 +36,12 @@ public class DataController : MonoBehaviour {
     public string fileName;
     public string dataAsJson;   // can probably make private later
     public bool writingDataProperly = true;
+    public string confirmationCode;
 
     // Loading trial configuration variables
     public int totalTrials;
 
+    public System.Random rnd = new System.Random();
 
     // ********************************************************************** //
 
@@ -57,6 +59,15 @@ public class DataController : MonoBehaviour {
     void Start()
     {
         PlayerFPS = GameObject.Find("FPSController");     // This will yield null but its on purpose :)
+
+        // Create a random subject completion/confirmation code
+        int code = rnd.Next(0, 10000000);          // This will specify a subject-unique (probably) confirmation code for them to enter after finishing experiment to show completion
+        confirmationCode = code.ToString();
+
+        while (confirmationCode.Length <= 8)       // pad the code string until its 8 digits
+        {
+            confirmationCode = " " + confirmationCode;
+        }
     }
 
     // ********************************************************************** //
@@ -76,7 +87,7 @@ public class DataController : MonoBehaviour {
 
     private void DataSetup()
     {
-        stringDateTime = dateTime.ToString("dd-MM-yy", DateTimeFormatInfo.InvariantInfo) + '_' + dateTime.ToString("t", DateTimeFormatInfo.InvariantInfo);
+        stringDateTime = dateTime.ToString("dd-MM-yy", DateTimeFormatInfo.InvariantInfo) + '_' + dateTime.ToString("t", DateTimeFormatInfo.InvariantInfo) + '_' + confirmationCode;
         stringDateTime = stringDateTime.Replace("/", "-");   // make sure you don't have conflicting characters for writing to web server
         stringDateTime = stringDateTime.Replace(":", "-");   // make sure you don't have conflicting characters for writing to web server
 
@@ -101,12 +112,11 @@ public class DataController : MonoBehaviour {
 
         // v1.0 - local file saving
         //File.WriteAllText(filePath, dataAsJson);
-
         //-----------
         // v2.0 - local server testing (using MAMP)
         //WWW www = new WWW("http://localhost:8888/fromunity.php", webData);
-
         //-----------
+
         // v2.1 - web server (Summerfield lab one)
         WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
         StartCoroutine(WaitForRequest(www));
@@ -114,8 +124,26 @@ public class DataController : MonoBehaviour {
 
     // ********************************************************************** //
 
+    IEnumerator WaitForRequest(WWW data)
+    {
+        writingDataProperly = true;
+
+        yield return data;
+        if (data.error != null)
+        {
+            writingDataProperly = false;
+        }
+        else
+        {
+            Debug.Log(data.text);
+            writingDataProperly = true;
+        }
+    }
+
+    // ********************************************************************** //
+
     // codesource for Post(): https://qiita.com/mattak/items/d01926bc57f8ab1f569a  (received 17/11/2018)
-   
+    /*
     IEnumerator Post(string url, string bodyJsonString)
     {
         writingDataProperly = true;
@@ -142,24 +170,7 @@ public class DataController : MonoBehaviour {
             writingDataProperly = true;
         }
     }
-
-    // ********************************************************************** //
-
-    IEnumerator WaitForRequest(WWW data)
-    {
-        writingDataProperly = true;
-
-        yield return data;
-        if (data.error != null)
-        {
-            writingDataProperly = false;
-        }
-        else
-        {
-            Debug.Log(data.text);
-            writingDataProperly = true;
-        }
-    }
+    */
 
     // ********************************************************************** //
 
@@ -173,6 +184,7 @@ public class DataController : MonoBehaviour {
         gameData = new GameData(totalTrials);
 
         // Data that is consistent across trials
+        gameData.confirmationCode = confirmationCode;
         gameData.totalTrials = totalTrials;
         gameData.dataRecordFrequency = config.GetDataFrequency();
         gameData.restbreakDuration = config.restbreakDuration;
@@ -327,6 +339,13 @@ public class DataController : MonoBehaviour {
     //    // Supply trial-invariant participant information data
     //    return gameData.participantData;
     //}
+
+    // ********************************************************************** //
+
+    public string GetConfirmationCode()
+    {
+        return confirmationCode;
+    }
 
     // ********************************************************************** //
     // This is obsolete since filePath is public

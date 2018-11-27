@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/PHP/build_labserver
+/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/PHP/micro_labpilot
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity
@@ -181,7 +181,6 @@ fa1c317e7807ba3c9b05056693f277ff Assembly-CSharp-firstpass.dll:UnityStandardAsse
 4ea8d9566bdcd2e6d7cf97aef45ed480 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.PlatformSpecificContent
 4bd2ce0ce7ea9374f663549b0ba0aa06 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter
 81d6a421cbac2031cd5e35b10c8ac717 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.ActivateTrigger
-486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.WipeTotalScorePracticeScript
 94698609fd89e311fe5356d085720481 Assembly-CSharp.dll:.TrialCountdownScript
 60e3a31993bab65e1efb2350a900d178 Assembly-CSharp-firstpass.dll:UnityStandardAssets.CrossPlatformInput.InputAxisScrollbar
 984325a0f27f470906ea181a933fb4b1 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Aeroplane.AeroplaneAiControl
@@ -189,6 +188,7 @@ fa1c317e7807ba3c9b05056693f277ff Assembly-CSharp-firstpass.dll:UnityStandardAsse
 67053dd85e9c9aa7b2eac0e5b916f295 Assembly-CSharp-firstpass.dll:UnityStandardAssets._2D.CameraFollow
 f16835701e71dd5d6fb1fed4b7aff1d8 Unity.TextMeshPro.dll:TMPro.TMP_Asset
 0e3cf281ff36c7bdb2ab229f3e8aeee7 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Cameras.LookatTarget
+a16b28884425520804ab57479bd4d43c Assembly-CSharp.dll:.PracticeHelperMessageScript
 f5c6c8dc1d2620313012c1f25775215c Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.SunShafts
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.SpawnRewardLocation
 d947b95c171314b81b313a2f4ffd0411 Assembly-CSharp-firstpass.dll:UnityStandardAssets.CrossPlatformInput.ButtonHandler
@@ -227,6 +227,7 @@ cecf74a4a014467f492fa5579fb4b397 Facebook.Unity.Settings.dll:Facebook.Unity.Sett
 64342b84226887986310a210860da5f5 Assembly-CSharp.dll:.ScreenMessageScript
 f0381a4cdbbdc9731c4f307e73791f48 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Effects.ExplosionFireAndDebris
 f9cfd8d5300b5bcccc91b7b91391d934 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ScreenSpaceAmbientOcclusion
+98389118665ed32a58b6faca7a9bd82e Assembly-CSharp.dll:.CelebrateBothRewardsHit
 201273fb4f889724fb090164b7d6c657 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 486cd95c82d8305219c352c06b776e1f UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 0f27c39183b9eb95eba0a228bea28273 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -284,7 +285,7 @@ dfd33ff9ae3ce8d7ca1f22b475ec2387 UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 f2143d8859d27c6fb35088337df79fd9 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Aeroplane.AeroplaneControlSurfaceAnimator
 aac9c55ae7ba4b95b852a7d9c191acd1 Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 06d51b8055e70ca39cec8ba3a3a6b0e1 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Car.CarAudio
-b6e2929d3f1feedbe216c27178213209 Assembly-CSharp.dll:.GameController
+abd02af52f35141d0555d3e6d8256faa Assembly-CSharp.dll:.GameController
 93ff3baa7264bc68b2f5d42afd44e6be Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Aeroplane.AeroplaneUserControl2Axis
 ae0fa6aaa5e980f190fd2479500fab1a Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ColorCorrectionRamp
 8e4aa2658cebce35b52581da9e1c2d04 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Grayscale

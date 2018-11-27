@@ -7,6 +7,7 @@ public class ExitButtonScript : MonoBehaviour
     public AudioClip buttonClickSound;
     private AudioSource source;
 
+    // Note that this script is now obsolete - not being used.
     // ********************************************************************** //
 
     private void Awake()

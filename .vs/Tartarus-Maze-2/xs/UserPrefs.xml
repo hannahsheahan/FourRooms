@@ -1,19 +1,16 @@
 ﻿<Properties StartupConfiguration="{7F1C645E-A8A1-739D-9CEE-42785020E511}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ContinueButtonScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ExperimentConfig.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameController.cs" Line="624" Column="48" />
-      <File FileName="Assets/Scripts/DataController.cs" Line="297" Column="29" />
-      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="738" Column="31" />
-      <File FileName="PHP/fromunity.php" Line="28" Column="36" />
-      <File FileName="Assets/Scripts/ContinueButtonScript.cs" Line="46" Column="45" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="519" Column="62" />
+      <File FileName="Assets/Scripts/DataController.cs" Line="218" Column="58" />
+      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="138" Column="25" />
+      <File FileName="Assets/Scripts/TrackingScript.cs" Line="30" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/Assets/Standard Assets/Characters/FirstPersonCharacter/Scripts/RigidbodyFirstPersonController.cs" relfile="Assets/Standard Assets/Characters/FirstPersonCharacter/Scripts/RigidbodyFirstPersonController.cs" line="7" column="22" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />

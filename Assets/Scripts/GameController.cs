@@ -356,6 +356,7 @@ public class GameController : MonoBehaviour {
             case STATE_STAR2FOUND:
 
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
+                displayTimeLeft = false;             // freeze the visible countdown
                 CongratulatePlayer();                // display a big congratulatory message
 
                 if (stateTimer.ElapsedSeconds() > beforeScoreUpdateTime)
@@ -383,7 +384,6 @@ public class GameController : MonoBehaviour {
             case STATE_TIMEOUT:
 
                 FLAG_trialTimeout = true;
-
                 displayMessage = "timeoutMessage";
                 Debug.Log("Trial timed out: (after " + movementTimer.ElapsedSeconds() + " sec)");
 
@@ -397,6 +397,7 @@ public class GameController : MonoBehaviour {
                 {
                     source.PlayOneShot(errorSound, 1F);
                     displayMessage = "restartTrialMessage";
+                    UpdateScore();   // take -20 points off total score
                 }
                 FLAG_trialError = true;
 
@@ -406,8 +407,10 @@ public class GameController : MonoBehaviour {
                 // Wait a little while in the error state to display the error message
                 if (stateTimer.ElapsedSeconds() > errorDwellTime)
                 {
+                    flashTotalScore = false;
+
                     // stop recording the state transitions for this trial
-                    CancelInvoke("RecordFSMState"); 
+                    CancelInvoke("RecordFSMState");
 
                     // Restart the trial
                     NextAttempt();
@@ -611,7 +614,7 @@ public class GameController : MonoBehaviour {
     }
 
     // ********************************************************************** //
-
+    // Note this is obsolete, because Application.Quit() does not work for web applications, only local ones.
     public void ExitGame()
     {
         Application.Quit();  // close the application
@@ -643,13 +646,21 @@ public class GameController : MonoBehaviour {
     {
         // This is used for displaying boring, white text messages to the player, such as warnings
 
-
         // Display any major errors that require the player to restart the experiment
-        if (!dataController.writingDataProperly)
+        while (!dataController.writingDataProperly) 
         {
             displayMessage = "dataWritingError";
-        }
 
+            // Try another attempt at the save function to see if the connection issue resolves
+            dataController.SaveData();
+        }
+        // It's fixed! So restart the trial
+        if (displayMessage == "dataWritingError")
+        {
+            displayMessage = "restartTrialMessage";
+            NextAttempt();
+            StateNext(STATE_SETUP);
+        }
 
         // Display regular game messages to the player
         switch (displayMessage)
@@ -659,7 +670,7 @@ public class GameController : MonoBehaviour {
                 messageTimer.Reset();
                 break;
 
-            case "wellDoneMessage":
+            case "wellDoneMessage":  // Note that this happens in an external script now
                 textMessage = "Well done!";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
@@ -692,7 +703,7 @@ public class GameController : MonoBehaviour {
                 break;
 
             case "dataWritingError":
-                textMessage = "There was an error sending data to the web server. \n Please exit.";
+                textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, please exit.";
                 break;
 
             case "notFullScreenError":
@@ -718,7 +729,15 @@ public class GameController : MonoBehaviour {
             if (!scoreUpdated)  // just do this once per trial
             {
                 displayTimeLeft = false;   // freeze the visible countdown
-                trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
+
+                if (State == STATE_ERROR)  // take off 20 points for a mistrial
+                {
+                    trialScore = -20;
+                }
+                else                       // increase the total score
+                {                        
+                    trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
+                }
                 totalScore += trialScore;
                 scoreUpdated = true;
                 flashTotalScore = true;

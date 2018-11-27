@@ -79,15 +79,46 @@ public class ExperimentConfig
     // Randomisation of trial sequence
     public System.Random rand = new System.Random();
 
+    // Preset experiments
+    private string experimentVersion;
+
     // ********************************************************************** //
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
+        experimentVersion = "mturk_learnpilot";
+        //experimentVersion = "micro_debug";
+        //experimentVersion = "singleblock_labpilot";
+
 
         // Set these variables to define your experiment:
-        practiceTrials     = 1   + getReadyTrial;
-        totalTrials        = 16 * 4  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-        restFrequency      = 16   + restbreakOffset;            // Take a rest after this many normal trials
+        switch (experimentVersion)
+        {
+            case "mturk_learnpilot":       // ----Full 4 block learning experiment-----
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                break;
+
+            case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 20   + restbreakOffset;                          // Take a rest after this many normal trials
+                restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
+                break;
+
+            case "micro_debug":            // ----Mini debugging test experiment-----
+                practiceTrials = 1 + getReadyTrial;
+                totalTrials = 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 2 + restbreakOffset;                           // Take a rest after this many normal trials
+                restbreakDuration = 5.0f;                                      // how long are the imposed rest breaks?
+                break;
+
+            default:
+                Debug.Log("Warning: defining an untested trial sequence");
+                break;
+        }
 
         // Figure out how many rest breaks we will have and add them to the trial list
         nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials - practiceTrials) / restFrequency), 0 );  // round down to whole integer
@@ -95,15 +126,14 @@ public class ExperimentConfig
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.04f;
-        restbreakDuration   = 5.0f;    // how long are the imposed rest breaks?
-        getReadyDuration    = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
+        getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         maxMovementTime        = 60.0f;   // time allowed to collect both rewards, incl. wait after hitting first one
         preDisplayCueTime      = 1.5f;    // will take a TR during this period
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    // will take a TR during this period
-        goalHitPauseTime       = 2.0f;    // we will take a TR during this period
+        goalHitPauseTime       = 1.0f;    // we will take a TR during this period
         finalGoalHitPauseTime  = 2.0f;    // we will take a TR during this period (but should be independent of first goal hit time in case we want to jitter)
         minDwellAtReward       = 0.1f;      
         displayMessageTime     = 1.5f;     
@@ -149,33 +179,58 @@ public class ExperimentConfig
         // Generate the trial randomisation/list that we want.   Note: Ensure this is aligned with the total number of trials
         int nextTrial = System.Array.IndexOf(trialMazes, null);
 
-        //RandomPlayerAndRewardPositions();   // works a charm if you want all start and reward locations completely random
+        // Define the full trial sequence
+        switch (experimentVersion)
+        {
+            case "mturk_learnpilot":       // ----Full 4 block learning experiment-----
+
+                //---- training block 1
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);                  
+
+                //---- training block 2
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);                   
+
+                //---- training block 3
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);                   
+
+                //---- training block 4
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);                   
+                break;
+
+            case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
+
+                //---- training block 1
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);                   
+                break;
+
+            case "micro_debug":            // ----Mini debugging test experiment-----
+
+                RandomPlayerAndRewardPositions();                        // works a charm if you want all start and reward locations completely random
+                break;
+
+            default:
+                Debug.Log("Warning: defining an untested trial sequence");
+                break;
+        }
+
+        // Later experiment:
 
         //---- free foraging block
         //AddFreeForageBlock();   // ***HRS to make this later
 
-        //---- training block 1
-        nextTrial = AddTrainingBlock(nextTrial);
-        nextTrial = RestBreakHere(nextTrial); // rest break
-
-        //---- training block 2
-        nextTrial = AddTrainingBlock(nextTrial);
-        nextTrial = RestBreakHere(nextTrial); // rest break
-
-        //---- training block 3
-        nextTrial = AddTrainingBlock(nextTrial);
-        nextTrial = RestBreakHere(nextTrial); // rest break
-
-        //---- training block 4
-        nextTrial = AddTrainingBlock(nextTrial);
-        nextTrial = RestBreakHere(nextTrial); // rest break
+        //---- training goes here
 
         //---- free foraging block
         //AddFreeForageBlock();
 
 
         // For debugging: print out the final trial sequence in readable text to check it looks ok
-        //PrintTrialSequence();
+        PrintTrialSequence();
 
     }
 
@@ -336,7 +391,6 @@ public class ExperimentConfig
     private int SingleContextDoubleRewardBlock(int firstTrial, string context)
     {
         // This function specifies the required trials in the block, and returns the next trial after this block
-
         // NOTE: Use this function if you want to 'block' by reward type
 
         string startRoom;
@@ -401,7 +455,7 @@ public class ExperimentConfig
 
     private void TwoContextDoubleRewardBlock(int firstTrial)
     {
-
+        // NOTE: Not currently used
         // ***HRS to write this more efficiently using SingleContextDoubleRewardBlock() later
 
 
@@ -671,8 +725,11 @@ public class ExperimentConfig
 
     private void RandomPlayerAndRewardPositions()
     {
-        // This function generates trial content that randomly positions the player and reward/s in the different rooms
+        // This script is used for debugging purposes, to run the experiment without imposing a particular training scheme
 
+        // This function generates trial content that randomly positions the player and reward/s in the different rooms
+        int n = possibleRewardTypes.Length;
+        int rewardInd;
         for (int trial = setupTrials + practiceTrials; trial < totalTrials - 1; trial++)
         {
             // Deal with restbreaks and regular trials
@@ -682,17 +739,8 @@ public class ExperimentConfig
             }
             else                                    // It's a regular trial
             {
-                // For now, change the reward type every second trial (if mod 2)
-                if (trial % 2 == 0)
-                //if (trial < 0)  // for now just fix as 'always cheese'
-                {
-                    rewardTypes[trial] = "wine";    // use single reward type for now
-                }
-                else
-                {
-                    rewardTypes[trial] = "cheese";    // use single reward type for now
-                }
-
+                rewardInd = rand.Next(n);           // select a random reward type
+                rewardTypes[trial] = possibleRewardTypes[rewardInd];
                 trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
                 doubleRewardTask[trial] = true;
                 GenerateRandomTrialPositions(trial);   // randomly position player start and reward/s locations
