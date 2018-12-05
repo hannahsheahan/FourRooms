@@ -600,16 +600,24 @@ public class ExperimentConfig
             trialMazes[trial] = "FourRooms_" + rewardTypes[trial]; 
             doubleRewardTask[trial] = true;
 
-            // select start location as random position in given room
-            playerStartRooms[trial] = startRoom;
-            playerStartPositions[trial] = RandomPositionInRoom(startRoom);
-            playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]); // orient player towards the centre of the environment
-
             // select random locations in rooms 1 and 2 for the two rewards (one in each)
             star1Rooms[trial] = rewardRoom1;
             star2Rooms[trial] = rewardRoom2;
             star1Positions[trial] = RandomPositionInRoom(rewardRoom1);
             star2Positions[trial] = RandomPositionInRoom(rewardRoom2);
+
+            // select start location as random position in given room
+            playerStartRooms[trial] = startRoom;
+            playerStartPositions[trial] = RandomPositionInRoom(startRoom);
+
+            // make sure the player doesn't spawn on one of the rewards
+            while ( (star1Positions[trial] == playerStartPositions[trial]) || (star2Positions[trial] == playerStartPositions[trial]))
+            {
+                playerStartPositions[trial] = RandomPositionInRoom(startRoom);
+            }
+            // orient player towards the centre of the environment (will be maximally informative of location in environment)
+            playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]); 
+
         }
     }
 
