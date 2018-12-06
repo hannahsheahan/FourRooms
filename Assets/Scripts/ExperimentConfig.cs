@@ -34,6 +34,7 @@ public class ExperimentConfig
     private int roomSize;
     private float playerYposition;
     private float starYposition;
+    private float deltaSquarePosition;
 
     // Positions and orientations
     private Vector3 mazeCentre;
@@ -292,52 +293,46 @@ public class ExperimentConfig
         yellowRoomPositions = new Vector3[roomSize * roomSize];
         greenRoomPositions = new Vector3[roomSize * roomSize];
 
-        // Blue room
-        int startind = 0;
+        // Version 1.0 larger room positions:
         //int[] XPositionsblue = { 95, 105, 115, 125, 135 };
         //int[] ZPositionsblue = { 95, 105, 115, 125, 135 };
+        //int[] XPositionsred = { 155, 165, 175, 185, 195 };
+        //int[] ZPositionsred = { 95, 105, 115, 125, 135 };
+        //int[] XPositionsgreen = { 155, 165, 175, 185, 195 };
+        //int[] ZPositionsgreen = { 155, 165, 175, 185, 195 };
+        //int[] XPositionsyellow = { 95, 105, 115, 125, 135 };
+        //int[] ZPositionsyellow = { 155, 165, 175, 185, 195 };
 
-        // shrunken maze
-        float[] XPositionsblue = { 105f, 111.8f, 118.6f, 125.4f, 139f };
-        float[] ZPositionsblue = { 93f, 99.8f, 106.6f, 113.4f, 127f };
-
+        // Version 2.0 smaller room positions
+        // Blue room
+        int startind = 0;
+        deltaSquarePosition = 8.5f; // ***HRS later should really use this to create loop for specifying positions
+        float[] XPositionsblue = { 105.1f, 113.6f, 122.1f, 130.6f, 139.1f };
+        float[] ZPositionsblue = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
         startind = startind + roomSize * roomSize;
 
         // Red room
-        //int[] XPositionsred = { 155, 165, 175, 185, 195 };
-        //int[] ZPositionsred = { 95, 105, 115, 125, 135 };
-
-        // shrunken maze
-        float[] XPositionsred = { 156f, 162.8f, 169.6f, 176.4f, 190f };
-        float[] ZPositionsred = { 93f, 99.8f, 106.6f, 113.4f, 127f };
+        float[] XPositionsred = { 156f, 164.5f, 173f, 181.5f, 190f };
+        float[] ZPositionsred = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsred, starYposition, ZPositionsred);
         startind = startind + roomSize * roomSize;
 
         // Green room
-        //int[] XPositionsgreen = { 155, 165, 175, 185, 195 };
-        //int[] ZPositionsgreen = { 155, 165, 175, 185, 195 };
-
-        // shrunken maze
-        float[] XPositionsgreen = { 156f, 162.8f, 169.6f, 176.4f, 190f };
-        float[] ZPositionsgreen = { 144f, 150.8f, 157.6f, 164.4f, 178f };
+        float[] XPositionsgreen = { 156f, 164.5f, 173f, 181.5f, 190f };
+        float[] ZPositionsgreen = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
         startind = startind + roomSize * roomSize;
 
         // Yellow room
-        //int[] XPositionsyellow = { 95, 105, 115, 125, 135 };
-        //int[] ZPositionsyellow = { 155, 165, 175, 185, 195 };
-
-        // shrunken maze
-        float[] XPositionsyellow = { 105f, 111.8f, 118.6f, 125.4f, 139f };
-        float[] ZPositionsyellow = { 144f, 150.8f, 157.6f, 164.4f, 178f };
-
+        float[] XPositionsyellow = { 105.1f, 113.6f, 122.1f, 130.6f, 139.1f };
+        float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
@@ -614,6 +609,10 @@ public class ExperimentConfig
         // This function writes the trial number indicated by the input variable 'trial'.
         // Note: use this function within another that modulates context such that e.g. for 'cheese', the rooms for room1 and room2 reward are set
 
+        bool collisionInSpawnLocations = true;
+        Vector3 adjacentRewardPosition;
+        Vector3 rewardLoc;
+
         // Check that we've inputted a valid trial number
         if ( (trial < setupTrials - 1) || (trial == setupTrials - 1) )
         {
@@ -640,9 +639,48 @@ public class ExperimentConfig
             playerStartPositions[trial] = RandomPositionInRoom(startRoom);
 
             // make sure the player doesn't spawn on one of the rewards
-            while ( (star1Positions[trial] == playerStartPositions[trial]) || (star2Positions[trial] == playerStartPositions[trial]))
+            // ***HRS to expand this so that the player doesn't spawn on the adjacent squares of the reward either
+            while ( collisionInSpawnLocations )
             {
+                collisionInSpawnLocations = false;   // benefit of the doubt
                 playerStartPositions[trial] = RandomPositionInRoom(startRoom);
+
+                // check that the player didnt spawn on top of a reward
+                //if (!((star1Positions[trial] == playerStartPositions[trial]) || (star2Positions[trial] == playerStartPositions[trial])))
+                //{
+                //    collisionInSpawnLocations = false;
+                //}
+               
+                // Check player doesn't spawn on, or adjacent to, a reward
+                for (int rewardInd = 0; rewardInd < 2; rewardInd++)
+                {
+                    if (rewardInd == 0)    // check first reward position
+                    {
+                        rewardLoc = star1Positions[trial];
+                    }
+                    else                   // check second reward position
+                    {
+                        rewardLoc = star2Positions[trial];
+                    }
+                    float[] deltaXPositions = { rewardLoc.x - deltaSquarePosition, rewardLoc.x, rewardLoc.x + deltaSquarePosition };
+                    float[] deltaZPositions = { rewardLoc.z - deltaSquarePosition, rewardLoc.z, rewardLoc.z + deltaSquarePosition };
+
+                    // check all 8 positions adjacent to the reward, and the reward position itself
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            adjacentRewardPosition = new Vector3(deltaXPositions[i], star1Positions[trial].y, deltaZPositions[i]);
+
+                            if (playerStartPositions[trial] == adjacentRewardPosition)
+                            {
+                                collisionInSpawnLocations = true;   // respawn the player location
+                            }
+                        }
+                    }
+                }
+
+
             }
             // orient player towards the centre of the environment (will be maximally informative of location in environment)
             playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]); 
