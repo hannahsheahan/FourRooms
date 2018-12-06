@@ -214,15 +214,29 @@ public class DataController : MonoBehaviour {
     {
         AssembleTrialData();                                         // store the error data for that attempt
 
-        // decide here ***HRS WHERE to insert repetition in trial sequence. Note that the indices of trialList are offset since first element is trial=1, not =0
-        int trialInsertIndex = trialListIndex + 1;                   // default 
+        int trialInsertIndex = trialListIndex + 1;                   // default to repeating trial immediately (if code below is ever deprecated)
+        int trialInsertNumber;
 
-        trialList.Insert(trialInsertIndex, currentTrialNumber);      // insert this trial to repeat later in the trial list
+        // find the next trial in the trial list that is of a different context to the current (error trial) context
+        int trial = currentTrialNumber;
+        while (gameData.allTrialData[trial].mapName == gameData.allTrialData[currentTrialNumber].mapName)
+        {
+            trial++;
+            if (trial == totalTrials) // we need an out, and don't want to access trials that dont exist
+            {
+                break;
+            }
+        }
+        trialInsertNumber = trial;                                           // the trial NUMBER to insert the repeat trial at
+        trialInsertIndex = trialList.FindIndex(a => a == trialInsertNumber); // the corresponding trial INDEX in the trialList (will change as we perform more error trials etc)
+
+        // Insert the repeat trial just before the context change
+        trialList.Insert(trialInsertIndex, currentTrialNumber); 
         Debug.Log("Inserting trial repeat at location: " + trialInsertIndex);
-
         Debug.Log("Current trial number: " + currentTrialNumber);
 
-        currentTrialNumber = trialList[trialListIndex + 1];        // load next trial in trial list. This does seem to be moving to the next trial in the list even if its inserted there
+        // load next trial in trial list
+        currentTrialNumber = trialList[trialListIndex + 1];        
         trialListIndex = trialListIndex + 1;
         Debug.Log("Shifting the current trial number to trial: " + currentTrialNumber);
 
