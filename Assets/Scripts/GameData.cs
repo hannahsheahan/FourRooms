@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class GameData
@@ -13,6 +14,7 @@ public class GameData
     public float dataRecordFrequency;
     public float restbreakDuration;
     public float getReadyDuration;
+    public List<int> trialList = new List<int>();
 
     public TrialData[] allTrialData;
 

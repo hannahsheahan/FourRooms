@@ -40,6 +40,9 @@ public class DataController : MonoBehaviour {
 
     // Loading trial configuration variables
     public int totalTrials;
+    public List<int> trialList = new List<int>();  // this makes dynamically changing/reinserting error trials at different locations possible
+    public int trialListIndex = 0;                 // keeps track of where in the trial sequence we are (independent of currentTrialNumber for where to save the data)
+
 
     public System.Random rnd = new System.Random();
 
@@ -142,38 +145,6 @@ public class DataController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    // codesource for Post(): https://qiita.com/mattak/items/d01926bc57f8ab1f569a  (received 17/11/2018)
-    /*
-    IEnumerator Post(string url, string bodyJsonString)
-    {
-        writingDataProperly = true;
-        Debug.Log("Post coroutine started.");
-
-        var request = new UnityWebRequest(url, "POST");
-        byte[] dataRaw = System.Text.Encoding.UTF8.GetBytes(bodyJsonString);
-        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(dataRaw);
-        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        //yield return request.SendWebRequest();
-        yield return request.SendWebRequest();
-
-        Debug.Log("Status Code: " + request.responseCode);   // Note: code 200 means it has succeeded
-
-        if (request.error != null)
-        {
-            Debug.Log("There was a request error.");
-            writingDataProperly = false;
-        }
-        else
-        {
-            writingDataProperly = true;
-        }
-    }
-    */
-
-    // ********************************************************************** //
-
     public void LoadTrialSequence()
     {
         // Load in the trial sequence to the data controller and save it
@@ -196,6 +167,7 @@ public class DataController : MonoBehaviour {
         // Add each required trial data to gameData in turn
         for (int trial = 0; trial < totalTrials; trial++)
         {
+            trialList.Add(trial); 
             gameData.allTrialData[trial].mapName = config.GetTrialMaze(trial);
 
             // Positions and orientations
@@ -229,13 +201,41 @@ public class DataController : MonoBehaviour {
     public void AddTrial()
     {
         AssembleTrialData();
-        currentTrialNumber++; 
+        Debug.Log("Finished correctly. This was trial number: " + currentTrialNumber);
+
+        currentTrialNumber = trialList[trialListIndex + 1];  // This is incorrect I think. We want the trial List and current trial number to be essentially independnt
+        trialListIndex = trialListIndex + 1;
+        Debug.Log("Shift to next trial because it finished correctly: " + currentTrialNumber);
+    }
+
+    // ********************************************************************** //
+
+    public void ReinsertErrorTrial()
+    {
+        AssembleTrialData();                                         // store the error data for that attempt
+
+        // decide here ***HRS WHERE to insert repetition in trial sequence. Note that the indices of trialList are offset since first element is trial=1, not =0
+        int trialInsertIndex = trialListIndex + 1;                   // default 
+
+        trialList.Insert(trialInsertIndex, currentTrialNumber);      // insert this trial to repeat later in the trial list
+        Debug.Log("Inserting trial repeat at location: " + trialInsertIndex);
+
+        Debug.Log("Current trial number: " + currentTrialNumber);
+
+        currentTrialNumber = trialList[trialListIndex + 1];        // load next trial in trial list. This does seem to be moving to the next trial in the list even if its inserted there
+        trialListIndex = trialListIndex + 1;
+        Debug.Log("Shifting the current trial number to trial: " + currentTrialNumber);
+
     }
 
     // ********************************************************************** //
 
     public void AssembleTrialData()
     {
+        Debug.Log("Current trial is: " + currentTrialNumber);
+        // Update the gameData with the actual executed trialList
+        gameData.trialList = trialList;
+
         // Transfer over the just-finished trial data
         gameData.allTrialData[currentTrialNumber].trialNumber = currentTrialNumber;
         gameData.allTrialData[currentTrialNumber].mapName = GameController.control.GetCurrentMapName();
@@ -245,6 +245,8 @@ public class DataController : MonoBehaviour {
         gameData.allTrialData[currentTrialNumber].FLAG_trialError.Add(GameController.control.FLAG_trialError);
         gameData.allTrialData[currentTrialNumber].firstMovementTime.Add(GameController.control.firstMovementTime);
         gameData.allTrialData[currentTrialNumber].totalMovementTime.Add(GameController.control.totalMovementTime);
+        gameData.allTrialData[currentTrialNumber].trialListIndex.Add(trialListIndex);
+
 
         // This is only updated if the trial is finished correctly anyway
         gameData.allTrialData[currentTrialNumber].trialScore = GameController.control.trialScore;
@@ -333,13 +335,6 @@ public class DataController : MonoBehaviour {
             gameData.participantGender = gender;
         }
     }
-    // ********************************************************************** //
-    // Note: this is obsolete, don't need separate class for this in datafile.
-    //public ParticipantData GetParticipantData()
-    // {
-    //    // Supply trial-invariant participant information data
-    //    return gameData.participantData;
-    //}
 
     // ********************************************************************** //
 

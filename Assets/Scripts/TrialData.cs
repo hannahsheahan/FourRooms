@@ -14,6 +14,7 @@ public class TrialData
 
     // Static per trial data
     public int trialNumber = 0;
+    public List<int> trialListIndex = new List<int>();      // which trial attempt
 
     //public int mapIndex;   // this causes some complications (because SceneManager only manages active/loaded scenes, so .buildIndex throws -1)
     public string mapName;

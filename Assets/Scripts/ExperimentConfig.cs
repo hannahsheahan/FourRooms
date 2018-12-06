@@ -104,7 +104,7 @@ public class ExperimentConfig
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
-                practiceTrials = 0 + getReadyTrial;
+                practiceTrials = 1 + getReadyTrial;
                 totalTrials = 16  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 20   + restbreakOffset;                          // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
@@ -232,7 +232,7 @@ public class ExperimentConfig
 
 
         // For debugging: print out the final trial sequence in readable text to check it looks ok
-        PrintTrialSequence();
+        //PrintTrialSequence();
 
     }
 
@@ -621,7 +621,6 @@ public class ExperimentConfig
         else
         {
             // Write the trial according to context and room/start locations
-
             rewardTypes[trial] = context;
 
             // this is a double reward trial
@@ -639,17 +638,10 @@ public class ExperimentConfig
             playerStartPositions[trial] = RandomPositionInRoom(startRoom);
 
             // make sure the player doesn't spawn on one of the rewards
-            // ***HRS to expand this so that the player doesn't spawn on the adjacent squares of the reward either
             while ( collisionInSpawnLocations )
             {
                 collisionInSpawnLocations = false;   // benefit of the doubt
                 playerStartPositions[trial] = RandomPositionInRoom(startRoom);
-
-                // check that the player didnt spawn on top of a reward
-                //if (!((star1Positions[trial] == playerStartPositions[trial]) || (star2Positions[trial] == playerStartPositions[trial])))
-                //{
-                //    collisionInSpawnLocations = false;
-                //}
                
                 // Check player doesn't spawn on, or adjacent to, a reward
                 for (int rewardInd = 0; rewardInd < 2; rewardInd++)

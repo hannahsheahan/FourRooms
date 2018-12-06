@@ -397,7 +397,8 @@ public class GameController : MonoBehaviour {
 
 
             case STATE_ERROR:
-                // Handle error trials by continuing to record data on the same trial
+                // Handle error trials by continuing to record data on the same trial ***HRS
+
                 if (FLAG_trialError == false)
                 {
                     source.PlayOneShot(errorSound, 1F);
@@ -417,8 +418,9 @@ public class GameController : MonoBehaviour {
                     // stop recording the state transitions for this trial
                     CancelInvoke("RecordFSMState");
 
-                    // Restart the trial
-                    NextAttempt();
+                    // Re-insert the trial further in the sequence for trying again later
+                    // NextAttempt();   // Don't restart the trial immediately
+                    RepeatTrialAgainLater();
                     StateNext(STATE_SETUP);
 
                 }
@@ -486,6 +488,15 @@ public class GameController : MonoBehaviour {
     {
         // Save the current trial data and move data storage to the next trial
         dataController.AddTrial();  
+        dataController.SaveData();
+    }
+
+    // ********************************************************************** //
+
+    public void RepeatTrialAgainLater()
+    {
+        // Save the current trial data before the participant comes back to this trial later in the trial sequence
+        dataController.ReinsertErrorTrial();
         dataController.SaveData();
     }
 
