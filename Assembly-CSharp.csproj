@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\FrozenCountdownMessageScript.cs" />
     <Compile Include="Assets\Scripts\CelebrateBothRewardsHit.cs" />
     <Compile Include="Assets\Scripts\ContinueButtonScript.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\TotalScoreUpdateScript.cs" />
     <Compile Include="Assets\Scripts\TrackingScript.cs" />
+    <Compile Include="Assets\Scripts\TraverseHallwayScript.cs" />
     <Compile Include="Assets\Scripts\TrialCountdownScript.cs" />
     <Compile Include="Assets\Scripts\TrialData.cs" />
     <None Include="Assets\Fonts\Jupiter\LICENSE.txt" />

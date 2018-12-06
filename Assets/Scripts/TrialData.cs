@@ -41,6 +41,7 @@ public class TrialData
     public float errorDwellTime;
     public float goalHitPauseTime;
     public float finalGoalHitPauseTime;
+    public float hallwayFreezeTime;
 
 
     // trial error flags

@@ -74,6 +74,7 @@ public class ExperimentConfig
     public float errorDwellTime;
     public float restbreakDuration;
     public float getReadyDuration;
+    public float hallwayFreezeTime;
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
 
     // Randomisation of trial sequence
@@ -86,9 +87,9 @@ public class ExperimentConfig
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
-        experimentVersion = "mturk_learnpilot";
+        //experimentVersion = "mturk_learnpilot";
         //experimentVersion = "micro_debug";
-        //experimentVersion = "singleblock_labpilot";
+        experimentVersion = "singleblock_labpilot";
 
 
         // Set these variables to define your experiment:
@@ -102,14 +103,14 @@ public class ExperimentConfig
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
-                practiceTrials = 2 + getReadyTrial;
+                practiceTrials = 0 + getReadyTrial;
                 totalTrials = 16  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 20   + restbreakOffset;                          // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
                 break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
-                practiceTrials = 1 + getReadyTrial;
+                practiceTrials = 0 + getReadyTrial;
                 totalTrials = 3 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                           // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                      // how long are the imposed rest breaks?
@@ -138,7 +139,7 @@ public class ExperimentConfig
         minDwellAtReward       = 0.1f;      
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
-
+        hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
 
         // These variables define the environment (are less likely to be played with)
         roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
@@ -254,10 +255,16 @@ public class ExperimentConfig
         // Add in the practice/familiarisation trials in an open arena
         for (int trial = setupTrials; trial < setupTrials + practiceTrials - 1; trial++)
         {
-            trialMazes[trial] = "Practice";
-            rewardTypes[trial] = "cheese";
-            doubleRewardTask[trial] = true;
-            GenerateRandomTrialPositions(trial);     // randomly position the start, and reward/s locations
+            // just make the rewards on each side of the hallway/bridge
+            if ( trial % 2 == 0 )
+            {
+                SetDoubleRewardTrial(trial, "cheese", "blue", "red", "yellow");  
+            }
+            else
+            {
+                SetDoubleRewardTrial(trial, "cheese", "red", "green", "blue"); 
+            }
+            trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
     }
 
@@ -287,29 +294,51 @@ public class ExperimentConfig
 
         // Blue room
         int startind = 0;
-        int[] XPositionsblue = { 95, 105, 115, 125, 135 };
-        int[] ZPositionsblue = { 95, 105, 115, 125, 135 };
+        //int[] XPositionsblue = { 95, 105, 115, 125, 135 };
+        //int[] ZPositionsblue = { 95, 105, 115, 125, 135 };
+
+        // shrunken maze
+        float[] XPositionsblue = { 105f, 111.8f, 118.6f, 125.4f, 139f };
+        float[] ZPositionsblue = { 93f, 99.8f, 106.6f, 113.4f, 127f };
+
+
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
         startind = startind + roomSize * roomSize;
 
         // Red room
-        int[] XPositionsred = { 155, 165, 175, 185, 195 };
-        int[] ZPositionsred = { 95, 105, 115, 125, 135 };
+        //int[] XPositionsred = { 155, 165, 175, 185, 195 };
+        //int[] ZPositionsred = { 95, 105, 115, 125, 135 };
+
+        // shrunken maze
+        float[] XPositionsred = { 156f, 162.8f, 169.6f, 176.4f, 190f };
+        float[] ZPositionsred = { 93f, 99.8f, 106.6f, 113.4f, 127f };
+
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsred, starYposition, ZPositionsred);
         startind = startind + roomSize * roomSize;
 
         // Green room
-        int[] XPositionsgreen = { 155, 165, 175, 185, 195 };
-        int[] ZPositionsgreen = { 155, 165, 175, 185, 195 };
+        //int[] XPositionsgreen = { 155, 165, 175, 185, 195 };
+        //int[] ZPositionsgreen = { 155, 165, 175, 185, 195 };
+
+        // shrunken maze
+        float[] XPositionsgreen = { 156f, 162.8f, 169.6f, 176.4f, 190f };
+        float[] ZPositionsgreen = { 144f, 150.8f, 157.6f, 164.4f, 178f };
+
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
         startind = startind + roomSize * roomSize;
 
         // Yellow room
-        int[] XPositionsyellow = { 95, 105, 115, 125, 135 };
-        int[] ZPositionsyellow = { 155, 165, 175, 185, 195 };
+        //int[] XPositionsyellow = { 95, 105, 115, 125, 135 };
+        //int[] ZPositionsyellow = { 155, 165, 175, 185, 195 };
+
+        // shrunken maze
+        float[] XPositionsyellow = { 105f, 111.8f, 118.6f, 125.4f, 139f };
+        float[] ZPositionsyellow = { 144f, 150.8f, 157.6f, 164.4f, 178f };
+
+
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
         AddPossibleLocations(possibleStarPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
 
@@ -334,7 +363,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    void AddPossibleLocations(Vector3[] locationVar, int startind, int[] xpositions, float yposition, int[] zpositions)
+    void AddPossibleLocations(Vector3[] locationVar, int startind, float[] xpositions, float yposition, float[] zpositions)
     {
         int ind = startind;
         for (int i = 0; i < roomSize; i++)
@@ -586,7 +615,7 @@ public class ExperimentConfig
         // Note: use this function within another that modulates context such that e.g. for 'cheese', the rooms for room1 and room2 reward are set
 
         // Check that we've inputted a valid trial number
-        if ( (trial < setupTrials + practiceTrials - 1) || (trial == setupTrials + practiceTrials - 1) )
+        if ( (trial < setupTrials - 1) || (trial == setupTrials - 1) )
         {
             Debug.Log("Trial randomisation failed: invalid trial number input writing to.");
         }

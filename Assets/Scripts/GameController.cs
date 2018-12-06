@@ -82,7 +82,10 @@ public class GameController : MonoBehaviour {
     public float totalMovementTime;
     public float totalExperimentTime;
     public float currentMovementTime;
+    public float hallwayFreezeTime;
+    public float currentFrozenTime;
     public bool displayTimeLeft;
+    public float firstFrozenTime;
 
 
     public float maxMovementTime;  
@@ -126,11 +129,13 @@ public class GameController : MonoBehaviour {
     public const int STATE_REST        = 15;
     public const int STATE_GETREADY    = 16;
     public const int STATE_PAUSE       = 17;
-    public const int STATE_EXIT        = 18;
-    public const int STATE_MAX         = 19;
+    public const int STATE_HALLFREEZE  = 18;
+    public const int STATE_EXIT        = 19;
+    public const int STATE_MAX         = 20;
 
-    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","GetReady","Pause","Exit","Max" };
+    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","GetReady","Pause","HallwayFreeze","Exit","Max" };
     public int State;
+    public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
 
     private bool gameStarted = false;
@@ -167,6 +172,7 @@ public class GameController : MonoBehaviour {
 
         // Initialise FSM State
         State = STATE_STARTSCREEN;
+        previousState = STATE_STARTSCREEN;
         stateTimer = new Timer();
         stateTimer.Reset();
 
@@ -453,11 +459,23 @@ public class GameController : MonoBehaviour {
                 break;
 
 
+            case STATE_HALLFREEZE:
+
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                currentFrozenTime = currentMovementTime - firstFrozenTime;
+
+                if (stateTimer.ElapsedSeconds() > hallwayFreezeTime)
+                {
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = true;
+                    displayMessage = "noMessage";
+                    StateNext(previousState);
+                }
+                break;
+
             case STATE_EXIT:
                 // Display the total experiment time and wait for the participant to close the application
 
                 // Note: at the moment this is just to save the correct exiting state transition in the datafile
-
                 break;
 
         }
@@ -519,6 +537,7 @@ public class GameController : MonoBehaviour {
         displayMessageTime = currentTrialData.displayMessageTime;
         errorDwellTime  = currentTrialData.errorDwellTime;
         rewardType      = currentTrialData.rewardType;
+        hallwayFreezeTime = currentTrialData.hallwayFreezeTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
@@ -716,7 +735,23 @@ public class GameController : MonoBehaviour {
                     displayMessage = "noMessage"; // reset the message
                 }
                 break;
+
+            case "traversingHallway":
+                //textMessage = "Crossing a bridge takes time. \n Continue in..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
+                textMessage = "Unlocking this bridge..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
+                break;
         }  
+    }
+
+    // ********************************************************************** //
+
+    public void HallwayFreeze()
+    {   // Display a message, and track the hallway traversal in the FSM and in the saved data
+        displayMessage = "traversingHallway";
+        previousState = State;
+        firstFrozenTime = totalMovementTime;
+        StateNext(STATE_HALLFREEZE);
+
     }
 
     // ********************************************************************** //
