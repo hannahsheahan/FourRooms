@@ -201,11 +201,9 @@ public class DataController : MonoBehaviour {
     public void AddTrial()
     {
         AssembleTrialData();
-        Debug.Log("Finished correctly. This was trial number: " + currentTrialNumber);
 
         currentTrialNumber = trialList[trialListIndex + 1];  // This is incorrect I think. We want the trial List and current trial number to be essentially independnt
-        trialListIndex = trialListIndex + 1;
-        Debug.Log("Shift to next trial because it finished correctly: " + currentTrialNumber);
+        trialListIndex++;
     }
 
     // ********************************************************************** //
@@ -214,6 +212,7 @@ public class DataController : MonoBehaviour {
     {
         AssembleTrialData();                                         // store the error data for that attempt
 
+        // Determine where to integrate another trial attempt
         int trialInsertIndex = trialListIndex + 1;                   // default to repeating trial immediately (if code below is ever deprecated)
         int trialInsertNumber;
 
@@ -222,7 +221,7 @@ public class DataController : MonoBehaviour {
         while (gameData.allTrialData[trial].mapName == gameData.allTrialData[currentTrialNumber].mapName)
         {
             trial++;
-            if (trial == totalTrials) // we need an out, and don't want to access trials that dont exist
+            if (trial == totalTrials)                                // we need an out for this loop, and don't want to access trials that dont exist
             {
                 break;
             }
@@ -232,14 +231,10 @@ public class DataController : MonoBehaviour {
 
         // Insert the repeat trial just before the context change
         trialList.Insert(trialInsertIndex, currentTrialNumber); 
-        Debug.Log("Inserting trial repeat at location: " + trialInsertIndex);
-        Debug.Log("Current trial number: " + currentTrialNumber);
 
         // load next trial in trial list
         currentTrialNumber = trialList[trialListIndex + 1];        
         trialListIndex = trialListIndex + 1;
-        Debug.Log("Shifting the current trial number to trial: " + currentTrialNumber);
-
     }
 
     // ********************************************************************** //
