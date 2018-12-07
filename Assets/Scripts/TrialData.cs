@@ -25,6 +25,7 @@ public class TrialData
     public Vector3 playerSpawnOrientation;
     public Vector3 star1Location;
     public Vector3 star2Location;
+    public Vector3[] presentPositions;
 
     // trial event times
     public float maxMovementTime;

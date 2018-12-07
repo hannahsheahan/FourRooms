@@ -11,9 +11,8 @@ public class ExperimentConfig
     /// <summary>
     /// This script will contain all the experiment configuration details
     /// e.g. experiment type, trial numbers, ordering and randomisation, trial 
-    /// start and end locations. Note that we keep variables private and use Get()
-    /// methods since the /// experiment configuration should not be modified 
-    /// outside of this script.
+    /// start and end locations. 
+    /// Notes:  variables should eventually be turned private. Some currently public for ease of communication with DataController.
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 08/11/2018
     /// </summary>
@@ -23,7 +22,7 @@ public class ExperimentConfig
     private const int setupAndCloseTrials = 7;     // Note: there must be 7 extra trials in trial list to account for Persistent, InformationScreen, BeforeStartingScreen, ConsentScreen, StartScreen, Instructions and Exit 'trials'.
     private const int restbreakOffset = 1;         // Note: makes specifying restbreaks more intuitive
     private const int getReadyTrial = 1;           // Note: this is the get ready screen after the practice
-    private const int setupTrials = setupAndCloseTrials-1;
+    private const int setupTrials = setupAndCloseTrials - 1;
     private int totalTrials;
     private int practiceTrials;
     private int restFrequency;
@@ -55,6 +54,12 @@ public class ExperimentConfig
     private Vector3[] yellowRoomPositions;
     private Vector3[] greenRoomPositions;
 
+    private Vector3[] bluePresentPositions;
+    private Vector3[] redPresentPositions;
+    private Vector3[] yellowPresentPositions;
+    private Vector3[] greenPresentPositions;
+
+    public Vector3[] presentPositions;
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
@@ -283,7 +288,33 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void GeneratePossibleSettings()
+    private void GeneratePresentPositions()
+    {
+        // Spawn the presents in the opposite corners of the room
+        int nPresentsPerRoom = 2;   // two presents per room
+
+        presentPositions = new Vector3[nPresentsPerRoom*4];  
+
+        // ORDER:  green; red; yellow; blue
+        float[] xpositions = { 156f, 190f, 156f, 190f, 105.1f, 139.1f, 105.1f, 139.1f };
+        float[] zpositions = { 144.3f, 178.3f, 127.3f, 93.3f, 178.3f, 144.3f, 93.3f, 127.3f };
+        float yposition = 74.3f;
+
+        for (int i = 0; i < presentPositions.Length; i++)
+        {
+            presentPositions[i] = new Vector3(xpositions[i], yposition, zpositions[i]);
+        }
+
+        // specify present positions by coloured room (***HRS horrible hardcoding but fine for now - can change later)
+        greenPresentPositions = new Vector3[] { new Vector3(xpositions[0], yposition, zpositions[0]), new Vector3(xpositions[1], yposition, zpositions[1]) };
+        redPresentPositions = new Vector3[] { new Vector3(xpositions[2], yposition, zpositions[2]), new Vector3(xpositions[3], yposition, zpositions[3]) };
+        yellowPresentPositions = new Vector3[] { new Vector3(xpositions[4], yposition, zpositions[4]), new Vector3(xpositions[5], yposition, zpositions[5]) };
+        bluePresentPositions = new Vector3[] { new Vector3(xpositions[6], yposition, zpositions[6]), new Vector3(xpositions[7], yposition, zpositions[7]) };
+    }
+
+// ********************************************************************** //
+
+private void GeneratePossibleSettings()
     {
         // Generate all possible spawn locations for player and stars
         possiblePlayerPositions = new Vector3[roomSize * roomSize * 4]; // we are working with 4 square rooms
@@ -292,6 +323,9 @@ public class ExperimentConfig
         redRoomPositions = new Vector3[roomSize * roomSize];
         yellowRoomPositions = new Vector3[roomSize * roomSize];
         greenRoomPositions = new Vector3[roomSize * roomSize];
+
+        // Generate the positions for the presents to spawn at
+        GeneratePresentPositions();
 
         // Version 1.0 larger room positions:
         //int[] XPositionsblue = { 95, 105, 115, 125, 135 };
@@ -630,8 +664,15 @@ public class ExperimentConfig
             // select random locations in rooms 1 and 2 for the two rewards (one in each)
             star1Rooms[trial] = rewardRoom1;
             star2Rooms[trial] = rewardRoom2;
-            star1Positions[trial] = RandomPositionInRoom(rewardRoom1);
-            star2Positions[trial] = RandomPositionInRoom(rewardRoom2);
+
+            // For a randomly selected reward location within each room
+            //star1Positions[trial] = RandomPositionInRoom(rewardRoom1);  
+            //star2Positions[trial] = RandomPositionInRoom(rewardRoom2);
+
+            // For specific reward locations (at present/gift locations) within each room
+            star1Positions[trial] = RandomPresentInRoom(rewardRoom1);
+            star2Positions[trial] = RandomPresentInRoom(rewardRoom2);
+
 
             // select start location as random position in given room
             playerStartRooms[trial] = startRoom;
@@ -672,6 +713,28 @@ public class ExperimentConfig
                     }
                 }
 
+                // make sure player doesnt spawn on or adjacent to a present box (makes above obsolete)
+
+                for (int k = 0; k < presentPositions.Length; k++)
+                {
+                    rewardLoc = presentPositions[k];
+                    float[] deltaXPositions = { rewardLoc.x - deltaSquarePosition, rewardLoc.x, rewardLoc.x + deltaSquarePosition };
+                    float[] deltaZPositions = { rewardLoc.z - deltaSquarePosition, rewardLoc.z, rewardLoc.z + deltaSquarePosition };
+
+                    // check all 8 positions adjacent to the box, and the box position itself
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            adjacentRewardPosition = new Vector3(deltaXPositions[i], rewardLoc.y, deltaZPositions[i]);
+
+                            if (playerStartPositions[trial] == adjacentRewardPosition)
+                            {
+                                collisionInSpawnLocations = true;   // respawn the player location
+                            }
+                        }
+                    }
+                }
 
             }
             // orient player towards the centre of the environment (will be maximally informative of location in environment)
@@ -699,6 +762,30 @@ public class ExperimentConfig
             case "yellow":
                 return yellowRoomPositions[UnityEngine.Random.Range(0, yellowRoomPositions.Length - 1)];
             
+            default:
+                return new Vector3(0.0f, 0.0f, 0.0f);  // this should never happen
+        }
+    }
+
+    // ********************************************************************** //
+
+    private Vector3 RandomPresentInRoom( string roomColour)
+    {
+        // select a random present in a room of a given colour to put the reward in
+        switch (roomColour)
+        {
+            case "blue":
+                return bluePresentPositions[UnityEngine.Random.Range(0, bluePresentPositions.Length - 1)];
+
+            case "red":
+                return redPresentPositions[UnityEngine.Random.Range(0, redPresentPositions.Length - 1)];
+
+            case "green":
+                return greenPresentPositions[UnityEngine.Random.Range(0, greenPresentPositions.Length - 1)];
+
+            case "yellow":
+                return yellowPresentPositions[UnityEngine.Random.Range(0, yellowPresentPositions.Length - 1)];
+
             default:
                 return new Vector3(0.0f, 0.0f, 0.0f);  // this should never happen
         }

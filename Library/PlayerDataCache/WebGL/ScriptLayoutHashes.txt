@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/PHP/mturklearnpilot2
+/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/PHP/giftboxpilot
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity
@@ -250,6 +250,7 @@ d33ca682ebf67c138052c44a5b20c529 Assembly-CSharp-firstpass.dll:UnityStandardAsse
 72a8523b432c0a5317826b7a9e0a0e79 Unity.TextMeshPro.dll:TMPro.PackageResourceImporterWindow
 2f3f1ce8b23b682f3b00a9ce61255f6a Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.Water
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.SpawnPlayerLocation
+486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.TraverseHallwayScript
 9595ac4350e79cc90fc637e36e208279 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.CreaseShading
 e53cc67d84060d628c7f03fc725766d8 Unity.TextMeshPro.dll:TMPro.TMP_FontAsset
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp-firstpass.dll:UnityStandardAssets._2D.Platformer2DUserControl
@@ -286,7 +287,7 @@ dfd33ff9ae3ce8d7ca1f22b475ec2387 UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 f2143d8859d27c6fb35088337df79fd9 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Aeroplane.AeroplaneControlSurfaceAnimator
 aac9c55ae7ba4b95b852a7d9c191acd1 Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 06d51b8055e70ca39cec8ba3a3a6b0e1 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Car.CarAudio
-824fb44b34e4a2877fce04dfd6286478 Assembly-CSharp.dll:.GameController
+2c3f69072aa8d820fdd8305eed53c0dd Assembly-CSharp.dll:.GameController
 93ff3baa7264bc68b2f5d42afd44e6be Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Aeroplane.AeroplaneUserControl2Axis
 ae0fa6aaa5e980f190fd2479500fab1a Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ColorCorrectionRamp
 8e4aa2658cebce35b52581da9e1c2d04 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Grayscale
@@ -305,7 +306,7 @@ e7243432dd281e72011751efc287823c Assembly-CSharp-firstpass.dll:UnityStandardAsse
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.GerstnerDisplace
 63b1d9ebe2d595f39b6b7350000aa0e6 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Effects.Explosive
 e04611b8715e6833d2bd7010fc6be10b Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
-93582d700d1e7c8d80523b7a2efbfac1 Assembly-CSharp.dll:.DataController
+1ea53d51fb5955f264025a04d794304d Assembly-CSharp.dll:.DataController
 5b5ad732d2d32a997181b009aa65cfb0 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.WaterTile
 bd57674768d88af20344e9f680801c2d Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.DepthOfFieldDeprecated
 df03e2ffa8b3251f71a6c2235d50c66b Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Fisheye
@@ -322,5 +323,4 @@ ecf6baecdeac0425cbdb99f7f844691a Assembly-CSharp.dll:.ExitExperimentDurationScri
 f59ca19b2477a0f8545617e6a1dec4b4 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Tonemapping
 36ed8d92a07a53bf383bc90e377cc388 Assembly-CSharp-firstpass.dll:UnityStandardAssets._2D.PlatformerCharacter2D
 695c9335429d4798b6f74ca73c042ff4 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.AutoMobileShaderSwitch
-486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.TraverseHallwayScript
-00fca7ce6bd74a29487894448005af6b Assembly-CSharp.dll:.FrozenCountdownMessageScript
+e6cf64d271c7ff32d11f59af39527b6f Assembly-CSharp.dll:.PresentRevealScript

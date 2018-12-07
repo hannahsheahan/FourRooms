@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\FrozenCountdownMessageScript.cs" />
     <Compile Include="Assets\Scripts\CelebrateBothRewardsHit.cs" />
     <Compile Include="Assets\Scripts\ContinueButtonScript.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
@@ -78,6 +77,7 @@
     <Compile Include="Assets\Scripts\HideOrDisplayReward.cs" />
     <Compile Include="Assets\Scripts\LavaDeath.cs" />
     <Compile Include="Assets\Scripts\PracticeHelperMessageScript.cs" />
+    <Compile Include="Assets\Scripts\PresentRevealScript.cs" />
     <Compile Include="Assets\Scripts\RestBreakProgress.cs" />
     <Compile Include="Assets\Scripts\RewardAnimationScript.cs" />
     <Compile Include="Assets\Scripts\RewardHitScript.cs" />

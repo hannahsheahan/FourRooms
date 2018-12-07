@@ -40,6 +40,7 @@ public class GameController : MonoBehaviour {
     public Vector3 star2SpawnLocation;
     public Vector3 activeStarSpawnLocation;   // this is obsolete: only used for if we have sequential order on reward collection
     public bool doubleRewardTask;
+    public Vector3[] presentPositions;
 
     private string nextScene;
 
@@ -52,6 +53,7 @@ public class GameController : MonoBehaviour {
     public AudioClip goCueSound;
     public AudioClip errorSound; 
     public AudioClip fallSound;
+    public AudioClip openBoxSound;
     private AudioSource source;
 
     // Messages to the screen
@@ -527,13 +529,14 @@ public class GameController : MonoBehaviour {
         // Load in the trial data
         currentTrialData = dataController.GetCurrentTrialData();
         nextScene = currentTrialData.mapName;
-
+        
         // Location and orientation variables
         playerSpawnLocation     = currentTrialData.playerSpawnLocation;
         playerSpawnOrientation  = currentTrialData.playerSpawnOrientation;
         star1SpawnLocation      = currentTrialData.star1Location;
         star2SpawnLocation      = currentTrialData.star2Location;
         doubleRewardTask        = currentTrialData.doubleRewardTask;
+        presentPositions        = currentTrialData.presentPositions;
 
         //activeStarSpawnLocation = star1SpawnLocation;
 
@@ -587,6 +590,22 @@ public class GameController : MonoBehaviour {
             RecordFSMState();                              // catch the current state before the update
             InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);
             //Debug.Log("Found player.");
+        }
+    }
+
+
+    // ********************************************************************** //
+
+    // ***HRS obsolete to delete
+    public void EnablePlayerController(bool enable)  
+    {
+        if (enable & !(PlayerFPS.GetComponent<FirstPersonController>().enabled))
+        {
+            PlayerFPS.GetComponent<FirstPersonController>().enabled = true;
+        }
+        else
+        {
+            PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
         }
     }
 
@@ -751,7 +770,19 @@ public class GameController : MonoBehaviour {
                 //textMessage = "Crossing a bridge takes time. \n Continue in..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
                 textMessage = "Unlocking this bridge..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
                 break;
+
+            case "openBoxQuestion":
+                textMessage = "Press space-bar to open the gift box";
+                break;
+
         }  
+    }
+
+    // ********************************************************************** //
+
+    public void OpenBox()
+    {
+        source.PlayOneShot(openBoxSound, 1F);
     }
 
     // ********************************************************************** //

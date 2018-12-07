@@ -176,6 +176,7 @@ public class DataController : MonoBehaviour {
 
             gameData.allTrialData[trial].star1Location = config.GetStar1StartPosition(trial);
             gameData.allTrialData[trial].star2Location = config.GetStar2StartPosition(trial);
+            gameData.allTrialData[trial].presentPositions = config.presentPositions;  // same per trial for now
 
             // Rewards
             gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);
@@ -201,11 +202,9 @@ public class DataController : MonoBehaviour {
     public void AddTrial()
     {
         AssembleTrialData();
-        Debug.Log("Finished correctly. This was trial number: " + currentTrialNumber);
 
         currentTrialNumber = trialList[trialListIndex + 1];  // This is incorrect I think. We want the trial List and current trial number to be essentially independnt
-        trialListIndex = trialListIndex + 1;
-        Debug.Log("Shift to next trial because it finished correctly: " + currentTrialNumber);
+        trialListIndex++;
     }
 
     // ********************************************************************** //
@@ -232,13 +231,10 @@ public class DataController : MonoBehaviour {
 
         // Insert the repeat trial just before the context change
         trialList.Insert(trialInsertIndex, currentTrialNumber); 
-        Debug.Log("Inserting trial repeat at location: " + trialInsertIndex);
-        Debug.Log("Current trial number: " + currentTrialNumber);
 
         // load next trial in trial list
         currentTrialNumber = trialList[trialListIndex + 1];        
-        trialListIndex = trialListIndex + 1;
-        Debug.Log("Shifting the current trial number to trial: " + currentTrialNumber);
+        trialListIndex++;
 
     }
 
