@@ -6,18 +6,21 @@ using UnityEngine.UI;
 public class PresentRevealScript : MonoBehaviour {
 
     public GameObject present;
-    public Text OpenPresentMessage;
     public int presentIndex;
 
     // Define the indices for the different presents
     //private const int GREEN1  = 0;
     //private const int GREEN2  = 1;
-    //private const int RED1    = 2;
-    //private const int RED2    = 3;
-    //private const int YELLOW1 = 4;
-    //private const int YELLOW2 = 5;
-    //private const int BLUE1   = 6;
-    //private const int BLUE2   = 7;
+    //private const int GREEN3  = 2;
+    //private const int RED1    = 3;
+    //private const int RED2    = 4;
+    //private const int RED3    = 5;
+    //private const int YELLOW1 = 6;
+    //private const int YELLOW2 = 7;
+    //private const int YELLOW3 = 8;
+    //private const int BLUE1   = 9;
+    //private const int BLUE2   = 10;
+    //private const int BLUE3   = 11;
 
     // ********************************************************************** //
 
@@ -31,22 +34,26 @@ public class PresentRevealScript : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        OpenPresentMessage.text = "Press space-bar to open the present";
+        GameController.control.OpenBoxQuestion(true);
     }
+
+    // ********************************************************************** //
 
     private void OnTriggerStay(Collider other)
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             GameController.control.OpenBox();
-            OpenPresentMessage.text = "";
+            GameController.control.OpenBoxQuestion(false);
             present.SetActive(false);
         }
     }
 
+    // ********************************************************************** //
+
     private void OnTriggerExit(Collider other)
     {
-        OpenPresentMessage.text = "";
+        GameController.control.OpenBoxQuestion(false);
     }
 
 }

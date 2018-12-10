@@ -53,13 +53,14 @@ public class ExperimentConfig
     private Vector3[] redRoomPositions;
     private Vector3[] yellowRoomPositions;
     private Vector3[] greenRoomPositions;
+    private Vector3[] spawnedPresentPositions;
 
     private Vector3[] bluePresentPositions;
     private Vector3[] redPresentPositions;
     private Vector3[] yellowPresentPositions;
     private Vector3[] greenPresentPositions;
 
-    public Vector3[] presentPositions;
+    public Vector3[][] presentPositions;
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
@@ -150,7 +151,7 @@ public class ExperimentConfig
         // These variables define the environment (are less likely to be played with)
         roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
-        starYposition   = 73.5f;
+        starYposition   = 74.5f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
 
 
@@ -165,6 +166,7 @@ public class ExperimentConfig
         star2Positions = new Vector3[totalTrials];
         doubleRewardTask = new bool[totalTrials];
         rewardTypes = new string[totalTrials];
+        presentPositions = new Vector3[totalTrials][];
 
         // Generate a list of all the possible (player or star) spawn locations
         GeneratePossibleSettings();
@@ -288,11 +290,26 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void GeneratePresentPositions()
+    private Vector3[] ChooseNRandomPresentPositions( int nPresents, Vector3[] roomPositions )
     {
-        // Spawn the presents in the opposite corners of the room
-        int nPresentsPerRoom = 2;   // two presents per room
+        Vector3[] positionsInRoom = new Vector3[nPresents];
 
+        for (int i = 0; i < nPresents; i++)
+        {
+            positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+        }
+
+        return positionsInRoom;
+    }
+
+    // ********************************************************************** //
+
+    private void GeneratePresentPositions(int trial)
+    {
+
+        // Spawn the presents in the opposite corners of the room
+        /*
+        int nPresentsPerRoom = 2;   // two presents per room
         presentPositions = new Vector3[nPresentsPerRoom*4];  
 
         // ORDER:  green; red; yellow; blue
@@ -310,11 +327,28 @@ public class ExperimentConfig
         redPresentPositions = new Vector3[] { new Vector3(xpositions[2], yposition, zpositions[2]), new Vector3(xpositions[3], yposition, zpositions[3]) };
         yellowPresentPositions = new Vector3[] { new Vector3(xpositions[4], yposition, zpositions[4]), new Vector3(xpositions[5], yposition, zpositions[5]) };
         bluePresentPositions = new Vector3[] { new Vector3(xpositions[6], yposition, zpositions[6]), new Vector3(xpositions[7], yposition, zpositions[7]) };
+        */
+
+        // presents can be at any position in the room now
+        int numberPresentsPerRoom = 3;
+        presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
+
+        greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
+        redPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, redRoomPositions );
+        yellowPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, yellowRoomPositions );
+        bluePresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, blueRoomPositions );
+
+        // concatenate all the positions of generated presents 
+        greenPresentPositions.CopyTo(presentPositions[trial], 0);
+        redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
+        yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
+        bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
+
     }
 
-// ********************************************************************** //
+    // ********************************************************************** //
 
-private void GeneratePossibleSettings()
+    private void GeneratePossibleSettings()
     {
         // Generate all possible spawn locations for player and stars
         possiblePlayerPositions = new Vector3[roomSize * roomSize * 4]; // we are working with 4 square rooms
@@ -323,9 +357,6 @@ private void GeneratePossibleSettings()
         redRoomPositions = new Vector3[roomSize * roomSize];
         yellowRoomPositions = new Vector3[roomSize * roomSize];
         greenRoomPositions = new Vector3[roomSize * roomSize];
-
-        // Generate the positions for the presents to spawn at
-        GeneratePresentPositions();
 
         // Version 1.0 larger room positions:
         //int[] XPositionsblue = { 95, 105, 115, 125, 135 };
@@ -661,6 +692,9 @@ private void GeneratePossibleSettings()
             trialMazes[trial] = "FourRooms_" + rewardTypes[trial]; 
             doubleRewardTask[trial] = true;
 
+            // generate the random locations for the presents in each room
+            GeneratePresentPositions(trial);
+
             // select random locations in rooms 1 and 2 for the two rewards (one in each)
             star1Rooms[trial] = rewardRoom1;
             star2Rooms[trial] = rewardRoom2;
@@ -703,9 +737,9 @@ private void GeneratePossibleSettings()
                     {
                         for (int j = 0; j < 3; j++)
                         {
-                            adjacentRewardPosition = new Vector3(deltaXPositions[i], star1Positions[trial].y, deltaZPositions[i]);
+                            adjacentRewardPosition = new Vector3(deltaXPositions[i], star1Positions[trial].y, deltaZPositions[j]);
 
-                            if (playerStartPositions[trial] == adjacentRewardPosition)
+                            if (playerStartPositions[trial] == adjacentRewardPosition) 
                             {
                                 collisionInSpawnLocations = true;   // respawn the player location
                             }
@@ -714,10 +748,9 @@ private void GeneratePossibleSettings()
                 }
 
                 // make sure player doesnt spawn on or adjacent to a present box (makes above obsolete)
-
-                for (int k = 0; k < presentPositions.Length; k++)
+                for (int k = 0; k < presentPositions[trial].Length; k++)
                 {
-                    rewardLoc = presentPositions[k];
+                    rewardLoc = presentPositions[trial][k];
                     float[] deltaXPositions = { rewardLoc.x - deltaSquarePosition, rewardLoc.x, rewardLoc.x + deltaSquarePosition };
                     float[] deltaZPositions = { rewardLoc.z - deltaSquarePosition, rewardLoc.z, rewardLoc.z + deltaSquarePosition };
 
@@ -726,7 +759,7 @@ private void GeneratePossibleSettings()
                     {
                         for (int j = 0; j < 3; j++)
                         {
-                            adjacentRewardPosition = new Vector3(deltaXPositions[i], rewardLoc.y, deltaZPositions[i]);
+                            adjacentRewardPosition = new Vector3(deltaXPositions[i], rewardLoc.y, deltaZPositions[j]);
 
                             if (playerStartPositions[trial] == adjacentRewardPosition)
                             {

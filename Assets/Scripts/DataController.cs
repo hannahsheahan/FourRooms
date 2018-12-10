@@ -176,7 +176,7 @@ public class DataController : MonoBehaviour {
 
             gameData.allTrialData[trial].star1Location = config.GetStar1StartPosition(trial);
             gameData.allTrialData[trial].star2Location = config.GetStar2StartPosition(trial);
-            gameData.allTrialData[trial].presentPositions = config.presentPositions;  // same per trial for now
+            gameData.allTrialData[trial].presentPositions = config.presentPositions[trial]; 
 
             // Rewards
             gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);

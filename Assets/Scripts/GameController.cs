@@ -787,13 +787,29 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
+    public void OpenBoxQuestion(bool visible)
+    {
+        if (displayMessage == "noMessage")    // don't get rid of any other important messages e.g. the data writing error or restarting trial
+        {
+            if (visible)
+            {
+                displayMessage = "openBoxQuestion";
+            }
+        }
+        if (!visible)
+        {
+            displayMessage = "noMessage";
+        }
+    }
+
+    // ********************************************************************** //
+
     public void HallwayFreeze()
     {   // Display a message, and track the hallway traversal in the FSM and in the saved data
         displayMessage = "traversingHallway";
         previousState = State;
         firstFrozenTime = totalMovementTime;
         StateNext(STATE_HALLFREEZE);
-
     }
 
     // ********************************************************************** //
