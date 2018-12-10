@@ -209,14 +209,13 @@ public class ExperimentConfig
 
                 //---- training block 4
                 nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);                   
+
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);                   
                 break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
@@ -308,7 +307,6 @@ public class ExperimentConfig
                     positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
                 }
             }
-            Debug.Log("Present position: " + positionsInRoom[i].x +", " + positionsInRoom[i].y + ", " + positionsInRoom[i].z);
         }
 
         return positionsInRoom;

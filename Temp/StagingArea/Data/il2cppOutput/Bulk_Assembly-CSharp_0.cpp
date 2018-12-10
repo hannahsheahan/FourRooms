@@ -405,7 +405,6 @@ extern String_t* _stringLiteral2111252837;
 extern String_t* _stringLiteral2118567100;
 extern String_t* _stringLiteral2168171507;
 extern String_t* _stringLiteral22373147;
-extern String_t* _stringLiteral2239216835;
 extern String_t* _stringLiteral225310226;
 extern String_t* _stringLiteral2296245849;
 extern String_t* _stringLiteral2306740312;
@@ -12008,7 +12007,7 @@ IL_00f6:
 		String_t* L_55 = V_2;
 		if (!L_55)
 		{
-			goto IL_03e1;
+			goto IL_03d1;
 		}
 	}
 	{
@@ -12026,7 +12025,7 @@ IL_00f6:
 		bool L_59 = String_op_Equality_m920492651(NULL /*static, unused*/, L_58, _stringLiteral2974430316, /*hidden argument*/NULL);
 		if (L_59)
 		{
-			goto IL_03c1;
+			goto IL_03b9;
 		}
 	}
 	{
@@ -12035,11 +12034,11 @@ IL_00f6:
 		bool L_61 = String_op_Equality_m920492651(NULL /*static, unused*/, L_60, _stringLiteral1674974677, /*hidden argument*/NULL);
 		if (L_61)
 		{
-			goto IL_03d6;
+			goto IL_03c6;
 		}
 	}
 	{
-		goto IL_03e1;
+		goto IL_03d1;
 	}
 
 IL_037c:
@@ -12065,37 +12064,31 @@ IL_037c:
 		int32_t L_74 = V_1;
 		int32_t L_75 = ExperimentConfig_AddTrainingBlock_m2870622980(__this, L_74, /*hidden argument*/NULL);
 		V_1 = L_75;
-		int32_t L_76 = V_1;
-		int32_t L_77 = ExperimentConfig_RestBreakHere_m3489163849(__this, L_76, /*hidden argument*/NULL);
-		V_1 = L_77;
-		goto IL_03f0;
+		goto IL_03e0;
 	}
 
-IL_03c1:
+IL_03b9:
 	{
-		int32_t L_78 = V_1;
-		int32_t L_79 = ExperimentConfig_AddTrainingBlock_m2870622980(__this, L_78, /*hidden argument*/NULL);
-		V_1 = L_79;
-		int32_t L_80 = V_1;
-		int32_t L_81 = ExperimentConfig_RestBreakHere_m3489163849(__this, L_80, /*hidden argument*/NULL);
-		V_1 = L_81;
-		goto IL_03f0;
+		int32_t L_76 = V_1;
+		int32_t L_77 = ExperimentConfig_AddTrainingBlock_m2870622980(__this, L_76, /*hidden argument*/NULL);
+		V_1 = L_77;
+		goto IL_03e0;
 	}
 
-IL_03d6:
+IL_03c6:
 	{
 		ExperimentConfig_RandomPlayerAndRewardPositions_m3286299053(__this, /*hidden argument*/NULL);
-		goto IL_03f0;
+		goto IL_03e0;
 	}
 
-IL_03e1:
+IL_03d1:
 	{
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t3317548046_il2cpp_TypeInfo_var);
 		Debug_Log_m4051431634(NULL /*static, unused*/, _stringLiteral233162121, /*hidden argument*/NULL);
-		goto IL_03f0;
+		goto IL_03e0;
 	}
 
-IL_03f0:
+IL_03e0:
 	{
 		return;
 	}
@@ -12317,7 +12310,7 @@ extern "C" IL2CPP_METHOD_ATTR Vector3U5BU5D_t1718750761* ExperimentConfig_Choose
 		Vector3U5BU5D_t1718750761* L_1 = (Vector3U5BU5D_t1718750761*)SZArrayNew(Vector3U5BU5D_t1718750761_il2cpp_TypeInfo_var, (uint32_t)L_0);
 		V_0 = L_1;
 		V_1 = 0;
-		goto IL_00ee;
+		goto IL_008a;
 	}
 
 IL_000e:
@@ -12370,60 +12363,22 @@ IL_007f:
 		}
 	}
 	{
-		ObjectU5BU5D_t2843939325* L_20 = (ObjectU5BU5D_t2843939325*)SZArrayNew(ObjectU5BU5D_t2843939325_il2cpp_TypeInfo_var, (uint32_t)6);
-		ObjectU5BU5D_t2843939325* L_21 = L_20;
-		ArrayElementTypeCheck (L_21, _stringLiteral2239216835);
-		(L_21)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(0), (RuntimeObject *)_stringLiteral2239216835);
-		ObjectU5BU5D_t2843939325* L_22 = L_21;
-		Vector3U5BU5D_t1718750761* L_23 = V_0;
-		int32_t L_24 = V_1;
-		float L_25 = ((L_23)->GetAddressAtUnchecked(static_cast<il2cpp_array_size_t>(L_24)))->get_x_2();
-		float L_26 = L_25;
-		RuntimeObject * L_27 = Box(Single_t1397266774_il2cpp_TypeInfo_var, &L_26);
-		ArrayElementTypeCheck (L_22, L_27);
-		(L_22)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(1), (RuntimeObject *)L_27);
-		ObjectU5BU5D_t2843939325* L_28 = L_22;
-		ArrayElementTypeCheck (L_28, _stringLiteral3450517380);
-		(L_28)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(2), (RuntimeObject *)_stringLiteral3450517380);
-		ObjectU5BU5D_t2843939325* L_29 = L_28;
-		Vector3U5BU5D_t1718750761* L_30 = V_0;
-		int32_t L_31 = V_1;
-		float L_32 = ((L_30)->GetAddressAtUnchecked(static_cast<il2cpp_array_size_t>(L_31)))->get_y_3();
-		float L_33 = L_32;
-		RuntimeObject * L_34 = Box(Single_t1397266774_il2cpp_TypeInfo_var, &L_33);
-		ArrayElementTypeCheck (L_29, L_34);
-		(L_29)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(3), (RuntimeObject *)L_34);
-		ObjectU5BU5D_t2843939325* L_35 = L_29;
-		ArrayElementTypeCheck (L_35, _stringLiteral3450517380);
-		(L_35)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(4), (RuntimeObject *)_stringLiteral3450517380);
-		ObjectU5BU5D_t2843939325* L_36 = L_35;
-		Vector3U5BU5D_t1718750761* L_37 = V_0;
-		int32_t L_38 = V_1;
-		float L_39 = ((L_37)->GetAddressAtUnchecked(static_cast<il2cpp_array_size_t>(L_38)))->get_z_4();
-		float L_40 = L_39;
-		RuntimeObject * L_41 = Box(Single_t1397266774_il2cpp_TypeInfo_var, &L_40);
-		ArrayElementTypeCheck (L_36, L_41);
-		(L_36)->SetAtUnchecked(static_cast<il2cpp_array_size_t>(5), (RuntimeObject *)L_41);
-		IL2CPP_RUNTIME_CLASS_INIT(String_t_il2cpp_TypeInfo_var);
-		String_t* L_42 = String_Concat_m2971454694(NULL /*static, unused*/, L_36, /*hidden argument*/NULL);
-		IL2CPP_RUNTIME_CLASS_INIT(Debug_t3317548046_il2cpp_TypeInfo_var);
-		Debug_Log_m4051431634(NULL /*static, unused*/, L_42, /*hidden argument*/NULL);
-		int32_t L_43 = V_1;
-		V_1 = ((int32_t)il2cpp_codegen_add((int32_t)L_43, (int32_t)1));
+		int32_t L_20 = V_1;
+		V_1 = ((int32_t)il2cpp_codegen_add((int32_t)L_20, (int32_t)1));
 	}
 
-IL_00ee:
+IL_008a:
 	{
-		int32_t L_44 = V_1;
-		int32_t L_45 = ___nPresents0;
-		if ((((int32_t)L_44) < ((int32_t)L_45)))
+		int32_t L_21 = V_1;
+		int32_t L_22 = ___nPresents0;
+		if ((((int32_t)L_21) < ((int32_t)L_22)))
 		{
 			goto IL_000e;
 		}
 	}
 	{
-		Vector3U5BU5D_t1718750761* L_46 = V_0;
-		return L_46;
+		Vector3U5BU5D_t1718750761* L_23 = V_0;
+		return L_23;
 	}
 }
 // System.Void ExperimentConfig::GeneratePresentPositions(System.Int32)
