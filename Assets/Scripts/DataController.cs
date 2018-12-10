@@ -235,12 +235,7 @@ public class DataController : MonoBehaviour {
 
         // load next trial in trial list
         currentTrialNumber = trialList[trialListIndex + 1];        
-<<<<<<< HEAD
         trialListIndex++;
-
-=======
-        trialListIndex = trialListIndex + 1;
->>>>>>> 805c3df002c308bddb34ba28bf7096666267b5a9
     }
 
     // ********************************************************************** //

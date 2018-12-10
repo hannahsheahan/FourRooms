@@ -12,11 +12,7 @@ public class ExperimentConfig
     /// This script contains all the experiment configuration details
     /// e.g. experiment type, trial numbers, ordering and randomisation, trial 
     /// start and end locations. 
-<<<<<<< HEAD
     /// Notes:  variables should eventually be turned private. Some currently public for ease of communication with DataController.
-=======
-    /// Notes:  some config variables are currently public for ease of communication with DataController, but really they should all be private.
->>>>>>> 805c3df002c308bddb34ba28bf7096666267b5a9
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 08/11/2018
     /// </summary>
@@ -72,6 +68,7 @@ public class ExperimentConfig
     private const int TWO_STARS = 1;
     private string[] possibleRewardTypes; 
     private string[] rewardTypes;             // diamond or gold? (martini or beer)
+    private int numberPresentsPerRoom;
 
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float maxMovementTime;
@@ -151,9 +148,10 @@ public class ExperimentConfig
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
+        numberPresentsPerRoom  = 4;
 
         // These variables define the environment (are less likely to be played with)
-        roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
+        roomSize = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
         starYposition   = 74.5f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
@@ -301,6 +299,16 @@ public class ExperimentConfig
         for (int i = 0; i < nPresents; i++)
         {
             positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+
+            // make sure that we dont spawn multiple presents on top of each other
+            for (int j = 0; j < i; j++)
+            {
+                if (positionsInRoom[i] == positionsInRoom[j])
+                {
+                    positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+                }
+            }
+            Debug.Log("Present position: " + positionsInRoom[i].x +", " + positionsInRoom[i].y + ", " + positionsInRoom[i].z);
         }
 
         return positionsInRoom;
@@ -334,7 +342,6 @@ public class ExperimentConfig
         */
 
         // presents can be at any position in the room now
-        int numberPresentsPerRoom = 3;
         presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
 
         greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
@@ -772,6 +779,18 @@ public class ExperimentConfig
                         }
                     }
                 }
+
+                /*
+                // If we decide to have loads of presents, just make sure player doesnt spawn on top of them
+                for (int k = 0; k < presentPositions[trial].Length; k++)
+                {
+                    rewardLoc = presentPositions[trial][k];
+                    if (playerStartPositions[trial] == rewardLoc)
+                    {
+                        collisionInSpawnLocations = true;   // respawn the player location
+                    }
+                }
+                */
 
             }
             // orient player towards the centre of the environment (will be maximally informative of location in environment)
