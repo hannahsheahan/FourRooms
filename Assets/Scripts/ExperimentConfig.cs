@@ -9,10 +9,14 @@ using System.IO;
 public class ExperimentConfig
 {
     /// <summary>
-    /// This script will contain all the experiment configuration details
+    /// This script contains all the experiment configuration details
     /// e.g. experiment type, trial numbers, ordering and randomisation, trial 
     /// start and end locations. 
+<<<<<<< HEAD
     /// Notes:  variables should eventually be turned private. Some currently public for ease of communication with DataController.
+=======
+    /// Notes:  some config variables are currently public for ease of communication with DataController, but really they should all be private.
+>>>>>>> 805c3df002c308bddb34ba28bf7096666267b5a9
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 08/11/2018
     /// </summary>

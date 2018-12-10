@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/Persistent.unity
+=======
+- path: Assets/Scenes/Practice.unity
+>>>>>>> 805c3df002c308bddb34ba28bf7096666267b5a9
   isLoaded: 1
   isActive: 1

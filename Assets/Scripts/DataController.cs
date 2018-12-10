@@ -213,6 +213,7 @@ public class DataController : MonoBehaviour {
     {
         AssembleTrialData();                                         // store the error data for that attempt
 
+        // Determine where to integrate another trial attempt
         int trialInsertIndex = trialListIndex + 1;                   // default to repeating trial immediately (if code below is ever deprecated)
         int trialInsertNumber;
 
@@ -221,7 +222,7 @@ public class DataController : MonoBehaviour {
         while (gameData.allTrialData[trial].mapName == gameData.allTrialData[currentTrialNumber].mapName)
         {
             trial++;
-            if (trial == totalTrials) // we need an out, and don't want to access trials that dont exist
+            if (trial == totalTrials)                                // we need an out for this loop, and don't want to access trials that dont exist
             {
                 break;
             }
@@ -234,8 +235,12 @@ public class DataController : MonoBehaviour {
 
         // load next trial in trial list
         currentTrialNumber = trialList[trialListIndex + 1];        
+<<<<<<< HEAD
         trialListIndex++;
 
+=======
+        trialListIndex = trialListIndex + 1;
+>>>>>>> 805c3df002c308bddb34ba28bf7096666267b5a9
     }
 
     // ********************************************************************** //
