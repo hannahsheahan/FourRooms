@@ -96,7 +96,7 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        //experimentVersion = "micro_debug";
+        //experimentVersion = "micro_debug";   // NOTE this is obsolete not updated for present positioning
         experimentVersion = "singleblock_labpilot";
 
 
