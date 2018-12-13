@@ -1,7 +1,7 @@
 # FourRooms
 Unity Editor Version: 2018.1.7f1
 
-This project has been developed into a general purpose codebase for running human behavioural navigation experiments online using webGL.
+This is a Unity project developed for running human behavioural navigation experiments online using webGL. It has been designed to include a general purpose codebase that can easily serve as the basis for other online behavioural experiments in Unity.
 
 ## Overview
 
