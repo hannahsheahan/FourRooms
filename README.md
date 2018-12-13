@@ -1,7 +1,7 @@
 # FourRooms
 Unity Editor Version: 2018.1.7f1
 
-This project originally forked from Tartarus-Maze-2 by willdecothi@github.com before being developed into a general purpose codebase for running human behavioural navigation experiments.
+This project originally forked from Tartarus-Maze-2 by github.com/willdecothi before being developed into a general purpose codebase for running human behavioural navigation experiments.
 
 - You will need to edit filepath.path in filepath.cs script for an appropriate  location for the log file.
 
