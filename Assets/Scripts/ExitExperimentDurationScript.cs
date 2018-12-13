@@ -10,6 +10,7 @@ public class ExitExperimentDurationScript : MonoBehaviour {
 
     public Text ExperimentDurationText;
     public Text ConfirmationCode;
+    public Text YouMayNowExitText;
     private float totalExperimentTime;
 
     private void Start()
@@ -25,14 +26,19 @@ public class ExitExperimentDurationScript : MonoBehaviour {
 
     void Update()
     {
-        totalExperimentTime = GameController.control.totalExperimentTime;
+        totalExperimentTime = GameController.control.totalExperimentTime;   
 
         if (totalExperimentTime > 0.0f)    // just make sure it has updated
         {
             ExperimentDurationText.text = "Total time: " + (totalExperimentTime/60.0f).ToString("0.0") + " min";
         }
 
-        ConfirmationCode.text = "Your completion code: " + code;
+        // reveal the completion code once the participant has given some feedback.
+        if (dataController.participantFeedbackSubmitted)
+        {
+            ConfirmationCode.text = "Your completion code: " + code;
+            YouMayNowExitText.text = "You may now exit the game.";
+        }
     }
     // ********************************************************************** //
 }

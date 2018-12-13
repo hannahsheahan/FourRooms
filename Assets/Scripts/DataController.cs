@@ -27,6 +27,8 @@ public class DataController : MonoBehaviour {
     public bool participantIDSet = false;
     public bool participantAgeSet = false;
     public bool participantGenderSet = false;
+    public bool participantFeedbackGiven = false;
+    public bool participantFeedbackSubmitted = false;        
 
     // Data file saving
     private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/data/";
@@ -321,6 +323,30 @@ public class DataController : MonoBehaviour {
         {
             participantIDSet = true;
             gameData.participantID = ID;
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void SetParticipantFeedback(string feedback)
+    {
+        if (feedback != "")  // you must provide SOME feedback
+        {
+            participantFeedbackGiven = true;
+            gameData.participantFeedback = feedback;
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void SubmitParticipantFeedback() 
+    {
+        // Note that we are using a separate flag for this because we need the
+        // feedback to save to file OnClick(), before they reveal the code and exit.
+        if (participantFeedbackGiven) 
+        { 
+            SaveData();
+            participantFeedbackSubmitted = true;
         }
     }
 

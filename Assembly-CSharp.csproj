@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\DataController.cs" />
     <Compile Include="Assets\Scripts\DisplayRewardCue.cs" />
     <Compile Include="Assets\Scripts\DropdownGenderScript.cs" />
+    <Compile Include="Assets\Scripts\EnterFeedbackScript.cs" />
     <Compile Include="Assets\Scripts\EnterParticipantIDScript.cs" />
     <Compile Include="Assets\Scripts\ExitButtonScript.cs" />
     <Compile Include="Assets\Scripts\ExitExperimentDurationScript.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Scripts\SpawnRewardLocation.cs" />
     <Compile Include="Assets\Scripts\SpawnRewardLocation1.cs" />
     <Compile Include="Assets\Scripts\SpawnRewardLocation2.cs" />
+    <Compile Include="Assets\Scripts\SubmitFeedbackButtonScript.cs" />
     <Compile Include="Assets\Scripts\TestSceneSwitchingByButton.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\TotalScoreUpdateScript.cs" />

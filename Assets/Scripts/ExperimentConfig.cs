@@ -90,15 +90,15 @@ public class ExperimentConfig
 
     // Preset experiments
     public string experimentVersion;
-
+    private int nExecutedTrials;            // to be used in micro_debug mode only
     // ********************************************************************** //
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        //experimentVersion = "micro_debug";   // NOTE this is obsolete not updated for present positioning
-        experimentVersion = "singleblock_labpilot";
-
+        experimentVersion = "micro_debug"; 
+        //experimentVersion = "singleblock_labpilot";
+        
 
         // Set these variables to define your experiment:
         switch (experimentVersion)
@@ -119,9 +119,10 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 practiceTrials = 0 + getReadyTrial;
-                totalTrials = 3 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 2 + restbreakOffset;                           // Take a rest after this many normal trials
-                restbreakDuration = 5.0f;                                      // how long are the imposed rest breaks?
+                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
+                totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
+                restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
                 break;
 
             default:
@@ -220,7 +221,7 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
 
-                RandomPlayerAndRewardPositions();                        // works a charm if you want all start and reward locations completely random
+                nextTrial = AddTrainingBlock_micro(nextTrial, nExecutedTrials); 
                 break;
 
             default:
@@ -486,6 +487,17 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
+    private int AddTrainingBlock_micro(int nextTrial, int numberOfTrials)
+    {
+        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+
+        nextTrial = DoubleRewardBlock_micro(nextTrial, "cheese", numberOfTrials);
+
+        return nextTrial;
+    }
+
+    // ********************************************************************** //
+
     private int SingleContextDoubleRewardBlock(int firstTrial, string context)
     {
         // This function specifies the required trials in the block, and returns the next trial after this block
@@ -549,6 +561,69 @@ public class ExperimentConfig
         return firstTrial + blockLength;
     }
 
+    // ********************************************************************** //
+
+    private int DoubleRewardBlock_micro(int firstTrial, string context, int blockLength)
+    {
+        // This is for use during testing and debugging only - it DOES NOT specify a full counterbalanced trial sequence
+        // This function specifies the required trials in the block, and returns the next trial after this block
+
+        string startRoom;
+        int contextSide;
+
+        string[] arrayContexts = new string[blockLength];
+        string[] arrayStartRooms = new string[blockLength];
+        int[] arrayContextSides = new int[blockLength];
+
+        for (int i = 0; i < blockLength; i++)
+        {
+            // use a different start location for each trial
+            switch (i % 4)
+            {
+                case 0:
+                    startRoom = "yellow";
+                    break;
+                case 1:
+                    startRoom = "green";
+                    break;
+                case 2:
+                    startRoom = "red";
+                    break;
+                case 3:
+                    startRoom = "blue";
+                    break;
+                default:
+                    startRoom = "error";
+                    Debug.Log("Start room specified incorrectly");
+                    break;
+            }
+
+            // switch the side of the room the rewards are located on for each context
+            if (blockLength % 2 != 0)
+            {
+                Debug.Log("Error: Odd number of trials specified per block. Specify even number for proper counterbalancing");
+            }
+
+            if (i < (blockLength / 2))
+            {
+                contextSide = 1;
+            }
+            else
+            {
+                contextSide = 2;
+            }
+
+            // Store trial setup in array, for later randomisation
+            arrayContexts[i] = context;
+            arrayStartRooms[i] = startRoom;
+            arrayContextSides[i] = contextSide;
+        }
+
+        // Randomise the trial order and save it
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides);
+
+        return firstTrial + blockLength;
+    }
     // ********************************************************************** //
 
     private void TwoContextDoubleRewardBlock(int firstTrial)
