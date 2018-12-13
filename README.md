@@ -1,7 +1,7 @@
 # FourRooms
 Unity Editor Version: 2018.1.7f1
 
-This project originally forked from Tartarus-Maze-2 by github.com/willdecothi before being developed into a general purpose codebase for running human behavioural navigation experiments.
+This project has been developed into a general purpose codebase for running human behavioural navigation experiments online using webGL.
 
 ## Overview
 
