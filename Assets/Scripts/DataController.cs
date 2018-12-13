@@ -20,7 +20,6 @@ public class DataController : MonoBehaviour {
 
     public GameData gameData;          // data for the entire game, including all trials
     public ExperimentConfig config;   // experiment details, trial sequence, randomisation etc
-    //public ParticipantData participantData;
     private GameObject PlayerFPS;
 
     public int currentTrialNumber = 0;
@@ -44,7 +43,7 @@ public class DataController : MonoBehaviour {
     public int totalTrials;
     public List<int> trialList = new List<int>();  // this makes dynamically changing/reinserting error trials at different locations possible
     public int trialListIndex = 0;                 // keeps track of where in the trial sequence we are (independent of currentTrialNumber for where to save the data)
-
+    public int numberPresentsPerRoom;
 
     public System.Random rnd = new System.Random();
 
@@ -156,6 +155,9 @@ public class DataController : MonoBehaviour {
         // Create the gameData object where we will store all the data
         gameData = new GameData(totalTrials);
 
+        // Specify the number of presents/gifts per room for tracking their state in the GameController
+        numberPresentsPerRoom = config.numberPresentsPerRoom;
+
         // Data that is consistent across trials
         gameData.confirmationCode = confirmationCode;
         gameData.experimentVersion = config.experimentVersion;
@@ -163,7 +165,7 @@ public class DataController : MonoBehaviour {
         gameData.dataRecordFrequency = config.GetDataFrequency();
         gameData.restbreakDuration = config.restbreakDuration;
         gameData.getReadyDuration = config.getReadyDuration;
-
+        
         Debug.Log("Total number of trials to load: " + totalTrials);
 
         // Add each required trial data to gameData in turn
@@ -272,16 +274,24 @@ public class DataController : MonoBehaviour {
 
             int stringLength = trackedStateData.Count;
             Debug.Log("There were this many tracked state transition timesteps: " + stringLength);
-
             for (var i = 0; i < stringLength; i++)
             {
                 gameData.allTrialData[currentTrialNumber].stateTransitions.Add(trackedStateData[i]);
             }
 
+            // Add in the gift wrapping state transition data
+            List<string> trackedGiftWrapStateData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
+            trackedGiftWrapStateData = GameController.control.giftWrapStateTransitions;
+
+            stringLength = trackedGiftWrapStateData.Count;
+            for (var i = 0; i < stringLength; i++)
+            {
+                gameData.allTrialData[currentTrialNumber].giftWrapStateTransitions.Add(trackedGiftWrapStateData[i]);
+            }
+
             // Add in the player tracking data
             List<string> trackedTrialData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
             trackedTrialData = PlayerFPS.GetComponent<TrackingScript>().getCoords();
-
             stringLength = trackedTrialData.Count;
             Debug.Log("There were this many tracked navigation timesteps: " + stringLength);
 

@@ -41,6 +41,7 @@ public class GameController : MonoBehaviour {
     public Vector3 activeStarSpawnLocation;   // this is obsolete: only used for if we have sequential order on reward collection
     public bool doubleRewardTask;
     public Vector3[] presentPositions;
+    public int numberPresentsPerRoom;
 
     private string nextScene;
 
@@ -88,7 +89,6 @@ public class GameController : MonoBehaviour {
     public float currentFrozenTime;
     public bool displayTimeLeft;
     public float firstFrozenTime;
-
 
     public float maxMovementTime;  
     private float preDisplayCueTime;
@@ -140,6 +140,9 @@ public class GameController : MonoBehaviour {
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
 
+    public int[] giftWrapState;
+    public List<string> giftWrapStateTransitions = new List<string>();   // recorded state of the giftboxes (in sync with the player data)
+
     private bool gameStarted = false;
 
     // ********************************************************************** //
@@ -172,18 +175,23 @@ public class GameController : MonoBehaviour {
         restbreakDuration = dataController.GetRestBreakDuration();
         getReadyDuration = dataController.GetGetReadyDuration();
 
-        // Initialise FSM State
-        State = STATE_STARTSCREEN;
-        previousState = STATE_STARTSCREEN;
-        stateTimer = new Timer();
-        stateTimer.Reset();
-
+        // Initialise the timers
         experimentTimer = new Timer();
         movementTimer = new Timer();
         messageTimer = new Timer();
         restbreakTimer = new Timer();
         getReadyTimer = new Timer();
+
+        // Initialise FSM State
+        State = STATE_STARTSCREEN;
+        previousState = STATE_STARTSCREEN;
+        stateTimer = new Timer();
+        stateTimer.Reset();
         stateTransitions.Clear();
+
+        // Initialise giftwrap states
+        giftWrapState = new int[4 * dataController.numberPresentsPerRoom];
+        giftWrapStateTransitions.Clear();
 
         // Ensure cue images are off
         displayCue = false;
@@ -538,8 +546,6 @@ public class GameController : MonoBehaviour {
         doubleRewardTask        = currentTrialData.doubleRewardTask;
         presentPositions        = currentTrialData.presentPositions;
 
-        //activeStarSpawnLocation = star1SpawnLocation;
-
         // Timer variables
         maxMovementTime = currentTrialData.maxMovementTime;
         preDisplayCueTime = currentTrialData.preDisplayCueTime;
@@ -587,25 +593,15 @@ public class GameController : MonoBehaviour {
             PlayerFPS = GameObject.Find("FPSController");
             stateTransitions.Clear();                      // restart the state tracker ready for the new trial
             stateTransitions.Add("Game State");
+
             RecordFSMState();                              // catch the current state before the update
             InvokeRepeating("RecordFSMState", 0f, dataRecordFrequency);
-            //Debug.Log("Found player.");
-        }
-    }
 
-
-    // ********************************************************************** //
-
-    // ***HRS obsolete to delete
-    public void EnablePlayerController(bool enable)  
-    {
-        if (enable & !(PlayerFPS.GetComponent<FirstPersonController>().enabled))
-        {
-            PlayerFPS.GetComponent<FirstPersonController>().enabled = true;
-        }
-        else
-        {
-            PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+            // Track the giftbox states whenever a change to the giftbox states is made
+            giftWrapStateTransitions.Clear();
+            giftWrapStateTransitions.Add("Wrapping State");
+            giftWrapState = Enumerable.Repeat(1, giftWrapState.Length).ToArray();
+            RecordGiftStates();
         }
     }
 
@@ -685,7 +681,21 @@ public class GameController : MonoBehaviour {
 
     private void RecordFSMState()
     {
+        // add the current stateof the gameplay at this moment to the array
         stateTransitions.Add(State.ToString());
+    }
+
+    // ********************************************************************** //
+
+    public void RecordGiftStates() 
+    {
+        // add the current state of the presents to an array
+        string giftWrapStateString = string.Format("{0:0.00}", Time.time);    // timestamp the state array with same timer as the positional tracking data
+        for (int i = 0; i < giftWrapState.Length; i++)
+        {
+            giftWrapStateString = giftWrapStateString + " " + giftWrapState[i].ToString();
+        }
+        giftWrapStateTransitions.Add(giftWrapStateString);
     }
 
     // ********************************************************************** //

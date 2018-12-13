@@ -33,7 +33,10 @@ public class EnterFeedbackScript : MonoBehaviour {
 
     public void CollectFeedbackFromInput(string feedback)
     {
-        dataController.SetParticipantFeedback(feedback);  // Send participant feedback data to the DataController
+        if (dataController != null) 
+        { 
+            dataController.SetParticipantFeedback(feedback);  // Send participant feedback data to the DataController
+        }
     }
 
     // ********************************************************************** //

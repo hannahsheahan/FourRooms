@@ -68,7 +68,7 @@ public class ExperimentConfig
     private const int TWO_STARS = 1;
     private string[] possibleRewardTypes; 
     private string[] rewardTypes;             // diamond or gold? (martini or beer)
-    private int numberPresentsPerRoom;
+    public int numberPresentsPerRoom;
 
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float maxMovementTime;
