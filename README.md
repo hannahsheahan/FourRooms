@@ -8,9 +8,9 @@ This project originally forked from Tartarus-Maze-2 by github.com/willdecothi be
 - You will need to edit filepath.path in filepath.cs script for an appropriate  location for the log file.
 
 - To run an experiment, you must start the game from the persistent scene, 'Persistent'
-- The gameplay is controlled -almost- entirely from GameController.cs. There is some gameplay that is local to short scripts attached to objects in different scenes, but where possible these scripts trigger functions within GameController.cs to keep gameplay centralised and readable. A finite-state-machine tracks within-trial changes to the game state.
+- The gameplay is controlled -almost- entirely from the singleton GameController.cs. There is some gameplay that is local to short scripts attached to objects in different scenes, but where possible these scripts trigger functions within GameController.cs to keep gameplay centralised and readable. A finite-state-machine tracks within-trial changes to the game state.
 
-- The data management is operated through DataController.cs. Any configuration file that needs to be read or loaded, any online changes to trial list sequencing, and any saving of the data (to either the Summerfield Lab webserver or to a location on your local computer), is performed here.
+- The data management is operated through DataController.cs. Any configuration file that needs to be read or loaded, any online changes to trial list sequencing, and any saving of the data (to either the Summerfield Lab webserver or to a location on your local computer), is performed here. There is one instance of DataController that persists between scenes and is fetched/found by other smaller scripts when needed.
 
 - The experiment configuration is controlled through the script ExperimentConfig.cs, which specifies the trial sequencing, randomisation, and experiment-specific controlled variables e.g. the duration and frequency of restbreaks.
 
