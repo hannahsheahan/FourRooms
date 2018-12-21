@@ -96,8 +96,8 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        experimentVersion = "micro_debug"; 
-        //experimentVersion = "singleblock_labpilot";
+        //experimentVersion = "micro_debug"; 
+        experimentVersion = "singleblock_labpilot";
         
 
         // Set these variables to define your experiment:

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Exit.unity
+- path: Assets/Scenes/GetReady.unity
   isLoaded: 1
   isActive: 1
