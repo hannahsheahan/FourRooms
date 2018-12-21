@@ -1,5 +1,5 @@
 # FourRooms
-Unity Editor Version: 2018.1.7f1
+##### Unity Editor Version: 2018.1.7f1
 
 This is a Unity project developed for running human behavioural navigation experiments online using webGL. It has been designed to include a general purpose codebase that can easily serve as the basis for other online behavioural experiments in Unity.
 
