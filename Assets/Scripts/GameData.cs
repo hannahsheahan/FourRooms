@@ -9,7 +9,8 @@ public class GameData
     public string participantID;
     public string participantAge;
     public int participantGender;
-    public string confirmationCode; 
+    public string confirmationCode;
+    public string participantFeedback;
     public int totalTrials;
     public float dataRecordFrequency;
     public float restbreakDuration;

@@ -12,11 +12,7 @@ public class ExperimentConfig
     /// This script contains all the experiment configuration details
     /// e.g. experiment type, trial numbers, ordering and randomisation, trial 
     /// start and end locations. 
-<<<<<<< HEAD
     /// Notes:  variables should eventually be turned private. Some currently public for ease of communication with DataController.
-=======
-    /// Notes:  some config variables are currently public for ease of communication with DataController, but really they should all be private.
->>>>>>> 805c3df002c308bddb34ba28bf7096666267b5a9
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 08/11/2018
     /// </summary>
@@ -72,6 +68,7 @@ public class ExperimentConfig
     private const int TWO_STARS = 1;
     private string[] possibleRewardTypes; 
     private string[] rewardTypes;             // diamond or gold? (martini or beer)
+    public int numberPresentsPerRoom;
 
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float maxMovementTime;
@@ -93,15 +90,15 @@ public class ExperimentConfig
 
     // Preset experiments
     public string experimentVersion;
-
+    private int nExecutedTrials;            // to be used in micro_debug mode only
     // ********************************************************************** //
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        //experimentVersion = "micro_debug";
+        //experimentVersion = "micro_debug"; 
         experimentVersion = "singleblock_labpilot";
-
+        
 
         // Set these variables to define your experiment:
         switch (experimentVersion)
@@ -122,9 +119,10 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 practiceTrials = 0 + getReadyTrial;
-                totalTrials = 3 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 2 + restbreakOffset;                           // Take a rest after this many normal trials
-                restbreakDuration = 5.0f;                                      // how long are the imposed rest breaks?
+                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
+                totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
+                restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
                 break;
 
             default:
@@ -151,9 +149,10 @@ public class ExperimentConfig
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
+        numberPresentsPerRoom  = 4;
 
         // These variables define the environment (are less likely to be played with)
-        roomSize        = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
+        roomSize = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
         starYposition   = 74.5f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
@@ -211,19 +210,18 @@ public class ExperimentConfig
 
                 //---- training block 4
                 nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);                   
+
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);                   
                 break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
 
-                RandomPlayerAndRewardPositions();                        // works a charm if you want all start and reward locations completely random
+                nextTrial = AddTrainingBlock_micro(nextTrial, nExecutedTrials); 
                 break;
 
             default:
@@ -301,6 +299,15 @@ public class ExperimentConfig
         for (int i = 0; i < nPresents; i++)
         {
             positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+
+            // make sure that we dont spawn multiple presents on top of each other
+            for (int j = 0; j < i; j++)
+            {
+                if (positionsInRoom[i] == positionsInRoom[j])
+                {
+                    positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+                }
+            }
         }
 
         return positionsInRoom;
@@ -334,7 +341,6 @@ public class ExperimentConfig
         */
 
         // presents can be at any position in the room now
-        int numberPresentsPerRoom = 3;
         presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
 
         greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
@@ -481,6 +487,17 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
+    private int AddTrainingBlock_micro(int nextTrial, int numberOfTrials)
+    {
+        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+
+        nextTrial = DoubleRewardBlock_micro(nextTrial, "cheese", numberOfTrials);
+
+        return nextTrial;
+    }
+
+    // ********************************************************************** //
+
     private int SingleContextDoubleRewardBlock(int firstTrial, string context)
     {
         // This function specifies the required trials in the block, and returns the next trial after this block
@@ -544,6 +561,69 @@ public class ExperimentConfig
         return firstTrial + blockLength;
     }
 
+    // ********************************************************************** //
+
+    private int DoubleRewardBlock_micro(int firstTrial, string context, int blockLength)
+    {
+        // This is for use during testing and debugging only - it DOES NOT specify a full counterbalanced trial sequence
+        // This function specifies the required trials in the block, and returns the next trial after this block
+
+        string startRoom;
+        int contextSide;
+
+        string[] arrayContexts = new string[blockLength];
+        string[] arrayStartRooms = new string[blockLength];
+        int[] arrayContextSides = new int[blockLength];
+
+        for (int i = 0; i < blockLength; i++)
+        {
+            // use a different start location for each trial
+            switch (i % 4)
+            {
+                case 0:
+                    startRoom = "yellow";
+                    break;
+                case 1:
+                    startRoom = "green";
+                    break;
+                case 2:
+                    startRoom = "red";
+                    break;
+                case 3:
+                    startRoom = "blue";
+                    break;
+                default:
+                    startRoom = "error";
+                    Debug.Log("Start room specified incorrectly");
+                    break;
+            }
+
+            // switch the side of the room the rewards are located on for each context
+            if (blockLength % 2 != 0)
+            {
+                Debug.Log("Error: Odd number of trials specified per block. Specify even number for proper counterbalancing");
+            }
+
+            if (i < (blockLength / 2))
+            {
+                contextSide = 1;
+            }
+            else
+            {
+                contextSide = 2;
+            }
+
+            // Store trial setup in array, for later randomisation
+            arrayContexts[i] = context;
+            arrayStartRooms[i] = startRoom;
+            arrayContextSides[i] = contextSide;
+        }
+
+        // Randomise the trial order and save it
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides);
+
+        return firstTrial + blockLength;
+    }
     // ********************************************************************** //
 
     private void TwoContextDoubleRewardBlock(int firstTrial)
@@ -772,6 +852,18 @@ public class ExperimentConfig
                         }
                     }
                 }
+
+                /*
+                // If we decide to have loads of presents, just make sure player doesnt spawn on top of them
+                for (int k = 0; k < presentPositions[trial].Length; k++)
+                {
+                    rewardLoc = presentPositions[trial][k];
+                    if (playerStartPositions[trial] == rewardLoc)
+                    {
+                        collisionInSpawnLocations = true;   // respawn the player location
+                    }
+                }
+                */
 
             }
             // orient player towards the centre of the environment (will be maximally informative of location in environment)

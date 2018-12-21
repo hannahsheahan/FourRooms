@@ -53,5 +53,6 @@ public class TrialData
     // Tracking data
     public List<string> stateTransitions = new List<string>();
     public List<string> timeStepTrackingData = new List<string>();
+    public List<string> giftWrapStateTransitions = new List<string>();
 
 }
