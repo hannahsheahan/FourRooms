@@ -95,9 +95,9 @@ public class ExperimentConfig
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
-        //experimentVersion = "mturk_learnpilot";
+        experimentVersion = "mturk_learnpilot";
         //experimentVersion = "micro_debug"; 
-        experimentVersion = "singleblock_labpilot";
+        //experimentVersion = "singleblock_labpilot";
         
 
         // Set these variables to define your experiment:

@@ -30,7 +30,7 @@ public class DataController : MonoBehaviour {
     public bool participantFeedbackSubmitted = false;        
 
     // Data file saving
-    private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/Tartarus/Tartarus-Maze-2/data/";
+    private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/data/";
     public DateTime dateTime = DateTime.Now;
     public string stringDateTime; 
     public string filePath;
