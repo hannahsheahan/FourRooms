@@ -95,10 +95,11 @@ public class ExperimentConfig
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
-        experimentVersion = "mturk_learnpilot";
+        //experimentVersion = "mturk_learnpilot";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
-        
+        experimentVersion = "singleblocktransfer_labpilot";
+
 
         // Set these variables to define your experiment:
         switch (experimentVersion)
@@ -117,9 +118,16 @@ public class ExperimentConfig
                 restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
                 break;
 
-            case "micro_debug":            // ----Mini debugging test experiment-----
+            case "singleblocktransfer_labpilot":   // ----Mini 1 block transfer rewards test experiment-----
                 practiceTrials = 0 + getReadyTrial;
-                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
+                totalTrials = 16 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 20 + restbreakOffset;                          // Take a rest after this many normal trials
+                restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
+                break;
+
+            case "micro_debug":            // ----Mini debugging test experiment-----
+                practiceTrials = 1 + getReadyTrial;
+                nExecutedTrials = 2;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
@@ -185,7 +193,7 @@ public class ExperimentConfig
         trialMazes[setupTrials + practiceTrials-1] = "GetReady";
         trialMazes[totalTrials - 1] = "Exit";
 
-        // Add in the practice trials in an open arena with little fog and no colour
+        // Add in the practice trials in an open practice arena with no colour on floors
         AddPracticeTrials();
 
         // Generate the trial randomisation/list that we want.   Note: Ensure this is aligned with the total number of trials
@@ -217,6 +225,12 @@ public class ExperimentConfig
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
+                break;
+
+            case "singleblocktransfer_labpilot":   // ----Mini 1 block test experiment-----
+
+                //---- training block 1
+                nextTrial = AddTransferBlock(nextTrial);
                 break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
@@ -272,7 +286,7 @@ public class ExperimentConfig
             }
             else
             {
-                SetDoubleRewardTrial(trial, "cheese", "red", "green", "blue"); 
+                SetDoubleRewardTrial(trial, "cheese", "red", "green", "blue");
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
@@ -428,7 +442,7 @@ public class ExperimentConfig
         }
 
         // Possible reward types
-        possibleRewardTypes = new string[] { "wine", "cheese" };
+        possibleRewardTypes = new string[] { "wine", "cheese", "banana", "watermelon" };
     }
 
     // ********************************************************************** //
@@ -481,6 +495,25 @@ public class ExperimentConfig
         {
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese");
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine");
+        }
+        return nextTrial;
+    }
+
+    // ********************************************************************** //
+
+    private int AddTransferBlock(int nextTrial)
+    {
+        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+
+        if (rand.Next(2) == 0)   // randomise whether the watermelon or banana sub-block happens first
+        {
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon");
+        }
+        else
+        {
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana");
         }
         return nextTrial;
     }
@@ -741,7 +774,34 @@ public class ExperimentConfig
                     }
                     break;
 
-                default:
+            case "watermelon":
+
+                if (contextSide == 1)
+                {
+                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue");
+                    trialSetCorrectly = true;
+                }
+                else if (contextSide == 2)
+                {
+                    SetDoubleRewardTrial(trial, context, startRoom, "green", "red");
+                    trialSetCorrectly = true;
+                }
+                break;
+
+            case "banana":
+
+                if (contextSide == 1)
+                {
+                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green");
+                    trialSetCorrectly = true;
+                }
+                else if (contextSide == 2)
+                {
+                    SetDoubleRewardTrial(trial, context, startRoom, "blue", "red");
+                    trialSetCorrectly = true;
+                }
+                break;
+            default:
                     break;
             }
     
