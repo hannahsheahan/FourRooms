@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/giftboxpilot2
+/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/giftboxpilottransfer
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity
@@ -15,6 +15,8 @@ Assets/Scenes/Practice.unity
 Assets/Scenes/FourRooms_wine.unity
 Assets/Scenes/FourRooms_cheese.unity
 Assets/Scenes/FourRooms_martini.unity
+Assets/Scenes/FourRooms_banana.unity
+Assets/Scenes/FourRooms_watermelon.unity
 SceneListEnd?
 c422dd62785a6d0afa870fbd111886ce Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
 95c241412033d75da3b2703947abc86e Assembly-CSharp-firstpass.dll:UnityStandardAssets.Effects.ExtinguishableParticleSystem
@@ -259,7 +261,7 @@ fd5bec7c3a0fba860bb3b16a37b8f7c4 Assembly-CSharp-firstpass.dll:UnityStandardAsse
 a90d6901a99744ae38d30050782e4e34 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Cameras.HandHeldCam
 d315386302caddeaaad4961b9b324239 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ContrastEnhance
 ab81ce3bab66b27457f2d7b929fb80fc Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Aeroplane.AeroplanePropellerAnimator
-f74ba10a70a7d5c95c0d771a4cae12cd Assembly-CSharp.dll:.DisplayRewardCue
+b2b6f2e10f17e65468e99eb3c9063166 Assembly-CSharp.dll:.DisplayRewardCue
 486cd95c82d8305219c352c06b776e1f UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 e033f131358cea5a0eabf9561e781deb UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
 9d863b523b577f5c3d915351a74cd338 UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender

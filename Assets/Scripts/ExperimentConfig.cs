@@ -96,9 +96,10 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
+        experimentVersion = "mturk_learntransferpilot";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
-        experimentVersion = "singleblocktransfer_labpilot";
+        //experimentVersion = "singleblocktransfer_labpilot";
 
 
         // Set these variables to define your experiment:
@@ -111,6 +112,13 @@ public class ExperimentConfig
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
 
+            case "mturk_learntransferpilot":       // ----Full 4 block learning experiment-----
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                break;
+
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
                 practiceTrials = 1 + getReadyTrial;
                 totalTrials = 16  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
@@ -119,7 +127,7 @@ public class ExperimentConfig
                 break;
 
             case "singleblocktransfer_labpilot":   // ----Mini 1 block transfer rewards test experiment-----
-                practiceTrials = 0 + getReadyTrial;
+                practiceTrials = 1 + getReadyTrial;
                 totalTrials = 16 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 20 + restbreakOffset;                          // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
@@ -220,6 +228,34 @@ public class ExperimentConfig
                 nextTrial = AddTrainingBlock(nextTrial);
 
                 break;
+
+            case "mturk_learntransferpilot":  // ----Full 3 block learning + 3 block transfer experiment (2hrs)-----
+
+                //---- training block 1
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 2
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 3
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 1
+                nextTrial = AddTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 2
+                nextTrial = AddTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 3
+                nextTrial = AddTransferBlock(nextTrial);
+
+                break;
+
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
 
