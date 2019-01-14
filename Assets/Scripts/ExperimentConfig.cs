@@ -63,6 +63,7 @@ public class ExperimentConfig
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
+    private bool[] freeForage;               // array specifying whether each trial was free foraging or not i.e. many rewards or just 2
     private const int ONE_STAR = 0;
     private const int TWO_STARS = 1;
     private string[] possibleRewardTypes; 
@@ -190,6 +191,7 @@ public class ExperimentConfig
         playerStartOrientations = new Vector3[totalTrials];
         rewardPositions = new Vector3[totalTrials][];
         doubleRewardTask = new bool[totalTrials];
+        freeForage = new bool[totalTrials];
         rewardTypes = new string[totalTrials];
         presentPositions = new Vector3[totalTrials][];
 
@@ -946,6 +948,7 @@ public class ExperimentConfig
             {
                 // rewards are positioned in all boxes
                 trialMazes[trial] = "PrePostForage_" + rewardTypes[trial];
+                freeForage[trial] = true;
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
                 star1Rooms[trial] = "rewards everywhere";
@@ -960,7 +963,8 @@ public class ExperimentConfig
             else
             { 
                 // this is a two-reward trial
-                trialMazes[trial] = "FourRooms_" + rewardTypes[trial]; 
+                trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
+                freeForage[trial] = false;
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
                 star1Rooms[trial] = rewardRoom1;
@@ -1233,6 +1237,13 @@ public class ExperimentConfig
     public bool GetIsDoubleReward(int trial)
     {
         return doubleRewardTask[trial];
+    }
+
+    // ********************************************************************** //
+
+    public bool GetIsFreeForaging(int trial)
+    {
+        return freeForage[trial];
     }
 
     // ********************************************************************** //

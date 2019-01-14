@@ -9,21 +9,6 @@ public class HideOrDisplayReward : MonoBehaviour {
    
 	private void Update()
     {
-        // Display or hide the reward location
-        switch (rewardIndex)
-        {
-            case 1:
-                reward.SetActive(GameController.control.reward1Visible);
-                break;
-
-            case 2:
-                reward.SetActive(GameController.control.reward2Visible);
-                break;
-
-            default:
-                reward.SetActive(GameController.control.reward1Visible);
-                reward.SetActive(GameController.control.reward2Visible);
-                break;
-        }
+        reward.SetActive(GameController.control.rewardsVisible[rewardIndex]);
     }
 }

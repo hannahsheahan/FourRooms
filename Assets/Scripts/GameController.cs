@@ -38,6 +38,8 @@ public class GameController : MonoBehaviour {
     public Vector3 playerSpawnOrientation;
     public Vector3[] rewardSpawnLocations;
     public bool doubleRewardTask;
+    public bool freeForage;
+    public int rewardsRemaining;
     public Vector3[] presentPositions;
     public int numberPresentsPerRoom;
 
@@ -322,7 +324,7 @@ public class GameController : MonoBehaviour {
                     source.PlayOneShot(starFoundSound, 1F);
                     firstMovementTime = movementTimer.ElapsedSeconds();
 
-                    if (doubleRewardTask)  // we are collecting two stars on this trial
+                    if (doubleRewardTask)  // we are collecting two or more stars on this trial
                     {
                         StateNext(STATE_STAR1FOUND);
                     }
@@ -340,14 +342,19 @@ public class GameController : MonoBehaviour {
                 // disable the player control and reset the starFound trigger ready to collect the next star
                 starFound = false; 
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                rewardsRemaining--;
 
-                // Guide a player a little more on practice trials
-                if (currentTrialData.mapName == "Practice")
+
+                if (!freeForage)
                 {
-                    displayMessage = "keepSearchingMessage";
+                    // Guide a player a little more on practice trials
+                    if (currentTrialData.mapName == "Practice")
+                    {
+                        displayMessage = "keepSearchingMessage";
+                    }
                 }
                 // pause here so that we can take a TR
-                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)  // the trial should timeout
+                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
                 {
                     PlayerFPS.GetComponent<FirstPersonController>().enabled = true; // let the player move again
                     StateNext(STATE_MOVING2);
@@ -366,11 +373,22 @@ public class GameController : MonoBehaviour {
                 {
                     source.PlayOneShot(starFoundSound, 1F);
                     totalMovementTime = movementTimer.ElapsedSeconds();
-                    StateNext(STATE_STAR2FOUND);
+
+                    // ***HRS this is a bit of a hack for dealing with the free-foraging multi-reward case
+                    if (rewardsRemaining > 1) 
+                    {
+                        StateNext(STATE_STAR1FOUND);
+                    }
+                    else 
+                    {   // STATE_STAR2FOUND is the state accessed when the FINAL reward to be collected is found
+                        StateNext(STATE_STAR2FOUND);
+                    }
                 }
                 break;
 
             case STATE_STAR2FOUND:
+
+                // This is the state when the FINAL reward to be collected is found (in the case of 2 or multiple rewards)
 
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
                 displayTimeLeft = false;             // freeze the visible countdown
@@ -546,6 +564,21 @@ public class GameController : MonoBehaviour {
         rewardSpawnLocations    = currentTrialData.rewardPositions;
         doubleRewardTask        = currentTrialData.doubleRewardTask;
         presentPositions        = currentTrialData.presentPositions;
+        freeForage              = currentTrialData.freeForage;
+
+
+        // ***HRS This is a hack for now for dealing with the free-foraging multi-reward case in the FSM, can make elegant later
+        if (doubleRewardTask)
+        { 
+            if (freeForage)
+            {
+                rewardsRemaining = 16;
+            }
+            else
+            {
+                rewardsRemaining = 2;
+            }
+        }
 
         // Timer variables
         maxMovementTime = currentTrialData.maxMovementTime;

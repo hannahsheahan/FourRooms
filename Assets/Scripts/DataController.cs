@@ -184,6 +184,8 @@ public class DataController : MonoBehaviour {
             // Rewards
             gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);
             gameData.allTrialData[trial].doubleRewardTask = config.GetIsDoubleReward(trial);
+            gameData.allTrialData[trial].freeForage = config.GetIsFreeForaging(trial);
+
 
             // Timer variables (can change these for each trial later e.g. with jitter)
             gameData.allTrialData[trial].maxMovementTime = config.maxMovementTime;

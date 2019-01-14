@@ -19,6 +19,7 @@ public class TrialData
     //public int mapIndex;   // this causes some complications (because SceneManager only manages active/loaded scenes, so .buildIndex throws -1)
     public string mapName;
     public bool doubleRewardTask;
+    public bool freeForage;
     public string rewardType;
 
     public Vector3 playerSpawnLocation;
