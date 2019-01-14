@@ -114,7 +114,7 @@ public class ExperimentConfig
 
             case "mturk_learntransferpilot":       // ----Full 4 block learning experiment-----
                 practiceTrials = 2 + getReadyTrial;
-                totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                totalTrials = 16 * 8 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
@@ -243,6 +243,10 @@ public class ExperimentConfig
                 nextTrial = AddTrainingBlock(nextTrial);
                 nextTrial = RestBreakHere(nextTrial);
 
+                //---- training block 4
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
                 //---- transfer block 1
                 nextTrial = AddTransferBlock(nextTrial);
                 nextTrial = RestBreakHere(nextTrial);
@@ -252,6 +256,10 @@ public class ExperimentConfig
                 nextTrial = RestBreakHere(nextTrial);
 
                 //---- transfer block 3
+                nextTrial = AddTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 4
                 nextTrial = AddTransferBlock(nextTrial);
 
                 break;
