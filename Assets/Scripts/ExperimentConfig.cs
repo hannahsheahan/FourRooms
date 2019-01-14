@@ -95,7 +95,8 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        experimentVersion = "mturk_learntransferpilot";
+        experimentVersion = "mturk_learnwithprepost";
+        //experimentVersion = "mturk_learntransferpilot";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
         //experimentVersion = "singleblocktransfer_labpilot";
@@ -107,6 +108,13 @@ public class ExperimentConfig
             case "mturk_learnpilot":       // ----Full 4 block learning experiment-----
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                break;
+
+            case "mturk_learnwithprepost":
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
@@ -226,6 +234,32 @@ public class ExperimentConfig
                 nextTrial = AddTrainingBlock(nextTrial);
 
                 break;
+            case "mturk_learnwithprepost":    // ----Full 4 block learning experiment with pre/post free-foraging tests-----
+
+                //---- pre-training free foraging block
+                nextTrial = AddFreeForageBlock(nextTrial, "cheeseandwine");
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 1
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 2
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 3
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 4
+                nextTrial = AddTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- post-training free foraging block 
+                nextTrial = AddFreeForageBlock(nextTrial, "cheeseandwine");
+
+                break;
 
             case "mturk_learntransferpilot":  // ----Full 3 block learning + 3 block transfer experiment (2hrs)-----
 
@@ -285,17 +319,6 @@ public class ExperimentConfig
                 break;
         }
 
-        // Later experiment:
-
-        //---- free foraging block
-        //AddFreeForageBlock();   // ***HRS to make this later
-
-        //---- training goes here
-
-        //---- free foraging block
-        //AddFreeForageBlock();
-
-
         // For debugging: print out the final trial sequence in readable text to check it looks ok
         //PrintTrialSequence();
 
@@ -318,17 +341,18 @@ public class ExperimentConfig
 
     private void AddPracticeTrials()
     {
+        bool freeForageFLAG = false;
         // Add in the practice/familiarisation trials in an open arena
         for (int trial = setupTrials; trial < setupTrials + practiceTrials - 1; trial++)
         {
             // just make the rewards on each side of the hallway/bridge
             if ( trial % 2 == 0 )
             {
-                SetDoubleRewardTrial(trial, "cheese", "blue", "red", "yellow");  
+                SetDoubleRewardTrial(trial, "cheese", "blue", "red", "yellow", freeForageFLAG);  
             }
             else
             {
-                SetDoubleRewardTrial(trial, "cheese", "red", "green", "blue");
+                SetDoubleRewardTrial(trial, "cheese", "red", "green", "blue", freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
@@ -529,15 +553,16 @@ public class ExperimentConfig
     private int AddTrainingBlock(int nextTrial)
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+        bool freeForageFLAG = false;
 
         if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine");
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
         } else
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese");
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
         }
         return nextTrial;
     }
@@ -547,20 +572,56 @@ public class ExperimentConfig
     private int AddTransferBlock(int nextTrial)
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+        bool freeForageFLAG = false;
 
         if (rand.Next(2) == 0)   // randomise whether the watermelon or banana sub-block happens first
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana");
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
         }
         else
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon");
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana");
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
         }
         return nextTrial;
     }
 
+    // ********************************************************************** //
+
+    private int AddFreeForageBlock(int nextTrial, string rewardSet)
+    {
+        // Add a 16 trial free-foraging block in which all boxes are rewarded, to the trial list. Trials are randomised within each context, but not between contexts. 
+        bool freeForageFLAG = true;
+
+        if (rewardSet == "cheeseandwine") 
+        { 
+            if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
+            {
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+            }
+            else
+            {
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+            }
+        }
+        else if (rewardSet == "bananaandwatermelon") 
+        {
+            if (rand.Next(2) == 0)   // randomise whether the banana or watermelon sub-block happens first
+            {
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
+            }
+            else
+            {
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
+            }
+        }
+        return nextTrial;
+    }
     // ********************************************************************** //
 
     private int AddTrainingBlock_micro(int nextTrial, int numberOfTrials)
@@ -574,7 +635,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private int SingleContextDoubleRewardBlock(int firstTrial, string context)
+    private int SingleContextDoubleRewardBlock(int firstTrial, string context, bool freeForageFLAG)
     {
         // This function specifies the required trials in the block, and returns the next trial after this block
         // NOTE: Use this function if you want to 'block' by reward type
@@ -616,6 +677,7 @@ public class ExperimentConfig
                 Debug.Log("Error: Odd number of trials specified per block. Specify even number for proper counterbalancing");
             }
 
+            // Note that the contextSide is important for the context training blocks, but irrelevant for the free-foraging blocks
             if (i < (blockLength/2)) 
             {
                 contextSide = 1;
@@ -632,7 +694,7 @@ public class ExperimentConfig
         }
 
         // Randomise the trial order and save it
-        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides);
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides, freeForageFLAG);
 
         return firstTrial + blockLength;
     }
@@ -696,7 +758,7 @@ public class ExperimentConfig
         }
 
         // Randomise the trial order and save it
-        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides);
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides, false);
 
         return firstTrial + blockLength;
     }
@@ -772,13 +834,13 @@ public class ExperimentConfig
         }
 
         // Randomise the trial order and save it
-        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides);
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides, false);
     }
 
 
     // ********************************************************************** //
 
-    private void SetTrialInContext(int trial, string startRoom, string context, int contextSide)
+    private void SetTrialInContext(int trial, string startRoom, string context, int contextSide, bool freeForageFLAG)
     {
         // This function specifies the reward covariance
 
@@ -793,12 +855,12 @@ public class ExperimentConfig
                        
                     if (contextSide==1)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue");
+                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue", freeForageFLAG);
                         trialSetCorrectly = true;
                     } 
                     else if (contextSide==2)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "green", "red");
+                        SetDoubleRewardTrial(trial, context, startRoom, "green", "red", freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     break;
@@ -807,12 +869,12 @@ public class ExperimentConfig
 
                     if (contextSide == 1)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green");
+                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green", freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     else if (contextSide == 2)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "blue", "red");
+                        SetDoubleRewardTrial(trial, context, startRoom, "blue", "red", freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     break;
@@ -821,12 +883,12 @@ public class ExperimentConfig
 
                 if (contextSide == 1)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue");
+                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 else if (contextSide == 2)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "green", "red");
+                    SetDoubleRewardTrial(trial, context, startRoom, "green", "red", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 break;
@@ -835,12 +897,12 @@ public class ExperimentConfig
 
                 if (contextSide == 1)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green");
+                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 else if (contextSide == 2)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "blue", "red");
+                    SetDoubleRewardTrial(trial, context, startRoom, "blue", "red", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 break;
@@ -856,7 +918,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void SetDoubleRewardTrial(int trial, string context, string startRoom, string rewardRoom1, string rewardRoom2)
+    private void SetDoubleRewardTrial(int trial, string context, string startRoom, string rewardRoom1, string rewardRoom2, bool freeForageFLAG)
     {
         // This function writes the trial number indicated by the input variable 'trial'.
         // Note: use this function within another that modulates context such that e.g. for 'cheese', the rooms for room1 and room2 reward are set
@@ -874,29 +936,40 @@ public class ExperimentConfig
         {
             // Write the trial according to context and room/start locations
             rewardTypes[trial] = context;
-
-            // this is a double reward trial
-            trialMazes[trial] = "FourRooms_" + rewardTypes[trial]; 
             doubleRewardTask[trial] = true;
 
             // generate the random locations for the presents in each room
             GeneratePresentPositions(trial);
 
-            // select random locations in rooms 1 and 2 for the two rewards (one in each)
-            star1Rooms[trial] = rewardRoom1;
-            star2Rooms[trial] = rewardRoom2;
 
-            // For a randomly selected reward location within each room
-            //star1Positions[trial] = RandomPositionInRoom(rewardRoom1);  
-            //star2Positions[trial] = RandomPositionInRoom(rewardRoom2);
+            if (freeForageFLAG) 
+            {
+                // rewards are positioned in all boxes
+                trialMazes[trial] = "PrePostForage_" + rewardTypes[trial];
 
-            // For specific reward locations (at present/gift locations) within each room
-            //star1Positions[trial] = RandomPresentInRoom(rewardRoom1);
-            //star2Positions[trial] = RandomPresentInRoom(rewardRoom2);
+                // select random locations in rooms 1 and 2 for the two rewards (one in each)
+                star1Rooms[trial] = "rewards everywhere";
+                star2Rooms[trial] = "rewards everywhere";
 
-            // Specific reward locations within each room for all rewards
-            rewardPositions[trial][0] = RandomPresentInRoom(rewardRoom1);
-            rewardPositions[trial][1] = RandomPresentInRoom(rewardRoom2);
+                // Specific reward locations within each room for all rewards
+                for (int i = 0; i < presentPositions[trial].Length; i++)
+                {
+                    rewardPositions[trial][i] = presentPositions[trial][i];
+                }
+            }
+            else
+            { 
+                // this is a two-reward trial
+                trialMazes[trial] = "FourRooms_" + rewardTypes[trial]; 
+
+                // select random locations in rooms 1 and 2 for the two rewards (one in each)
+                star1Rooms[trial] = rewardRoom1;
+                star2Rooms[trial] = rewardRoom2;
+
+                // Specific reward locations within each room for all rewards
+                rewardPositions[trial][0] = RandomPresentInRoom(rewardRoom1);
+                rewardPositions[trial][1] = RandomPresentInRoom(rewardRoom2);
+            }
 
             // select start location as random position in given room
             playerStartRooms[trial] = startRoom;
@@ -908,36 +981,7 @@ public class ExperimentConfig
                 collisionInSpawnLocations = false;   // benefit of the doubt
                 playerStartPositions[trial] = RandomPositionInRoom(startRoom);
                
-                // Check player doesn't spawn on, or adjacent to, a reward
-                for (int rewardInd = 0; rewardInd < 2; rewardInd++)
-                {
-                    if (rewardInd == 0)    // check first reward position
-                    {
-                        rewardLoc = rewardPositions[trial][0];
-                    }
-                    else                   // check second reward position
-                    {
-                        rewardLoc = rewardPositions[trial][1];
-                    }
-                    float[] deltaXPositions = { rewardLoc.x - deltaSquarePosition, rewardLoc.x, rewardLoc.x + deltaSquarePosition };
-                    float[] deltaZPositions = { rewardLoc.z - deltaSquarePosition, rewardLoc.z, rewardLoc.z + deltaSquarePosition };
-
-                    // check all 8 positions adjacent to the reward, and the reward position itself
-                    for (int i = 0; i < 3; i++)
-                    {
-                        for (int j = 0; j < 3; j++)
-                        {
-                            adjacentRewardPosition = new Vector3(deltaXPositions[i], rewardPositions[trial][0].y, deltaZPositions[j]);
-
-                            if (playerStartPositions[trial] == adjacentRewardPosition) 
-                            {
-                                collisionInSpawnLocations = true;   // respawn the player location
-                            }
-                        }
-                    }
-                }
-
-                // make sure player doesnt spawn on or adjacent to a present box (makes above obsolete)
+                // make sure player doesnt spawn on or adjacent to a present box
                 for (int k = 0; k < presentPositions[trial].Length; k++)
                 {
                     rewardLoc = presentPositions[trial][k];
@@ -959,22 +1003,9 @@ public class ExperimentConfig
                     }
                 }
 
-                /*
-                // If we decide to have loads of presents, just make sure player doesnt spawn on top of them
-                for (int k = 0; k < presentPositions[trial].Length; k++)
-                {
-                    rewardLoc = presentPositions[trial][k];
-                    if (playerStartPositions[trial] == rewardLoc)
-                    {
-                        collisionInSpawnLocations = true;   // respawn the player location
-                    }
-                }
-                */
-
             }
             // orient player towards the centre of the environment (will be maximally informative of location in environment)
             playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]); 
-
         }
     }
 
@@ -1028,7 +1059,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    public void ShuffleTrialOrderAndStoreBlock(int firstTrial, int blockLength, string[] arrayContexts, string[] arrayStartRooms, int[] arrayContextSides)
+    public void ShuffleTrialOrderAndStoreBlock(int firstTrial, int blockLength, string[] arrayContexts, string[] arrayStartRooms, int[] arrayContextSides, bool freeForageFLAG)
     {
         // This function shuffles the prospective trials from firstTrial to firstTrial+blockLength and stores them.
         // This has been checked and works correctly :)
@@ -1069,7 +1100,7 @@ public class ExperimentConfig
             startRoom = arrayStartRooms[i];
             context = arrayContexts[i];
             contextSide = arrayContextSides[i];
-            SetTrialInContext(i + firstTrial, startRoom, context, contextSide);
+            SetTrialInContext(i + firstTrial, startRoom, context, contextSide, freeForageFLAG);
         }
     }
 

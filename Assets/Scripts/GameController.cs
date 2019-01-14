@@ -60,8 +60,7 @@ public class GameController : MonoBehaviour {
     public string textMessage = "";
     public bool displayCue;
     public string rewardType;
-    public bool reward1Visible;
-    public bool reward2Visible;
+    public bool[] rewardsVisible;
     public int trialScore = 0;
     public int totalScore = 0;
     public int nextScore;
@@ -193,8 +192,10 @@ public class GameController : MonoBehaviour {
 
         // Ensure cue images are off
         displayCue = false;
-        reward1Visible = false;
-        reward2Visible = false;
+        for (int i = 0; i < rewardsVisible.Length; i++)
+        {
+            rewardsVisible[i] = false;
+        }
 
         StartExperiment();  
 
@@ -229,8 +230,10 @@ public class GameController : MonoBehaviour {
                 {
                     case "StartTrial":
                         // ensure the reward is hidden from sight
-                        reward1Visible = false;
-                        reward2Visible = false;
+                        for (int i = 0; i < rewardsVisible.Length; i++)
+                        {
+                            rewardsVisible[i] = false;
+                        }
                         StateNext(STATE_STARTTRIAL);
 
                         break;
@@ -288,8 +291,10 @@ public class GameController : MonoBehaviour {
                 if (stateTimer.ElapsedSeconds() >= goCueDelay)
                 {
                     source.PlayOneShot(goCueSound, 1F);
-                    reward1Visible = true;     // make the reward itself appear in the environment
-                    reward2Visible = true;     // make the reward itself appear in the environment
+                    for (int i = 0; i < rewardsVisible.Length; i++)
+                    {
+                        rewardsVisible[i] = true;
+                    }
                     StateNext(STATE_GO);
                 }
                 break;
@@ -873,21 +878,8 @@ public class GameController : MonoBehaviour {
 
     public void DisableRewardByIndex(int index)
     {
-        // Disable whichever of the two rewards was just hit. Called from RewardHitScript.cs
-        switch (index)
-        {
-            case 1:
-                reward1Visible = false;
-                break;
-
-            case 2:
-                reward2Visible = false;
-                break;
-            default:
-                reward1Visible = false;
-                reward2Visible = false;
-                break;
-        }
+        // Disable whichever of the rewards was just hit. Called from RewardHitScript.cs
+        rewardsVisible[index] = false;
     }
 
     // ********************************************************************** //
