@@ -85,7 +85,6 @@
     <Compile Include="Assets\Scripts\rotate.cs" />
     <Compile Include="Assets\Scripts\ScreenMessageScript.cs" />
     <Compile Include="Assets\Scripts\SpawnPlayerLocation.cs" />
-    <Compile Include="Assets\Scripts\SpawnRewardLocation.cs" />
     <Compile Include="Assets\Scripts\SpawnRewardLocation1.cs" />
     <Compile Include="Assets\Scripts\SpawnRewardLocation2.cs" />
     <Compile Include="Assets\Scripts\SubmitFeedbackButtonScript.cs" />

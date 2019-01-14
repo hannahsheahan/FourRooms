@@ -11,7 +11,7 @@ public class SpawnRewardLocation2 : MonoBehaviour {
     void Start () 
     {
         // Load the star spawn location from the configured datafile
-        transform.position = GameController.control.star2SpawnLocation;
+        transform.position = GameController.control.rewardSpawnLocations[1];
         Debug.Log("Reward2 spawned at: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);
     }
 

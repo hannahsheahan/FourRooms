@@ -36,9 +36,7 @@ public class GameController : MonoBehaviour {
 
     public Vector3 playerSpawnLocation;
     public Vector3 playerSpawnOrientation;
-    public Vector3 star1SpawnLocation;
-    public Vector3 star2SpawnLocation;
-    public Vector3 activeStarSpawnLocation;   // this is obsolete: only used for if we have sequential order on reward collection
+    public Vector3[] rewardSpawnLocations;
     public bool doubleRewardTask;
     public Vector3[] presentPositions;
     public int numberPresentsPerRoom;
@@ -346,7 +344,6 @@ public class GameController : MonoBehaviour {
                 // pause here so that we can take a TR
                 if (stateTimer.ElapsedSeconds() > goalHitPauseTime)  // the trial should timeout
                 {
-                    //activeStarSpawnLocation = star2SpawnLocation;
                     PlayerFPS.GetComponent<FirstPersonController>().enabled = true; // let the player move again
                     StateNext(STATE_MOVING2);
                 }
@@ -541,8 +538,7 @@ public class GameController : MonoBehaviour {
         // Location and orientation variables
         playerSpawnLocation     = currentTrialData.playerSpawnLocation;
         playerSpawnOrientation  = currentTrialData.playerSpawnOrientation;
-        star1SpawnLocation      = currentTrialData.star1Location;
-        star2SpawnLocation      = currentTrialData.star2Location;
+        rewardSpawnLocations    = currentTrialData.rewardPositions;
         doubleRewardTask        = currentTrialData.doubleRewardTask;
         presentPositions        = currentTrialData.presentPositions;
 

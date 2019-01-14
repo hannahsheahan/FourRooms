@@ -178,8 +178,7 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].playerSpawnLocation = config.GetPlayerStartPosition(trial);
             gameData.allTrialData[trial].playerSpawnOrientation = config.GetPlayerStartOrientation(trial);
 
-            gameData.allTrialData[trial].star1Location = config.GetStar1StartPosition(trial);
-            gameData.allTrialData[trial].star2Location = config.GetStar2StartPosition(trial);
+            gameData.allTrialData[trial].rewardPositions = config.GetRewardStartPositions(trial);
             gameData.allTrialData[trial].presentPositions = config.presentPositions[trial]; 
 
             // Rewards

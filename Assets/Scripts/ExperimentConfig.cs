@@ -46,8 +46,7 @@ public class ExperimentConfig
     private Vector3 spawnOrientation;
 
     private Vector3[] possibleStarPositions;
-    private Vector3[] star1Positions;
-    private Vector3[] star2Positions;
+    private Vector3[][] rewardPositions;
 
     private Vector3[] blueRoomPositions;
     private Vector3[] redRoomPositions;
@@ -181,8 +180,7 @@ public class ExperimentConfig
         star2Rooms = new string[totalTrials];
         playerStartPositions = new Vector3[totalTrials];
         playerStartOrientations = new Vector3[totalTrials];
-        star1Positions = new Vector3[totalTrials];
-        star2Positions = new Vector3[totalTrials];
+        rewardPositions = new Vector3[totalTrials][];
         doubleRewardTask = new bool[totalTrials];
         rewardTypes = new string[totalTrials];
         presentPositions = new Vector3[totalTrials][];
@@ -400,6 +398,7 @@ public class ExperimentConfig
 
         // presents can be at any position in the room now
         presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
+        rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
 
         greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
         redPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, redRoomPositions );
@@ -892,9 +891,12 @@ public class ExperimentConfig
             //star2Positions[trial] = RandomPositionInRoom(rewardRoom2);
 
             // For specific reward locations (at present/gift locations) within each room
-            star1Positions[trial] = RandomPresentInRoom(rewardRoom1);
-            star2Positions[trial] = RandomPresentInRoom(rewardRoom2);
+            //star1Positions[trial] = RandomPresentInRoom(rewardRoom1);
+            //star2Positions[trial] = RandomPresentInRoom(rewardRoom2);
 
+            // Specific reward locations within each room for all rewards
+            rewardPositions[trial][0] = RandomPresentInRoom(rewardRoom1);
+            rewardPositions[trial][1] = RandomPresentInRoom(rewardRoom2);
 
             // select start location as random position in given room
             playerStartRooms[trial] = startRoom;
@@ -911,11 +913,11 @@ public class ExperimentConfig
                 {
                     if (rewardInd == 0)    // check first reward position
                     {
-                        rewardLoc = star1Positions[trial];
+                        rewardLoc = rewardPositions[trial][0];
                     }
                     else                   // check second reward position
                     {
-                        rewardLoc = star2Positions[trial];
+                        rewardLoc = rewardPositions[trial][1];
                     }
                     float[] deltaXPositions = { rewardLoc.x - deltaSquarePosition, rewardLoc.x, rewardLoc.x + deltaSquarePosition };
                     float[] deltaZPositions = { rewardLoc.z - deltaSquarePosition, rewardLoc.z, rewardLoc.z + deltaSquarePosition };
@@ -925,7 +927,7 @@ public class ExperimentConfig
                     {
                         for (int j = 0; j < 3; j++)
                         {
-                            adjacentRewardPosition = new Vector3(deltaXPositions[i], star1Positions[trial].y, deltaZPositions[j]);
+                            adjacentRewardPosition = new Vector3(deltaXPositions[i], rewardPositions[trial][0].y, deltaZPositions[j]);
 
                             if (playerStartPositions[trial] == adjacentRewardPosition) 
                             {
@@ -1080,30 +1082,31 @@ public class ExperimentConfig
         playerStartPositions[trial] = RandomPositionInRoom(playerStartRooms[trial]); // random start position
         playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]);   // orient player towards the centre of the environment
 
+        // adapted for array of reward positions
         star1Rooms[trial] = ChooseRandomRoom();
         star2Rooms[trial] = ChooseRandomRoom();
-        star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);          // random star1 position in random room
+        rewardPositions[trial][0] = RandomPositionInRoom(star1Rooms[trial]);          // random star1 position in random room
 
         // ensure reward doesnt spawn on the player position (later this will be pre-determined)
-        while (playerStartPositions[trial] == star1Positions[trial])
+        while (playerStartPositions[trial] == rewardPositions[trial][0])
         {
-            star1Positions[trial] = RandomPositionInRoom(star1Rooms[trial]);
+            rewardPositions[trial][0] = RandomPositionInRoom(star1Rooms[trial]);
         }
 
         // One star, or two?
         if (doubleRewardTask[trial])
         {   // generate another position for star2
-            star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);      // random star2 position in random room
+            rewardPositions[trial][1] = RandomPositionInRoom(star2Rooms[trial]);      // random star2 position in random room
 
             // ensure rewards do not spawn on top of each other, or on top of player position
-            while ((playerStartPositions[trial] == star2Positions[trial]) || (star1Positions[trial] == star2Positions[trial]))
+            while ((playerStartPositions[trial] == rewardPositions[trial][1]) || (rewardPositions[trial][0] == rewardPositions[trial][1]))
             {
-                star2Positions[trial] = RandomPositionInRoom(star2Rooms[trial]);
+                rewardPositions[trial][1] = RandomPositionInRoom(star2Rooms[trial]);
             }
         }
         else
         {   // single star to be collected
-            star2Positions[trial] = star1Positions[trial];
+            rewardPositions[trial][1] = rewardPositions[trial][0];
         }
 
     }
@@ -1182,16 +1185,9 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    public Vector3 GetStar1StartPosition(int trial)
+    public Vector3[] GetRewardStartPositions(int trial)
     {
-        return star1Positions[trial];
-    }
-
-    // ********************************************************************** //
-
-    public Vector3 GetStar2StartPosition(int trial)
-    {
-        return star2Positions[trial];
+        return rewardPositions[trial];
     }
 
     // ********************************************************************** //
