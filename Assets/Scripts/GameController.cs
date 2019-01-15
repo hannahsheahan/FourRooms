@@ -11,13 +11,13 @@ using System.Linq;
 
 public class GameController : MonoBehaviour {
     /// <summary>
-    /// The GameController is a singleton script will control the game flow between scenes, 
+    /// The GameController is a singleton script will control the game flow between scenes,
     /// and centralise everything so all main processes branch from here.
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 30 Oct 2018
     /// Notes: N/A
     /// Issues: N/A
-    /// 
+    ///
     /// </summary>
 
     // Persistent controllers for data management and gameplay
@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour {
     // Audio clips
     public AudioClip starFoundSound;
     public AudioClip goCueSound;
-    public AudioClip errorSound; 
+    public AudioClip errorSound;
     public AudioClip fallSound;
     public AudioClip openBoxSound;
     private AudioSource source;
@@ -89,14 +89,14 @@ public class GameController : MonoBehaviour {
     public bool displayTimeLeft;
     public float firstFrozenTime;
 
-    public float maxMovementTime;  
+    public float maxMovementTime;
     private float preDisplayCueTime;
     private float goCueDelay;
     private float displayCueTime;
     private float goalHitPauseTime;
     private float finalGoalHitPauseTime;
-    public  float minDwellAtReward; 
-    public float displayMessageTime; 
+    public  float minDwellAtReward;
+    public float displayMessageTime;
     public float errorDwellTime;
     public float restbreakDuration;
     public float elapsedRestbreakTime;
@@ -194,12 +194,13 @@ public class GameController : MonoBehaviour {
 
         // Ensure cue images are off
         displayCue = false;
+        rewardsVisible = new bool[16]; // ***HRS hacky leave for now
         for (int i = 0; i < rewardsVisible.Length; i++)
         {
             rewardsVisible[i] = false;
         }
 
-        StartExperiment();  
+        StartExperiment();
 
     }
 
@@ -264,7 +265,7 @@ public class GameController : MonoBehaviour {
 
             case STATE_STARTTRIAL:
 
-                StartRecording();    
+                StartRecording();
 
                 // Wait until the goal/target cue appears (will take a TR here)
                 if (stateTimer.ElapsedSeconds() >= preDisplayCueTime)
@@ -340,7 +341,7 @@ public class GameController : MonoBehaviour {
             case STATE_STAR1FOUND:
 
                 // disable the player control and reset the starFound trigger ready to collect the next star
-                starFound = false; 
+                starFound = false;
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
                 rewardsRemaining--;
 
@@ -375,11 +376,11 @@ public class GameController : MonoBehaviour {
                     totalMovementTime = movementTimer.ElapsedSeconds();
 
                     // ***HRS this is a bit of a hack for dealing with the free-foraging multi-reward case
-                    if (rewardsRemaining > 1) 
+                    if (rewardsRemaining > 1)
                     {
                         StateNext(STATE_STAR1FOUND);
                     }
-                    else 
+                    else
                     {   // STATE_STAR2FOUND is the state accessed when the FINAL reward to be collected is found
                         StateNext(STATE_STAR2FOUND);
                     }
@@ -456,7 +457,7 @@ public class GameController : MonoBehaviour {
                 }
                 break;
 
-          
+
             case STATE_REST:
 
                 elapsedRestbreakTime = restbreakTimer.ElapsedSeconds();
@@ -486,7 +487,7 @@ public class GameController : MonoBehaviour {
                 // Note: this state is triggered by exiting fullscreen mode, and can only be escaped from by re-enabling fullscreen mode.
                 // pause the countdown timer display and disable the player controls
                 // Note that the FPSPlayer and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
-                pauseClock = true; 
+                pauseClock = true;
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
                 break;
 
@@ -517,7 +518,7 @@ public class GameController : MonoBehaviour {
     public void NextScene()
     {
         // Save the current trial data and move data storage to the next trial
-        dataController.AddTrial();  
+        dataController.AddTrial();
         dataController.SaveData();
     }
 
@@ -557,7 +558,7 @@ public class GameController : MonoBehaviour {
         // Load in the trial data
         currentTrialData = dataController.GetCurrentTrialData();
         nextScene = currentTrialData.mapName;
-        
+
         // Location and orientation variables
         playerSpawnLocation     = currentTrialData.playerSpawnLocation;
         playerSpawnOrientation  = currentTrialData.playerSpawnOrientation;
@@ -569,7 +570,7 @@ public class GameController : MonoBehaviour {
 
         // ***HRS This is a hack for now for dealing with the free-foraging multi-reward case in the FSM, can make elegant later
         if (doubleRewardTask)
-        { 
+        {
             if (freeForage)
             {
                 rewardsRemaining = 16;
@@ -655,7 +656,7 @@ public class GameController : MonoBehaviour {
         Debug.Log("The game has started now and into the FSM!");
         NextScene();
         gameStarted = true;     // start the game rolling!
-        Cursor.visible = false; 
+        Cursor.visible = false;
     }
 
     // ********************************************************************** //
@@ -721,7 +722,7 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    public void RecordGiftStates() 
+    public void RecordGiftStates()
     {
         // add the current state of the presents to an array
         string giftWrapStateString = string.Format("{0:0.00}", Time.time);    // timestamp the state array with same timer as the positional tracking data
@@ -739,7 +740,7 @@ public class GameController : MonoBehaviour {
         // This is used for displaying boring, white text messages to the player, such as warnings
 
         // Display any major errors that require the player to restart the experiment
-        while (!dataController.writingDataProperly) 
+        while (!dataController.writingDataProperly)
         {
             displayMessage = "dataWritingError";
 
@@ -819,7 +820,7 @@ public class GameController : MonoBehaviour {
                 textMessage = "Press space-bar to open the gift box";
                 break;
 
-        }  
+        }
     }
 
     // ********************************************************************** //
@@ -871,7 +872,7 @@ public class GameController : MonoBehaviour {
                     trialScore = -20;
                 }
                 else                       // increase the total score
-                {                        
+                {
                     trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
                 }
                 totalScore += trialScore;
