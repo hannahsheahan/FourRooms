@@ -114,7 +114,7 @@ public class ExperimentConfig
                 break;
 
             case "mturk_learnwithprepost":
-                practiceTrials = 2 + getReadyTrial;
+                practiceTrials = 0 + getReadyTrial;
                 totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -600,15 +600,20 @@ public class ExperimentConfig
         { 
             if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
             {
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+                // ***HRS debugging
+                //nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
             }
             else
             {
+                // ***HRS debugging
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+//                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
             }
         }
+        /*  // ***HRS debugging
         else if (rewardSet == "bananaandwatermelon") 
         {
             if (rand.Next(2) == 0)   // randomise whether the banana or watermelon sub-block happens first
@@ -622,6 +627,7 @@ public class ExperimentConfig
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
             }
         }
+        */
         return nextTrial;
     }
     // ********************************************************************** //

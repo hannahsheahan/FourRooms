@@ -9,15 +9,16 @@ using UnityStandardAssets.Characters.FirstPerson;
 using System.IO;
 using System.Linq;
 
-public class GameController : MonoBehaviour {
+public class GameController : MonoBehaviour
+{
     /// <summary>
-    /// The GameController is a singleton script will control the game flow between scenes,
+    /// The GameController is a singleton script will control the game flow between scenes, 
     /// and centralise everything so all main processes branch from here.
     /// Author: Hannah Sheahan, sheahan.hannah@gmail.com
     /// Date: 30 Oct 2018
     /// Notes: N/A
     /// Issues: N/A
-    ///
+    /// 
     /// </summary>
 
     // Persistent controllers for data management and gameplay
@@ -63,6 +64,7 @@ public class GameController : MonoBehaviour {
     public bool displayCue;
     public string rewardType;
     public bool[] rewardsVisible;
+    public int maxNRewards = 20;
     public int trialScore = 0;
     public int totalScore = 0;
     public int nextScore;
@@ -95,7 +97,7 @@ public class GameController : MonoBehaviour {
     private float displayCueTime;
     private float goalHitPauseTime;
     private float finalGoalHitPauseTime;
-    public  float minDwellAtReward;
+    public float minDwellAtReward;
     public float displayMessageTime;
     public float errorDwellTime;
     public float restbreakDuration;
@@ -113,28 +115,28 @@ public class GameController : MonoBehaviour {
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
-    public const int STATE_SETUP       = 1;
-    public const int STATE_STARTTRIAL  = 2;
-    public const int STATE_GOALAPPEAR  = 3;
-    public const int STATE_DELAY       = 4;
-    public const int STATE_GO          = 5;
-    public const int STATE_MOVING1     = 6;
-    public const int STATE_STAR1FOUND  = 7;
-    public const int STATE_MOVING2     = 8;
-    public const int STATE_STAR2FOUND  = 9;
-    public const int STATE_FINISH      = 10;
-    public const int STATE_NEXTTRIAL   = 11;
-    public const int STATE_INTERTRIAL  = 12;
-    public const int STATE_TIMEOUT     = 13;
-    public const int STATE_ERROR       = 14;
-    public const int STATE_REST        = 15;
-    public const int STATE_GETREADY    = 16;
-    public const int STATE_PAUSE       = 17;
-    public const int STATE_HALLFREEZE  = 18;
-    public const int STATE_EXIT        = 19;
-    public const int STATE_MAX         = 20;
+    public const int STATE_SETUP = 1;
+    public const int STATE_STARTTRIAL = 2;
+    public const int STATE_GOALAPPEAR = 3;
+    public const int STATE_DELAY = 4;
+    public const int STATE_GO = 5;
+    public const int STATE_MOVING1 = 6;
+    public const int STATE_STAR1FOUND = 7;
+    public const int STATE_MOVING2 = 8;
+    public const int STATE_STAR2FOUND = 9;
+    public const int STATE_FINISH = 10;
+    public const int STATE_NEXTTRIAL = 11;
+    public const int STATE_INTERTRIAL = 12;
+    public const int STATE_TIMEOUT = 13;
+    public const int STATE_ERROR = 14;
+    public const int STATE_REST = 15;
+    public const int STATE_GETREADY = 16;
+    public const int STATE_PAUSE = 17;
+    public const int STATE_HALLFREEZE = 18;
+    public const int STATE_EXIT = 19;
+    public const int STATE_MAX = 20;
 
-    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","GetReady","Pause","HallwayFreeze","Exit","Max" };
+    private string[] stateText = new string[] { "StartScreen", "Setup", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Exit", "Max" };
     public int State;
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
@@ -146,7 +148,7 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    void Awake ()           // Awake() executes once before anything else
+    void Awake()           // Awake() executes once before anything else
     {
         // Make GameController a singleton
         if (control == null)   // if control doesn't exist, make it
@@ -194,11 +196,11 @@ public class GameController : MonoBehaviour {
 
         // Ensure cue images are off
         displayCue = false;
-        rewardsVisible = new bool[16]; // ***HRS hacky leave for now
-        for (int i = 0; i < rewardsVisible.Length; i++)
-        {
-            rewardsVisible[i] = false;
-        }
+        rewardsVisible = new bool[maxNRewards]; //default
+        //for (int i = 0; i < rewardsVisible.Length; i++)
+        //{
+        //    rewardsVisible[i] = false;
+        //}
 
         StartExperiment();
 
@@ -315,6 +317,9 @@ public class GameController : MonoBehaviour {
 
             case STATE_MOVING1:
 
+                Debug.Log("Reward active states for cheese numbers 0,1: " + rewardsVisible[0] + ", " + rewardsVisible[1]);
+
+
                 if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
                 {
                     StateNext(STATE_TIMEOUT);
@@ -346,7 +351,7 @@ public class GameController : MonoBehaviour {
                 rewardsRemaining--;
 
 
-                if (!freeForage)
+                if (freeForage==false)  // Note: was testing !freeForage the source of Unity not responding when entering playmode?
                 {
                     // Guide a player a little more on practice trials
                     if (currentTrialData.mapName == "Practice")
@@ -375,7 +380,7 @@ public class GameController : MonoBehaviour {
                     source.PlayOneShot(starFoundSound, 1F);
                     totalMovementTime = movementTimer.ElapsedSeconds();
 
-                    // ***HRS this is a bit of a hack for dealing with the free-foraging multi-reward case
+                    // ***HRS bit of a hack for dealing with the free-foraging multi-reward case
                     if (rewardsRemaining > 1)
                     {
                         StateNext(STATE_STAR1FOUND);
@@ -560,15 +565,16 @@ public class GameController : MonoBehaviour {
         nextScene = currentTrialData.mapName;
 
         // Location and orientation variables
-        playerSpawnLocation     = currentTrialData.playerSpawnLocation;
-        playerSpawnOrientation  = currentTrialData.playerSpawnOrientation;
-        rewardSpawnLocations    = currentTrialData.rewardPositions;
-        doubleRewardTask        = currentTrialData.doubleRewardTask;
-        presentPositions        = currentTrialData.presentPositions;
-        freeForage              = currentTrialData.freeForage;
+        playerSpawnLocation = currentTrialData.playerSpawnLocation;
+        playerSpawnOrientation = currentTrialData.playerSpawnOrientation;
+        rewardSpawnLocations = currentTrialData.rewardPositions;
+        doubleRewardTask = currentTrialData.doubleRewardTask;
+        presentPositions = currentTrialData.presentPositions;
+        freeForage = currentTrialData.freeForage;
 
 
         // ***HRS This is a hack for now for dealing with the free-foraging multi-reward case in the FSM, can make elegant later
+        rewardsRemaining = 1;  // default
         if (doubleRewardTask)
         {
             if (freeForage)
@@ -581,24 +587,30 @@ public class GameController : MonoBehaviour {
             }
         }
 
+        //rewardsVisible = new bool[rewardsRemaining];
+        for (int i = 0; i < rewardsVisible.Length; i++)
+        {
+            rewardsVisible[i] = false;
+        }
+
         // Timer variables
         maxMovementTime = currentTrialData.maxMovementTime;
         preDisplayCueTime = currentTrialData.preDisplayCueTime;
         displayCueTime = currentTrialData.displayCueTime;
         goalHitPauseTime = currentTrialData.goalHitPauseTime;
         finalGoalHitPauseTime = currentTrialData.finalGoalHitPauseTime;
-        goCueDelay      = currentTrialData.goCueDelay;
-        minDwellAtReward  = currentTrialData.minDwellAtReward;
+        goCueDelay = currentTrialData.goCueDelay;
+        minDwellAtReward = currentTrialData.minDwellAtReward;
         displayMessageTime = currentTrialData.displayMessageTime;
-        errorDwellTime  = currentTrialData.errorDwellTime;
-        rewardType      = currentTrialData.rewardType;
+        errorDwellTime = currentTrialData.errorDwellTime;
+        rewardType = currentTrialData.rewardType;
         hallwayFreezeTime = currentTrialData.hallwayFreezeTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
 
-        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady"};
+        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady" };
 
         if (menuScenesArray.Contains(nextScene))
         {
@@ -674,7 +686,7 @@ public class GameController : MonoBehaviour {
         // Check if playing in fullscreen mode. If not, give warning until we're back in full screen.
         if (!Screen.fullScreen)
         {
-            if(State!=STATE_STARTSCREEN)
+            if (State != STATE_STARTSCREEN)
             {
                 // if we're in the middle of the experiment, send them a warning and restart the trial
                 FLAG_fullScreenModeError = true;
