@@ -348,10 +348,8 @@ public class GameController : MonoBehaviour
                 // disable the player control and reset the starFound trigger ready to collect the next star
                 starFound = false;
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
-                rewardsRemaining--;
 
-
-                if (freeForage==false)  // Note: was testing !freeForage the source of Unity not responding when entering playmode?
+                if (!freeForage) 
                 {
                     // Guide a player a little more on practice trials
                     if (currentTrialData.mapName == "Practice")
@@ -362,6 +360,10 @@ public class GameController : MonoBehaviour
                 // pause here so that we can take a TR
                 if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
                 {
+                    // decrement the counter tracking the number of rewards remaining to be collected
+                    rewardsRemaining = rewardsRemaining - 1;
+                    Debug.Log("Rewards remaining: " + rewardsRemaining);
+
                     PlayerFPS.GetComponent<FirstPersonController>().enabled = true; // let the player move again
                     StateNext(STATE_MOVING2);
                 }
@@ -378,15 +380,15 @@ public class GameController : MonoBehaviour
                 if (starFound)
                 {
                     source.PlayOneShot(starFoundSound, 1F);
-                    totalMovementTime = movementTimer.ElapsedSeconds();
 
-                    // ***HRS bit of a hack for dealing with the free-foraging multi-reward case
+                    // help the FSM deal with the free-foraging multi-reward case
                     if (rewardsRemaining > 1)
                     {
                         StateNext(STATE_STAR1FOUND);
                     }
                     else
                     {   // STATE_STAR2FOUND is the state accessed when the FINAL reward to be collected is found
+                        totalMovementTime = movementTimer.ElapsedSeconds(); 
                         StateNext(STATE_STAR2FOUND);
                     }
                 }

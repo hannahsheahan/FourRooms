@@ -600,17 +600,13 @@ public class ExperimentConfig
         { 
             if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
             {
-                // ***HRS debugging
-                //nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
             }
             else
             {
-                // ***HRS debugging
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
-//                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
             }
         }
         /*  // ***HRS debugging
