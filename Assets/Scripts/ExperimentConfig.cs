@@ -386,33 +386,29 @@ public class ExperimentConfig
 
         Vector3[] positionsInRoom = new Vector3[nPresents];
         bool collisionInSpawnLocations;
-
+        int iterationCounter = 0;
         // generate a random set of N present positions
         for (int i = 0; i < nPresents; i++)
         {
             collisionInSpawnLocations = true;
-
+            iterationCounter = 0;
             // make sure the rewards dont spawn on top of each other or in the evil '4 inner diagonals' position
             while (collisionInSpawnLocations)
             {
+                iterationCounter++;
                 collisionInSpawnLocations = false;   // benefit of the doubt
                 positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
 
-                // make sure the present hasn't spawned on top of another
-                for (int k = 0; k < positionsInRoom.Length; k++)
+                for (int j = 0; j < i; j++)  // just compare to the present positions already generated
                 {
-                    for (int j = 0; j < k; j++)  // just compare to the present positions already generated
+                    if (positionsInRoom[i] == positionsInRoom[j])
                     {
-                        if (positionsInRoom[k] == positionsInRoom[j])
-                        {
-                            collisionInSpawnLocations = true;   // respawn the present location
-                        }
+                        collisionInSpawnLocations = true;   // respawn the present location
                     }
                 }
 
-                /*
-                // make sure the presents have not spawned in the evil '4 inner diagonals' position which leaves no space for the player to spawn away from all presents
-                // yes, this code below is confusing (sorry), but I think its correct
+                // make sure the presents have not spawned in the evil '4 inner diagonals' position 
+                // (which leaves no space for the player to spawn away from all presents)
                 if (positionsInRoom.Length == nPresents)
                 {
                     bool[] evilPositions = new bool[nPresents];
@@ -420,7 +416,6 @@ public class ExperimentConfig
                     {
                         evilPositions[e] = false;
                     }
-
                     // for each present position, check if 2 squares away (in x AND in z, but in either direction (L/R/up/down) there is another present. 
                     // If true for all presents, then in evil '4 inner diagonals' arrangement
                     for (int k = 0; k < positionsInRoom.Length; k++)
@@ -448,8 +443,7 @@ public class ExperimentConfig
                             }
                         }
                         if (conditionsSatisfiedForEvil > 1)
-                        {
-                            // this present position might be evil (but we need to see if all presents are evil for it to be the evil configuration)
+                        {   // this present position might be evil (but we need to see if all presents are evil for it to be the evil configuration)
                             evilPositions[k] = true;
                         }
                     }
@@ -460,10 +454,15 @@ public class ExperimentConfig
                         collisionInSpawnLocations = true;   // respawn the final present location
                     }
                 }
-                */
+
+                // implement a catchment check for the while loop
+                if (iterationCounter > 20) 
+                {
+                    Debug.Log("There was a while loop error: D");
+                    break;
+                }
             }
         }
-
         return positionsInRoom;
     }
 
@@ -1025,6 +1024,7 @@ public class ExperimentConfig
         bool collisionInSpawnLocations = true;
         Vector3 adjacentRewardPosition;
         Vector3 rewardLoc;
+        int iterationCounter = 0;
 
         // Check that we've inputted a valid trial number
         if ( (trial < setupTrials - 1) || (trial == setupTrials - 1) )
@@ -1083,10 +1083,12 @@ public class ExperimentConfig
             // select start location as random position in given room
             playerStartRooms[trial] = startRoom;
             playerStartPositions[trial] = RandomPositionInRoom(startRoom);
+            iterationCounter = 0;
 
             // make sure the player doesn't spawn on one of the rewards
             while ( collisionInSpawnLocations )
             {
+                iterationCounter++;
                 collisionInSpawnLocations = false;   // benefit of the doubt
                 playerStartPositions[trial] = RandomPositionInRoom(startRoom);
                
@@ -1110,6 +1112,12 @@ public class ExperimentConfig
                             }
                         }
                     }
+                }
+                // implement a catchment check for the while loop
+                if (iterationCounter > 20) 
+                {
+                    Debug.Log("There was a while loop error: C");
+                    break;
                 }
 
             }
@@ -1217,6 +1225,8 @@ public class ExperimentConfig
 
     private void GenerateRandomTrialPositions(int trial)
     {
+        int iterationCounter = 0;
+
         // Generate a trial that randomly positions the player and reward/s
         playerStartRooms[trial] = ChooseRandomRoom();
         playerStartPositions[trial] = RandomPositionInRoom(playerStartRooms[trial]); // random start position
@@ -1230,18 +1240,34 @@ public class ExperimentConfig
         // ensure reward doesnt spawn on the player position (later this will be pre-determined)
         while (playerStartPositions[trial] == rewardPositions[trial][0])
         {
+            iterationCounter++;
             rewardPositions[trial][0] = RandomPositionInRoom(star1Rooms[trial]);
+
+            // implement a catchment check for the while loop
+            if (iterationCounter > 20)
+            {
+                Debug.Log("There was a while loop error:  A");
+                break;
+            }
         }
 
         // One star, or two?
         if (doubleRewardTask[trial])
         {   // generate another position for star2
             rewardPositions[trial][1] = RandomPositionInRoom(star2Rooms[trial]);      // random star2 position in random room
-
+            iterationCounter = 0;
             // ensure rewards do not spawn on top of each other, or on top of player position
             while ((playerStartPositions[trial] == rewardPositions[trial][1]) || (rewardPositions[trial][0] == rewardPositions[trial][1]))
             {
+                iterationCounter++;
                 rewardPositions[trial][1] = RandomPositionInRoom(star2Rooms[trial]);
+
+                // implement a catchment check for the while loop
+                if (iterationCounter > 20) 
+                {
+                    Debug.Log("There was a while loop error: B");
+                    break;
+                }
             }
         }
         else
