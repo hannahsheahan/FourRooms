@@ -435,7 +435,7 @@ public class GameController : MonoBehaviour
 
 
             case STATE_ERROR:
-                // Handle error trials by continuing to record data on the same trial ***HRS
+                // Handle error trials by continuing to record data on the same trial
 
                 if (FLAG_trialError == false)
                 {

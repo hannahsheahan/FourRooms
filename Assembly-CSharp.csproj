@@ -98,7 +98,6 @@
     <None Include="Assets\Textures and Sprites\SF UI\Background\LICENSE.txt" />
     <None Include="Assets\Materials\UI-Default-No-Alpha.shader" />
     <None Include="Assets\RewardTypePackages\FREE Food Pack\Shaders\Food.shader" />
-    <None Include="Assets\RewardTypePackages\PowerUps Vol 1 Free\Readme.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

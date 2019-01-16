@@ -97,9 +97,9 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        experimentVersion = "mturk_learnwithprepost";
+        //experimentVersion = "mturk_learnwithprepost";
         //experimentVersion = "mturk_learntransferpilot";
-        //experimentVersion = "micro_debug"; 
+        experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
         //experimentVersion = "singleblocktransfer_labpilot";
 
@@ -410,6 +410,7 @@ public class ExperimentConfig
                     }
                 }
 
+                /*
                 // make sure the presents have not spawned in the evil '4 inner diagonals' position which leaves no space for the player to spawn away from all presents
                 // yes, this code below is confusing (sorry), but I think its correct
                 if (positionsInRoom.Length == nPresents)
@@ -459,6 +460,7 @@ public class ExperimentConfig
                         collisionInSpawnLocations = true;   // respawn the final present location
                     }
                 }
+                */
             }
         }
 
@@ -474,8 +476,10 @@ public class ExperimentConfig
         //   every single square within each room have a present on it within the block, so this requires at least 7 trials and some constrained randomisation.
 
 
-        if (!freeForageFLAG) 
-        { 
+        //if (!freeForageFLAG) 
+        //{ 
+
+
             // presents can be at any position in the room now
             presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
             rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
@@ -490,19 +494,19 @@ public class ExperimentConfig
             redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
             yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
             bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
-        }
+        //}
+        /*
+
         else 
         { 
           // constrain the randomised locations for the presents to spawn
           if (trialInBlock == 0) 
           {
-           // for the first trial in each block, ensure that within each room, at least one but not 4 rewards spawn in the diagonal closest to a corner
+               // for the first trial in each block, ensure that within each room, at least one but not 4 rewards spawn in the diagonal closest to a corner
 
-           
-            
               }
-
         }
+        */       
 
         //--- alternative version
 
@@ -1045,8 +1049,8 @@ public class ExperimentConfig
                 maxMovementTime[trial] = 120.0f;       // 2 mins to collect all rewards on freeforaging trials
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
-                star1Rooms[trial] = "rewards everywhere";
-                star2Rooms[trial] = "rewards everywhere";
+                star1Rooms[trial] = "";
+                star2Rooms[trial] = "";
 
                 // Specific reward locations within each room for all rewards
                 for (int i = 0; i < presentPositions[trial].Length; i++)
@@ -1068,6 +1072,12 @@ public class ExperimentConfig
                 // Specific reward locations within each room for all rewards
                 rewardPositions[trial][0] = RandomPresentInRoom(rewardRoom1);
                 rewardPositions[trial][1] = RandomPresentInRoom(rewardRoom2);
+
+                // this will be the default but just specify it to make sure this isn't causing issues ***HRS
+                for (int i = 2; i < rewardPositions.Length; i++) 
+                {
+                    rewardPositions[trial][i] = new Vector3(0.0f,0.0f,0.0f);
+                }
             }
 
             // select start location as random position in given room
