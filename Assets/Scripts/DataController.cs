@@ -188,7 +188,7 @@ public class DataController : MonoBehaviour {
 
 
             // Timer variables (can change these for each trial later e.g. with jitter)
-            gameData.allTrialData[trial].maxMovementTime = config.maxMovementTime;
+            gameData.allTrialData[trial].maxMovementTime = config.maxMovementTime[trial];
             gameData.allTrialData[trial].goalHitPauseTime = config.goalHitPauseTime;
             gameData.allTrialData[trial].finalGoalHitPauseTime = config.finalGoalHitPauseTime;
             gameData.allTrialData[trial].preDisplayCueTime = config.preDisplayCueTime;

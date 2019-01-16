@@ -71,7 +71,7 @@ public class ExperimentConfig
     public int numberPresentsPerRoom;
 
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
-    public float maxMovementTime;
+    public float[] maxMovementTime;
     public float preDisplayCueTime;
     public float goalHitPauseTime;
     public float finalGoalHitPauseTime;
@@ -163,8 +163,8 @@ public class ExperimentConfig
         getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
-        maxMovementTime        = 60.0f;   // time allowed to collect both rewards, incl. wait after hitting first one
-        preDisplayCueTime      = 1.5f;    // will take a TR during this period
+        //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
+        preDisplayCueTime = 1.5f;    // will take a TR during this period
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    // will take a TR during this period
         goalHitPauseTime       = 1.0f;    // we will take a TR during this period
@@ -194,6 +194,7 @@ public class ExperimentConfig
         freeForage = new bool[totalTrials];
         rewardTypes = new string[totalTrials];
         presentPositions = new Vector3[totalTrials][];
+        maxMovementTime = new float[totalTrials];
 
         // Generate a list of all the possible (player or star) spawn locations
         GeneratePossibleSettings();
@@ -951,6 +952,7 @@ public class ExperimentConfig
                 // rewards are positioned in all boxes
                 trialMazes[trial] = "PrePostForage_" + rewardTypes[trial];
                 freeForage[trial] = true;
+                maxMovementTime[trial] = 120.0f;       // 2 mins to collect all rewards on freeforaging trials
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
                 star1Rooms[trial] = "rewards everywhere";
@@ -967,6 +969,7 @@ public class ExperimentConfig
                 // this is a two-reward trial
                 trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
                 freeForage[trial] = false;
+                maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
                 star1Rooms[trial] = rewardRoom1;
