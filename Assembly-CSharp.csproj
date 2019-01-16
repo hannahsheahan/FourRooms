@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\TraverseHallwayScript.cs" />
     <Compile Include="Assets\Scripts\TrialCountdownScript.cs" />
     <Compile Include="Assets\Scripts\TrialData.cs" />
+    <Compile Include="Assets\Scripts\TrialTypeMessageScript.cs" />
     <None Include="Assets\Fonts\Jupiter\LICENSE.txt" />
     <None Include="Assets\Textures and Sprites\SF UI\Background\LICENSE.txt" />
     <None Include="Assets\Materials\UI-Default-No-Alpha.shader" />

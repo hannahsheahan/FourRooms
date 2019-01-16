@@ -97,9 +97,9 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        //experimentVersion = "mturk_learnwithprepost";
+        experimentVersion = "mturk_learnwithprepost";
         //experimentVersion = "mturk_learntransferpilot";
-        experimentVersion = "micro_debug"; 
+        //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
         //experimentVersion = "singleblocktransfer_labpilot";
 
@@ -115,7 +115,7 @@ public class ExperimentConfig
                 break;
 
             case "mturk_learnwithprepost":
-                practiceTrials = 0 + getReadyTrial;
+                practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -407,6 +407,9 @@ public class ExperimentConfig
                     }
                 }
 
+                /*
+                // ***HRS actually this code below is insufficient - there are more arrangements than 
+                // just the 4 inner diagonals that result in nowhere for the player to spawn. So just stop spawning on top of rewards.
                 // make sure the presents have not spawned in the evil '4 inner diagonals' position 
                 // (which leaves no space for the player to spawn away from all presents)
                 if (positionsInRoom.Length == nPresents)
@@ -454,9 +457,9 @@ public class ExperimentConfig
                         collisionInSpawnLocations = true;   // respawn the final present location
                     }
                 }
-
+                */
                 // implement a catchment check for the while loop
-                if (iterationCounter > 20) 
+                if (iterationCounter > 40) 
                 {
                     Debug.Log("There was a while loop error: D");
                     break;
@@ -524,7 +527,7 @@ public class ExperimentConfig
             presentPositions[i] = new Vector3(xpositions[i], yposition, zpositions[i]);
         }
 
-        // specify present positions by coloured room (***HRS horrible hardcoding but fine for now - can change later)
+        // specify present positions by coloured room 
         greenPresentPositions = new Vector3[] { new Vector3(xpositions[0], yposition, zpositions[0]), new Vector3(xpositions[1], yposition, zpositions[1]) };
         redPresentPositions = new Vector3[] { new Vector3(xpositions[2], yposition, zpositions[2]), new Vector3(xpositions[3], yposition, zpositions[3]) };
         yellowPresentPositions = new Vector3[] { new Vector3(xpositions[4], yposition, zpositions[4]), new Vector3(xpositions[5], yposition, zpositions[5]) };
@@ -1040,7 +1043,6 @@ public class ExperimentConfig
             // generate the random locations for the presents in each room
             GeneratePresentPositions(trial, trialInBlock, freeForageFLAG);
 
-
             if (freeForageFLAG) 
             {
                 // rewards are positioned in all boxes
@@ -1072,12 +1074,6 @@ public class ExperimentConfig
                 // Specific reward locations within each room for all rewards
                 rewardPositions[trial][0] = RandomPresentInRoom(rewardRoom1);
                 rewardPositions[trial][1] = RandomPresentInRoom(rewardRoom2);
-
-                // this will be the default but just specify it to make sure this isn't causing issues ***HRS
-                for (int i = 2; i < rewardPositions.Length; i++) 
-                {
-                    rewardPositions[trial][i] = new Vector3(0.0f,0.0f,0.0f);
-                }
             }
 
             // select start location as random position in given room
@@ -1092,10 +1088,14 @@ public class ExperimentConfig
                 collisionInSpawnLocations = false;   // benefit of the doubt
                 playerStartPositions[trial] = RandomPositionInRoom(startRoom);
                
-                // make sure player doesnt spawn on or adjacent to a present box
+                // make sure player doesnt spawn on a present box
                 for (int k = 0; k < presentPositions[trial].Length; k++)
                 {
-                    rewardLoc = presentPositions[trial][k];
+                    if (playerStartPositions[trial] == presentPositions[trial][k])
+                    {
+                        collisionInSpawnLocations = true;   // respawn the player location
+                    }
+                    /*// This check was to stop spawning adjacent to a present box, but for several present arrangements this is impossible and results in an infinite while loop
                     float[] deltaXPositions = { rewardLoc.x - deltaSquarePosition, rewardLoc.x, rewardLoc.x + deltaSquarePosition };
                     float[] deltaZPositions = { rewardLoc.z - deltaSquarePosition, rewardLoc.z, rewardLoc.z + deltaSquarePosition };
 
@@ -1112,9 +1112,10 @@ public class ExperimentConfig
                             }
                         }
                     }
+                    */
                 }
                 // implement a catchment check for the while loop
-                if (iterationCounter > 20) 
+                if (iterationCounter > 40) 
                 {
                     Debug.Log("There was a while loop error: C");
                     break;
@@ -1244,7 +1245,7 @@ public class ExperimentConfig
             rewardPositions[trial][0] = RandomPositionInRoom(star1Rooms[trial]);
 
             // implement a catchment check for the while loop
-            if (iterationCounter > 20)
+            if (iterationCounter > 40)
             {
                 Debug.Log("There was a while loop error:  A");
                 break;
@@ -1263,7 +1264,7 @@ public class ExperimentConfig
                 rewardPositions[trial][1] = RandomPositionInRoom(star2Rooms[trial]);
 
                 // implement a catchment check for the while loop
-                if (iterationCounter > 20) 
+                if (iterationCounter > 40) 
                 {
                     Debug.Log("There was a while loop error: B");
                     break;

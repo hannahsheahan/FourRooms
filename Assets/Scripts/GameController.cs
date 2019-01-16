@@ -317,9 +317,6 @@ public class GameController : MonoBehaviour
 
             case STATE_MOVING1:
 
-                Debug.Log("Reward active states for cheese numbers 0,1: " + rewardsVisible[0] + ", " + rewardsVisible[1]);
-
-
                 if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
                 {
                     StateNext(STATE_TIMEOUT);
