@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 
 public class ExperimentConfig
@@ -345,17 +346,19 @@ public class ExperimentConfig
     private void AddPracticeTrials()
     {
         bool freeForageFLAG = false;
+        int trialInBlock;
         // Add in the practice/familiarisation trials in an open arena
         for (int trial = setupTrials; trial < setupTrials + practiceTrials - 1; trial++)
         {
+            trialInBlock = trial - setupTrials;
             // just make the rewards on each side of the hallway/bridge
             if ( trial % 2 == 0 )
             {
-                SetDoubleRewardTrial(trial, "cheese", "blue", "red", "yellow", freeForageFLAG);  
+                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "blue", "red", "yellow", freeForageFLAG);  
             }
             else
             {
-                SetDoubleRewardTrial(trial, "cheese", "red", "green", "blue", freeForageFLAG);
+                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "red", "green", "blue", freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
@@ -377,18 +380,84 @@ public class ExperimentConfig
 
     private Vector3[] ChooseNRandomPresentPositions( int nPresents, Vector3[] roomPositions )
     {
-        Vector3[] positionsInRoom = new Vector3[nPresents];
+        // This requires a constraint in randomisation so that 4 rewards do not 
+        // spawn all at the closest diagonals to the room corners, as this arrangement
+        // makes it impossible for a player to spawn not-next to a present.
 
+        Vector3[] positionsInRoom = new Vector3[nPresents];
+        bool collisionInSpawnLocations;
+
+        // generate a random set of N present positions
         for (int i = 0; i < nPresents; i++)
         {
-            positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+            collisionInSpawnLocations = true;
 
-            // make sure that we dont spawn multiple presents on top of each other
-            for (int j = 0; j < i; j++)
+            // make sure the rewards dont spawn on top of each other or in the evil '4 inner diagonals' position
+            while (collisionInSpawnLocations)
             {
-                if (positionsInRoom[i] == positionsInRoom[j])
+                collisionInSpawnLocations = false;   // benefit of the doubt
+                positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+
+                // make sure the present hasn't spawned on top of another
+                for (int k = 0; k < positionsInRoom.Length; k++)
                 {
-                    positionsInRoom[i] = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+                    for (int j = 0; j < k; j++)  // just compare to the present positions already generated
+                    {
+                        if (positionsInRoom[k] == positionsInRoom[j])
+                        {
+                            collisionInSpawnLocations = true;   // respawn the present location
+                        }
+                    }
+                }
+
+                // make sure the presents have not spawned in the evil '4 inner diagonals' position which leaves no space for the player to spawn away from all presents
+                // yes, this code below is confusing (sorry), but I think its correct
+                if (positionsInRoom.Length == nPresents)
+                {
+                    bool[] evilPositions = new bool[nPresents];
+                    for (int e = 0; e < evilPositions.Length; e++)
+                    {
+                        evilPositions[e] = false;
+                    }
+
+                    // for each present position, check if 2 squares away (in x AND in z, but in either direction (L/R/up/down) there is another present. 
+                    // If true for all presents, then in evil '4 inner diagonals' arrangement
+                    for (int k = 0; k < positionsInRoom.Length; k++)
+                    {
+                        float[] deltaXPositions = { positionsInRoom[k].x - 2 * deltaSquarePosition, positionsInRoom[k].x + 2 * deltaSquarePosition };
+                        float[] deltaZPositions = { positionsInRoom[k].z - 2 * deltaSquarePosition, positionsInRoom[k].z + 2 * deltaSquarePosition };
+                        int conditionsSatisfiedForEvil = 0;
+
+                        // compare to all other present positions
+                        for (int j = 0; j < positionsInRoom.Length; j++)
+                        {
+                            // other presents could be on left or right (or up or down) of the tested present
+                            for (int p = 0; p < deltaXPositions.Length; p++)
+                            {
+                                // check x-dimensions
+                                if (Math.Round(deltaXPositions[p], 2) == Math.Round(positionsInRoom[j].x, 2))
+                                {
+                                    conditionsSatisfiedForEvil++;
+                                }
+                                // check z-dimensions
+                                if (Math.Round(deltaZPositions[p], 2) == Math.Round(positionsInRoom[j].z, 2))
+                                {
+                                    conditionsSatisfiedForEvil++;
+                                }
+                            }
+                        }
+                        if (conditionsSatisfiedForEvil > 1)
+                        {
+                            // this present position might be evil (but we need to see if all presents are evil for it to be the evil configuration)
+                            evilPositions[k] = true;
+                        }
+                    }
+
+                    // if all 4 presents are in a possible evil position, that means the configuration is the evil '4 inner diagonals' one!
+                    if (evilPositions.All(x => x))
+                    {
+                        collisionInSpawnLocations = true;   // respawn the final present location
+                    }
                 }
             }
         }
@@ -398,8 +467,44 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void GeneratePresentPositions(int trial)
+    private void GeneratePresentPositions(int trial, int trialInBlock, bool freeForageFLAG)
     {
+        // - If the is a 2 reward covariance trial, spawn the presents in random positions within each room.
+        // - However, if this is a free foraging (all rewards) trial, we want to have had
+        //   every single square within each room have a present on it within the block, so this requires at least 7 trials and some constrained randomisation.
+
+
+        if (!freeForageFLAG) 
+        { 
+            // presents can be at any position in the room now
+            presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
+            rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
+
+            greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
+            redPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, redRoomPositions );
+            yellowPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, yellowRoomPositions );
+            bluePresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, blueRoomPositions );
+
+            // concatenate all the positions of generated presents 
+            greenPresentPositions.CopyTo(presentPositions[trial], 0);
+            redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
+            yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
+            bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
+        }
+        else 
+        { 
+          // constrain the randomised locations for the presents to spawn
+          if (trialInBlock == 0) 
+          {
+           // for the first trial in each block, ensure that within each room, at least one but not 4 rewards spawn in the diagonal closest to a corner
+
+           
+            
+              }
+
+        }
+
+        //--- alternative version
 
         // Spawn the presents in the opposite corners of the room
         /*
@@ -422,22 +527,7 @@ public class ExperimentConfig
         yellowPresentPositions = new Vector3[] { new Vector3(xpositions[4], yposition, zpositions[4]), new Vector3(xpositions[5], yposition, zpositions[5]) };
         bluePresentPositions = new Vector3[] { new Vector3(xpositions[6], yposition, zpositions[6]), new Vector3(xpositions[7], yposition, zpositions[7]) };
         */
-
-        // presents can be at any position in the room now
-        presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
-        rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
-
-        greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
-        redPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, redRoomPositions );
-        yellowPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, yellowRoomPositions );
-        bluePresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, blueRoomPositions );
-
-        // concatenate all the positions of generated presents 
-        greenPresentPositions.CopyTo(presentPositions[trial], 0);
-        redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
-        yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
-        bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
-
+        //-----
     }
 
     // ********************************************************************** //
@@ -845,7 +935,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void SetTrialInContext(int trial, string startRoom, string context, int contextSide, bool freeForageFLAG)
+    private void SetTrialInContext(int trial, int trialInBlock, string startRoom, string context, int contextSide, bool freeForageFLAG)
     {
         // This function specifies the reward covariance
 
@@ -860,12 +950,12 @@ public class ExperimentConfig
                        
                     if (contextSide==1)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", freeForageFLAG);
                         trialSetCorrectly = true;
                     } 
                     else if (contextSide==2)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "green", "red", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     break;
@@ -874,12 +964,12 @@ public class ExperimentConfig
 
                     if (contextSide == 1)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     else if (contextSide == 2)
                     {
-                        SetDoubleRewardTrial(trial, context, startRoom, "blue", "red", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     break;
@@ -888,12 +978,12 @@ public class ExperimentConfig
 
                 if (contextSide == 1)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "blue", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 else if (contextSide == 2)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "green", "red", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 break;
@@ -902,12 +992,12 @@ public class ExperimentConfig
 
                 if (contextSide == 1)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "yellow", "green", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 else if (contextSide == 2)
                 {
-                    SetDoubleRewardTrial(trial, context, startRoom, "blue", "red", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 break;
@@ -923,7 +1013,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void SetDoubleRewardTrial(int trial, string context, string startRoom, string rewardRoom1, string rewardRoom2, bool freeForageFLAG)
+    private void SetDoubleRewardTrial(int trial, int trialInBlock, string context, string startRoom, string rewardRoom1, string rewardRoom2, bool freeForageFLAG)
     {
         // This function writes the trial number indicated by the input variable 'trial'.
         // Note: use this function within another that modulates context such that e.g. for 'cheese', the rooms for room1 and room2 reward are set
@@ -944,7 +1034,7 @@ public class ExperimentConfig
             doubleRewardTask[trial] = true;
 
             // generate the random locations for the presents in each room
-            GeneratePresentPositions(trial);
+            GeneratePresentPositions(trial, trialInBlock, freeForageFLAG);
 
 
             if (freeForageFLAG) 
@@ -1109,7 +1199,7 @@ public class ExperimentConfig
             startRoom = arrayStartRooms[i];
             context = arrayContexts[i];
             contextSide = arrayContextSides[i];
-            SetTrialInContext(i + firstTrial, startRoom, context, contextSide, freeForageFLAG);
+            SetTrialInContext(i + firstTrial, i, startRoom, context, contextSide, freeForageFLAG);
         }
     }
 
