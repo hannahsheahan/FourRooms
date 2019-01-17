@@ -23,8 +23,6 @@ public class ControlBridges : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Bridges active: " + GameController.control.bridgeStates[0] + ", " + GameController.control.bridgeStates[1] + ", " + GameController.control.bridgeStates[2] + ", " + GameController.control.bridgeStates[3]);
-
         bridge1.SetActive(GameController.control.bridgeStates[0]);
         trigger1.SetActive(GameController.control.bridgeStates[0]);
 

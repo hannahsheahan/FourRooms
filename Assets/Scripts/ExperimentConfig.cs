@@ -48,6 +48,7 @@ public class ExperimentConfig
     private Vector3 spawnOrientation;
 
     private Vector3[] possibleRewardPositions;
+    private bool[] presentPositionHistory;
     private Vector3[][] rewardPositions;
 
     private Vector3[] blueRoomPositions;
@@ -383,10 +384,6 @@ public class ExperimentConfig
 
     private Vector3[] ChooseNRandomPresentPositions( int nPresents, Vector3[] roomPositions )
     {
-        // This requires a constraint in randomisation so that 4 rewards do not 
-        // spawn all at the closest diagonals to the room corners, as this arrangement
-        // makes it impossible for a player to spawn not-next to a present.
-
         Vector3[] positionsInRoom = new Vector3[nPresents];
         bool collisionInSpawnLocations;
         int iterationCounter = 0;
@@ -395,7 +392,7 @@ public class ExperimentConfig
         {
             collisionInSpawnLocations = true;
             iterationCounter = 0;
-            // make sure the rewards dont spawn on top of each other or in the evil '4 inner diagonals' position
+            // make sure the rewards dont spawn on top of each other
             while (collisionInSpawnLocations)
             {
                 iterationCounter++;
@@ -410,57 +407,6 @@ public class ExperimentConfig
                     }
                 }
 
-                /*
-                // ***HRS actually this code below is insufficient - there are more arrangements than 
-                // just the 4 inner diagonals that result in nowhere for the player to spawn. So just stop spawning on top of rewards.
-                // make sure the presents have not spawned in the evil '4 inner diagonals' position 
-                // (which leaves no space for the player to spawn away from all presents)
-                if (positionsInRoom.Length == nPresents)
-                {
-                    bool[] evilPositions = new bool[nPresents];
-                    for (int e = 0; e < evilPositions.Length; e++)
-                    {
-                        evilPositions[e] = false;
-                    }
-                    // for each present position, check if 2 squares away (in x AND in z, but in either direction (L/R/up/down) there is another present. 
-                    // If true for all presents, then in evil '4 inner diagonals' arrangement
-                    for (int k = 0; k < positionsInRoom.Length; k++)
-                    {
-                        float[] deltaXPositions = { positionsInRoom[k].x - 2 * deltaSquarePosition, positionsInRoom[k].x + 2 * deltaSquarePosition };
-                        float[] deltaZPositions = { positionsInRoom[k].z - 2 * deltaSquarePosition, positionsInRoom[k].z + 2 * deltaSquarePosition };
-                        int conditionsSatisfiedForEvil = 0;
-
-                        // compare to all other present positions
-                        for (int j = 0; j < positionsInRoom.Length; j++)
-                        {
-                            // other presents could be on left or right (or up or down) of the tested present
-                            for (int p = 0; p < deltaXPositions.Length; p++)
-                            {
-                                // check x-dimensions
-                                if (Math.Round(deltaXPositions[p], 2) == Math.Round(positionsInRoom[j].x, 2))
-                                {
-                                    conditionsSatisfiedForEvil++;
-                                }
-                                // check z-dimensions
-                                if (Math.Round(deltaZPositions[p], 2) == Math.Round(positionsInRoom[j].z, 2))
-                                {
-                                    conditionsSatisfiedForEvil++;
-                                }
-                            }
-                        }
-                        if (conditionsSatisfiedForEvil > 1)
-                        {   // this present position might be evil (but we need to see if all presents are evil for it to be the evil configuration)
-                            evilPositions[k] = true;
-                        }
-                    }
-
-                    // if all 4 presents are in a possible evil position, that means the configuration is the evil '4 inner diagonals' one!
-                    if (evilPositions.All(x => x))
-                    {
-                        collisionInSpawnLocations = true;   // respawn the final present location
-                    }
-                }
-                */
                 // implement a catchment check for the while loop
                 if (iterationCounter > 40) 
                 {
@@ -474,21 +420,71 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
+    private Vector3[] ChooseNUnoccupiedPresentPositions(int trial, int nPresents, Vector3[] roomPositions)
+    {
+        Vector3[] positionsInRoom = new Vector3[nPresents];
+        Vector3 positionInRoom = new Vector3();
+        List<Vector3> spawnableRoomPositions = new List<Vector3>();
+        int index;
+        int desiredPositionIndex;
+
+        // generate a random set of N present positions in this room
+        for (int k = 0; k < nPresents; k++)
+        {
+            // find the places in the room where we haven't spawned yet this block and turn them into a list
+            spawnableRoomPositions.Clear(); 
+
+            for (int j = 0; j < roomPositions.Length; j++)
+            {
+                index = Array.IndexOf(possibleRewardPositions, roomPositions[j]);
+
+                if (!presentPositionHistory[index])
+                {   
+                    // add to a list of unoccupied positions that can be sampled from (avoids rejection sampling)
+                    spawnableRoomPositions.Add(roomPositions[j]);
+                }
+            }
+
+            // make sure the reward doesn't spawn in a place that's been occupied previously this block
+            bool noValidPositions = !spawnableRoomPositions.Any();
+            if (noValidPositions) 
+            {   
+                // spawn whereever you want
+                Debug.Log("All room positions have been previously occupied this block. Present will spawn anywhere in room.");
+                positionInRoom = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+            }
+            else 
+            {   
+                // sample an unused position
+                desiredPositionIndex = rand.Next(spawnableRoomPositions.Count);
+                Debug.Log("This index randomly chosen was: " + desiredPositionIndex);
+                positionInRoom = spawnableRoomPositions[desiredPositionIndex];
+            }
+
+            positionsInRoom[k] = positionInRoom;
+
+            // update the history of spawn positions
+            index = Array.IndexOf(possibleRewardPositions, positionInRoom);
+            presentPositionHistory[index] = true;
+        }
+
+        return positionsInRoom;
+    }
+
+    // ********************************************************************** //
+
     private void GeneratePresentPositions(int trial, int trialInBlock, bool freeForageFLAG)
     {
         // - If the is a 2 reward covariance trial, spawn the presents in random positions within each room.
         // - However, if this is a free foraging (all rewards) trial, we want to have had
         //   every single square within each room have a present on it within the block, so this requires at least 7 trials and some constrained randomisation.
 
+        // presents can be at any position in the room now
+        presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
+        rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
 
-        //if (!freeForageFLAG) 
-        //{ 
-
-
-            // presents can be at any position in the room now
-            presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
-            rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
-
+        if (!freeForageFLAG) 
+        { 
             greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
             redPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, redRoomPositions );
             yellowPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, yellowRoomPositions );
@@ -499,19 +495,68 @@ public class ExperimentConfig
             redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
             yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
             bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
-        //}
-        /*
-
-        else 
-        { 
-          // constrain the randomised locations for the presents to spawn
-          if (trialInBlock == 0) 
-          {
-               // for the first trial in each block, ensure that within each room, at least one but not 4 rewards spawn in the diagonal closest to a corner
-
-              }
         }
-        */       
+        else 
+        {
+            // constrain the randomised locations for the presents to spawn in different places to before
+            // Note: each index of presentPositionHistory specifies a different square in the maze. True means the square has had a present on it, False means it hasnt
+
+            // refresh the presentPositionHistory tracker
+            if (trialInBlock == 0) 
+            {
+                presentPositionHistory = new bool[possibleRewardPositions.Length];
+                for (int i = 0; i < presentPositionHistory.Length; i++) 
+                {
+                    presentPositionHistory[i] = false;
+                }
+
+                // the first trial in the block can place presents anywhere
+                greenPresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, greenRoomPositions);
+                redPresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, redRoomPositions);
+                yellowPresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, yellowRoomPositions);
+                bluePresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, blueRoomPositions);
+
+                // concatenate all the positions of generated presents 
+                greenPresentPositions.CopyTo(presentPositions[trial], 0);
+                redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
+                yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
+                bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
+
+                // monitor where the presents spawned on this trial
+                for (int i = 0; i < possibleRewardPositions.Length; i++)
+                {
+                    if (presentPositions[trial].Contains(possibleRewardPositions[i]))
+                    {
+                        presentPositionHistory[i] = true;
+                    }
+                }
+            }
+            else 
+            {
+                // select reward positions based on ones that have not yet been occupied
+                // ...but if there isn't a space in the room that hasnt been occupied, just spawn wherever in the room
+                greenPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, greenRoomPositions);
+                redPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, redRoomPositions);
+                yellowPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, yellowRoomPositions);
+                bluePresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, blueRoomPositions);
+
+                // concatenate all the positions of generated presents 
+                greenPresentPositions.CopyTo(presentPositions[trial], 0);
+                redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
+                yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
+                bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
+
+                // monitor where the presents spawned on this trial
+                for (int i = 0; i < possibleRewardPositions.Length; i++)
+                {
+                    if (presentPositions[trial].Contains(possibleRewardPositions[i]))
+                    {
+                        presentPositionHistory[i] = true;
+                    }
+                }
+            }
+        }
+         
 
         //--- alternative version
 
