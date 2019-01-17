@@ -1026,7 +1026,6 @@ public class ExperimentConfig
 
         bool collisionInSpawnLocations = true;
         Vector3 adjacentRewardPosition;
-        Vector3 rewardLoc;
         int iterationCounter = 0;
 
         // Check that we've inputted a valid trial number
