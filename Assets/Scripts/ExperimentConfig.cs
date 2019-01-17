@@ -420,7 +420,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private Vector3[] ChooseNUnoccupiedPresentPositions(int trial, int nPresents, Vector3[] roomPositions)
+    private Vector3[] ChooseNUnoccupiedPresentPositions(int nPresents, Vector3[] roomPositions)
     {
         Vector3[] positionsInRoom = new Vector3[nPresents];
         Vector3 positionInRoom = new Vector3();
@@ -450,14 +450,14 @@ public class ExperimentConfig
             if (noValidPositions) 
             {   
                 // spawn whereever you want
-                Debug.Log("All room positions have been previously occupied this block. Present will spawn anywhere in room.");
+                //Debug.Log("All room positions have been previously occupied this block. Present will spawn anywhere in room.");
+                // ^ note that as a check, this message should display 28 times per block (since there are 25 positions per room, and 4*8 presents per room per block. So 7 repeats per room per block * 4 rooms = 28)
                 positionInRoom = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
             }
             else 
             {   
                 // sample an unused position
                 desiredPositionIndex = rand.Next(spawnableRoomPositions.Count);
-                Debug.Log("This index randomly chosen was: " + desiredPositionIndex);
                 positionInRoom = spawnableRoomPositions[desiredPositionIndex];
             }
 
@@ -535,10 +535,10 @@ public class ExperimentConfig
             {
                 // select reward positions based on ones that have not yet been occupied
                 // ...but if there isn't a space in the room that hasnt been occupied, just spawn wherever in the room
-                greenPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, greenRoomPositions);
-                redPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, redRoomPositions);
-                yellowPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, yellowRoomPositions);
-                bluePresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, blueRoomPositions);
+                greenPresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, greenRoomPositions);
+                redPresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, redRoomPositions);
+                yellowPresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, yellowRoomPositions);
+                bluePresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, blueRoomPositions);
 
                 // concatenate all the positions of generated presents 
                 greenPresentPositions.CopyTo(presentPositions[trial], 0);
