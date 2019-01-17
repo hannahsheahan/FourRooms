@@ -21,6 +21,7 @@ public class TrialData
     public bool doubleRewardTask;
     public bool freeForage;
     public string rewardType;
+    public bool[] bridgeStates;
 
     public Vector3 playerSpawnLocation;
     public Vector3 playerSpawnOrientation;

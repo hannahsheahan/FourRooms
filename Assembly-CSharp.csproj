@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CelebrateBothRewardsHit.cs" />
     <Compile Include="Assets\Scripts\ContinueButtonScript.cs" />
+    <Compile Include="Assets\Scripts\ControlBridges.cs" />
     <Compile Include="Assets\Scripts\DataController.cs" />
     <Compile Include="Assets\Scripts\DisplayRewardCue.cs" />
     <Compile Include="Assets\Scripts\DropdownGenderScript.cs" />

@@ -43,6 +43,7 @@ public class GameController : MonoBehaviour
     public int rewardsRemaining;
     public Vector3[] presentPositions;
     public int numberPresentsPerRoom;
+    public bool[] bridgeStates;  // ***HRS use this to enable/disable certain bridges to control CW vs CCW movements
 
     private string nextScene;
 
@@ -570,7 +571,7 @@ public class GameController : MonoBehaviour
         doubleRewardTask = currentTrialData.doubleRewardTask;
         presentPositions = currentTrialData.presentPositions;
         freeForage = currentTrialData.freeForage;
-
+        bridgeStates = currentTrialData.bridgeStates;
 
         // ***HRS This is a hack for now for dealing with the free-foraging multi-reward case in the FSM, can make elegant later
         rewardsRemaining = 1;  // default
@@ -755,6 +756,7 @@ public class GameController : MonoBehaviour
         {
             displayMessage = "dataWritingError";
 
+            Debug.Log("There was a data writing error. Trial will save and restart.");
             // Try another attempt at the save function to see if the connection issue resolves
             dataController.SaveData();
         }

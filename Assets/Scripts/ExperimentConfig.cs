@@ -35,6 +35,7 @@ public class ExperimentConfig
     private float playerYposition;
     private float starYposition;
     private float deltaSquarePosition;
+    public bool[][] bridgeStates;                   // whether the 4 different bridges are ON (active) or OFF (a hole in the floor)
 
     // Positions and orientations
     private Vector3 mazeCentre;
@@ -46,7 +47,7 @@ public class ExperimentConfig
     private Vector3[] playerStartOrientations;
     private Vector3 spawnOrientation;
 
-    private Vector3[] possibleStarPositions;
+    private Vector3[] possibleRewardPositions;
     private Vector3[][] rewardPositions;
 
     private Vector3[] blueRoomPositions;
@@ -115,7 +116,7 @@ public class ExperimentConfig
                 break;
 
             case "mturk_learnwithprepost":
-                practiceTrials = 2 + getReadyTrial;
+                practiceTrials = 0 + getReadyTrial;
                 totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -196,6 +197,7 @@ public class ExperimentConfig
         rewardTypes = new string[totalTrials];
         presentPositions = new Vector3[totalTrials][];
         maxMovementTime = new float[totalTrials];
+        bridgeStates = new bool[totalTrials][];                   
 
         // Generate a list of all the possible (player or star) spawn locations
         GeneratePossibleSettings();
@@ -347,6 +349,7 @@ public class ExperimentConfig
     {
         bool freeForageFLAG = false;
         int trialInBlock;
+        int contextSide = 1;             // ...this doesn't actually matter for practice trials
         // Add in the practice/familiarisation trials in an open arena
         for (int trial = setupTrials; trial < setupTrials + practiceTrials - 1; trial++)
         {
@@ -354,11 +357,11 @@ public class ExperimentConfig
             // just make the rewards on each side of the hallway/bridge
             if ( trial % 2 == 0 )
             {
-                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "blue", "red", "yellow", freeForageFLAG);  
+                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "blue", "red", "yellow", contextSide, freeForageFLAG);  
             }
             else
             {
-                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "red", "green", "blue", freeForageFLAG);
+                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "red", "green", "blue", contextSide, freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
@@ -542,7 +545,7 @@ public class ExperimentConfig
     {
         // Generate all possible spawn locations for player and stars
         possiblePlayerPositions = new Vector3[roomSize * roomSize * 4]; // we are working with 4 square rooms
-        possibleStarPositions = new Vector3[roomSize * roomSize * 4];
+        possibleRewardPositions = new Vector3[roomSize * roomSize * 4];
         blueRoomPositions = new Vector3[roomSize * roomSize];
         redRoomPositions = new Vector3[roomSize * roomSize];
         yellowRoomPositions = new Vector3[roomSize * roomSize];
@@ -566,7 +569,7 @@ public class ExperimentConfig
         float[] ZPositionsblue = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
-        AddPossibleLocations(possibleStarPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
         startind = startind + roomSize * roomSize;
 
         // Red room
@@ -574,7 +577,7 @@ public class ExperimentConfig
         float[] ZPositionsred = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
-        AddPossibleLocations(possibleStarPositions, startind, XPositionsred, starYposition, ZPositionsred);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, starYposition, ZPositionsred);
         startind = startind + roomSize * roomSize;
 
         // Green room
@@ -582,7 +585,7 @@ public class ExperimentConfig
         float[] ZPositionsgreen = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
-        AddPossibleLocations(possibleStarPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
         startind = startind + roomSize * roomSize;
 
         // Yellow room
@@ -590,7 +593,7 @@ public class ExperimentConfig
         float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
-        AddPossibleLocations(possibleStarPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
 
         // Add position arrays for locations in particular rooms
         startind = 0;
@@ -947,6 +950,7 @@ public class ExperimentConfig
 
         // Note the variable 'contextSide' specifies whether the two rooms containing the reward will be located on the left or right of the environment
         // e.g. if cheese context: the y/b side, vs the g/r side. if wine context: the y/g side, vs the b/r side.
+        // When the trial is a free foraging trial however, the 'contextSide' variable is used to specify which of the bridges is blocked, to control CW and CCW turns from the start room (since rewards are in all rooms).
 
         bool trialSetCorrectly = false;
 
@@ -956,12 +960,12 @@ public class ExperimentConfig
                        
                     if (contextSide==1)
                     {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", contextSide, freeForageFLAG);
                         trialSetCorrectly = true;
                     } 
                     else if (contextSide==2)
                     {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", contextSide, freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     break;
@@ -970,12 +974,12 @@ public class ExperimentConfig
 
                     if (contextSide == 1)
                     {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", contextSide, freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     else if (contextSide == 2)
                     {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", freeForageFLAG);
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", contextSide, freeForageFLAG);
                         trialSetCorrectly = true;
                     }
                     break;
@@ -984,12 +988,12 @@ public class ExperimentConfig
 
                 if (contextSide == 1)
                 {
-                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", contextSide, freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 else if (contextSide == 2)
                 {
-                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", contextSide, freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 break;
@@ -998,12 +1002,12 @@ public class ExperimentConfig
 
                 if (contextSide == 1)
                 {
-                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", contextSide, freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 else if (contextSide == 2)
                 {
-                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", freeForageFLAG);
+                    SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", contextSide, freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 break;
@@ -1019,14 +1023,14 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void SetDoubleRewardTrial(int trial, int trialInBlock, string context, string startRoom, string rewardRoom1, string rewardRoom2, bool freeForageFLAG)
+    private void SetDoubleRewardTrial(int trial, int trialInBlock, string context, string startRoom, string rewardRoom1, string rewardRoom2, int contextSide, bool freeForageFLAG)
     {
         // This function writes the trial number indicated by the input variable 'trial'.
         // Note: use this function within another that modulates context such that e.g. for 'cheese', the rooms for room1 and room2 reward are set
 
         bool collisionInSpawnLocations = true;
-        Vector3 adjacentRewardPosition;
         int iterationCounter = 0;
+        bridgeStates[trial] = new bool[4];                  // there are 4 bridges
 
         // Check that we've inputted a valid trial number
         if ( (trial < setupTrials - 1) || (trial == setupTrials - 1) )
@@ -1058,6 +1062,66 @@ public class ExperimentConfig
                 {
                     rewardPositions[trial][i] = presentPositions[trial][i];
                 }
+
+                // all the bridges that are available for walking over...
+                for (int i = 0; i < bridgeStates[trial].Length; i++)
+                {
+                    bridgeStates[trial][i] = true;
+                }
+
+                // determine which bridge to disable, to control CW vs CCW turns
+                // Note: contextSide==1 means they have to turn CW, contextSide==2 means they have to turn CCW
+                switch (startRoom) 
+                {
+                    case "blue":
+                        if (contextSide==1)
+                        {
+                            bridgeStates[trial][2] = false; // bridge 3
+                        }
+                        else
+                        {
+                            bridgeStates[trial][3] = false; // bridge 4
+                        }
+                        break;
+
+                    case "red":
+                        if (contextSide == 1)
+                        {
+                            bridgeStates[trial][1] = false; // bridge 2
+                        }
+                        else
+                        {
+                            bridgeStates[trial][2] = false; // bridge 3
+                        }
+                        break;
+
+                    case "yellow":
+                        if (contextSide == 1)
+                        {
+                            bridgeStates[trial][3] = false; // bridge 4
+                        }
+                        else
+                        {
+                            bridgeStates[trial][0] = false; // bridge 1
+                        }
+                        break;
+
+                    case "green":
+                        if (contextSide == 1)
+                        {
+                            bridgeStates[trial][0] = false; // bridge 1
+                        }
+                        else
+                        {
+                            bridgeStates[trial][1] = false; // bridge 2
+                        }
+                        break;
+
+                    default:
+                        Debug.Log("Warning: invalid room specified, trial sequence will not be properly counterbalanced.");
+                        break;               
+                }
+
             }
             else
             { 
@@ -1073,6 +1137,12 @@ public class ExperimentConfig
                 // Specific reward locations within each room for all rewards
                 rewardPositions[trial][0] = RandomPresentInRoom(rewardRoom1);
                 rewardPositions[trial][1] = RandomPresentInRoom(rewardRoom2);
+
+                // all the bridges are available for walking over
+                for (int i = 0; i < bridgeStates[trial].Length; i++) 
+                { 
+                    bridgeStates[trial][i] = true;
+                }
             }
 
             // select start location as random position in given room

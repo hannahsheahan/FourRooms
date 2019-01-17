@@ -179,13 +179,13 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].playerSpawnOrientation = config.GetPlayerStartOrientation(trial);
 
             gameData.allTrialData[trial].rewardPositions = config.GetRewardStartPositions(trial);
-            gameData.allTrialData[trial].presentPositions = config.presentPositions[trial]; 
+            gameData.allTrialData[trial].presentPositions = config.presentPositions[trial];
+            gameData.allTrialData[trial].bridgeStates = config.bridgeStates[trial];
 
             // Rewards
             gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);
             gameData.allTrialData[trial].doubleRewardTask = config.GetIsDoubleReward(trial);
             gameData.allTrialData[trial].freeForage = config.GetIsFreeForaging(trial);
-
 
             // Timer variables (can change these for each trial later e.g. with jitter)
             gameData.allTrialData[trial].maxMovementTime = config.maxMovementTime[trial];
