@@ -117,7 +117,7 @@ public class ExperimentConfig
                 break;
 
             case "mturk_learnwithprepost":
-                practiceTrials = 0 + getReadyTrial;
+                practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -425,14 +425,23 @@ public class ExperimentConfig
         Vector3[] positionsInRoom = new Vector3[nPresents];
         Vector3 positionInRoom = new Vector3();
         List<Vector3> spawnableRoomPositions = new List<Vector3>();
+        List<Vector3> withinTrialUnsedPresentPositions = new List<Vector3>();
+        bool[] positionsUsedThisTrial; 
         int index;
         int desiredPositionIndex;
+
+        positionsUsedThisTrial = new bool[possibleRewardPositions.Length];
+        for (int i = 0; i < positionsUsedThisTrial.Length; i++)
+        {
+            positionsUsedThisTrial[i] = false;
+        }
 
         // generate a random set of N present positions in this room
         for (int k = 0; k < nPresents; k++)
         {
             // find the places in the room where we haven't spawned yet this block and turn them into a list
-            spawnableRoomPositions.Clear(); 
+            spawnableRoomPositions.Clear();
+            withinTrialUnsedPresentPositions.Clear();      // a record of where we have spawned presents on this trial
 
             for (int j = 0; j < roomPositions.Length; j++)
             {
@@ -443,16 +452,23 @@ public class ExperimentConfig
                     // add to a list of unoccupied positions that can be sampled from (avoids rejection sampling)
                     spawnableRoomPositions.Add(roomPositions[j]);
                 }
+
+                if (!positionsUsedThisTrial[index]) 
+                {
+                    // add to a list of unoccupied positions for this trial only, that can be sampled from (avoids rejection sampling)
+                    withinTrialUnsedPresentPositions.Add(roomPositions[j]);
+                }
             }
 
             // make sure the reward doesn't spawn in a place that's been occupied previously this block
             bool noValidPositions = !spawnableRoomPositions.Any();
             if (noValidPositions) 
-            {   
-                // spawn whereever you want
+            {
+                // spawn whereever you want (so long as a present isnt already there)
                 //Debug.Log("All room positions have been previously occupied this block. Present will spawn anywhere in room.");
                 // ^ note that as a check, this message should display 28 times per block (since there are 25 positions per room, and 4*8 presents per room per block. So 7 repeats per room per block * 4 rooms = 28)
-                positionInRoom = roomPositions[UnityEngine.Random.Range(0, roomPositions.Length - 1)];
+                desiredPositionIndex = rand.Next(withinTrialUnsedPresentPositions.Count);
+                positionInRoom = withinTrialUnsedPresentPositions[desiredPositionIndex];
             }
             else 
             {   
@@ -466,6 +482,7 @@ public class ExperimentConfig
             // update the history of spawn positions
             index = Array.IndexOf(possibleRewardPositions, positionInRoom);
             presentPositionHistory[index] = true;
+            positionsUsedThisTrial[index] = true;
         }
 
         return positionsInRoom;
@@ -501,7 +518,7 @@ public class ExperimentConfig
             // constrain the randomised locations for the presents to spawn in different places to before
             // Note: each index of presentPositionHistory specifies a different square in the maze. True means the square has had a present on it, False means it hasnt
 
-            // refresh the presentPositionHistory tracker
+            // reset the presentPositionHistory tracker
             if (trialInBlock == 0) 
             {
                 presentPositionHistory = new bool[possibleRewardPositions.Length];
