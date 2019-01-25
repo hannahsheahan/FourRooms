@@ -48,7 +48,8 @@ public class ExperimentConfig
     private Vector3 spawnOrientation;
 
     private Vector3[] possibleRewardPositions;
-    private bool[] presentPositionHistory;
+    private bool[] presentPositionHistory1;
+    private bool[] presentPositionHistory2;
     private Vector3[][] rewardPositions;
 
     private Vector3[] blueRoomPositions;
@@ -63,6 +64,9 @@ public class ExperimentConfig
     private Vector3[] greenPresentPositions;
 
     public Vector3[][] presentPositions;
+
+    // Counterbalancing
+    public bool cheeseHorizontalCovariance;  // True = (cheese horizontal and wine vertical); False = (cheese vertical and wine horizontal)
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
@@ -99,11 +103,10 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_learnpilot";
-        experimentVersion = "mturk_learnwithprepost";
+        //experimentVersion = "mturk_learnwithprepost";
         //experimentVersion = "mturk_learntransferpilot";
-        //experimentVersion = "micro_debug"; 
+        experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
-        //experimentVersion = "singleblocktransfer_labpilot";
 
 
         // Set these variables to define your experiment:
@@ -121,6 +124,14 @@ public class ExperimentConfig
                 totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                break;
+
+            case "mturk_learnwithprepost_partial":
+                practiceTrials = 0 + getReadyTrial;
+                totalTrials = 16 * 2 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+
                 break;
 
             case "mturk_learntransferpilot":       // ----Full 4 block learning experiment-----
@@ -179,7 +190,7 @@ public class ExperimentConfig
         numberPresentsPerRoom  = 4;
 
         // These variables define the environment (are less likely to be played with)
-        roomSize = 5;           // rooms are each 5x5 grids. If this changes, you will need to change this code
+        roomSize = 4;           // rooms are each 5x5 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
         starYposition   = 74.5f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
@@ -265,6 +276,12 @@ public class ExperimentConfig
 
                 //---- post-training free foraging block 
                 nextTrial = AddFreeForageBlock(nextTrial, "cheeseandwine");
+
+                break;
+
+            case "mturk_learnwithprepost_partial":
+
+                // ... to fill in for partially completed subjects
 
                 break;
 
@@ -420,7 +437,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private Vector3[] ChooseNUnoccupiedPresentPositions(int nPresents, Vector3[] roomPositions)
+    private Vector3[] ChooseNUnoccupiedPresentPositions(int trial, int nPresents, Vector3[] roomPositions)
     {
         Vector3[] positionsInRoom = new Vector3[nPresents];
         Vector3 positionInRoom = new Vector3();
@@ -441,22 +458,18 @@ public class ExperimentConfig
         {
             // find the places in the room where we haven't spawned yet this block and turn them into a list
             spawnableRoomPositions.Clear();
-            withinTrialUnsedPresentPositions.Clear();      // a record of where we have spawned presents on this trial
 
             for (int j = 0; j < roomPositions.Length; j++)
             {
                 index = Array.IndexOf(possibleRewardPositions, roomPositions[j]);
 
-                if (!presentPositionHistory[index])
-                {   
-                    // add to a list of unoccupied positions that can be sampled from (avoids rejection sampling)
-                    spawnableRoomPositions.Add(roomPositions[j]);
-                }
-
                 if (!positionsUsedThisTrial[index]) 
                 {
-                    // add to a list of unoccupied positions for this trial only, that can be sampled from (avoids rejection sampling)
-                    withinTrialUnsedPresentPositions.Add(roomPositions[j]);
+                    if (!presentPositionHistory1[index])  // (we fill this first)
+                    {
+                        // add to a list of unoccupied positions that can be sampled from (avoids rejection sampling)
+                        spawnableRoomPositions.Add(roomPositions[j]); 
+                    }
                 }
             }
 
@@ -464,25 +477,53 @@ public class ExperimentConfig
             bool noValidPositions = !spawnableRoomPositions.Any();
             if (noValidPositions) 
             {
-                // spawn whereever you want (so long as a present isnt already there)
-                //Debug.Log("All room positions have been previously occupied this block. Present will spawn anywhere in room.");
-                // ^ note that as a check, this message should display 28 times per block (since there are 25 positions per room, and 4*8 presents per room per block. So 7 repeats per room per block * 4 rooms = 28)
-                desiredPositionIndex = rand.Next(withinTrialUnsedPresentPositions.Count);
-                positionInRoom = withinTrialUnsedPresentPositions[desiredPositionIndex];
+                // check the second presentPositionHistory i.e. we are filling these spots for the second time
+                for (int j = 0; j < roomPositions.Length; j++)
+                {
+                    index = Array.IndexOf(possibleRewardPositions, roomPositions[j]);
+
+                    if (!positionsUsedThisTrial[index])
+                    {
+                        if (!presentPositionHistory2[index]) // (we fill this second)
+                        {
+                            // add to a list of unoccupied positions that can be sampled from (avoids rejection sampling)
+                            spawnableRoomPositions.Add(roomPositions[j]);
+                        }
+                    }
+                }
+
+                // if there are still no valid positions, something's gone wrong
+                noValidPositions = !spawnableRoomPositions.Any();
+                if (noValidPositions) 
+                { 
+                    Debug.Log("Something has gone wrong. In a 4x4 grid this should never happen. This is trial " + trial);
+                }
+                else 
+                {
+                    // sample a position that has only been used once
+                    desiredPositionIndex = rand.Next(spawnableRoomPositions.Count);
+                    positionInRoom = spawnableRoomPositions[desiredPositionIndex];
+
+                    // update the history of spawn positions
+                    index = Array.IndexOf(possibleRewardPositions, positionInRoom);
+                    presentPositionHistory2[index] = true;
+                    positionsUsedThisTrial[index] = true;
+                }
             }
             else 
             {   
                 // sample an unused position
                 desiredPositionIndex = rand.Next(spawnableRoomPositions.Count);
                 positionInRoom = spawnableRoomPositions[desiredPositionIndex];
+
+                // update the history of spawn positions
+                index = Array.IndexOf(possibleRewardPositions, positionInRoom);
+                presentPositionHistory1[index] = true;
+                positionsUsedThisTrial[index] = true;
             }
 
             positionsInRoom[k] = positionInRoom;
 
-            // update the history of spawn positions
-            index = Array.IndexOf(possibleRewardPositions, positionInRoom);
-            presentPositionHistory[index] = true;
-            positionsUsedThisTrial[index] = true;
         }
 
         return positionsInRoom;
@@ -521,57 +562,26 @@ public class ExperimentConfig
             // reset the presentPositionHistory tracker
             if (trialInBlock == 0) 
             {
-                presentPositionHistory = new bool[possibleRewardPositions.Length];
-                for (int i = 0; i < presentPositionHistory.Length; i++) 
+                presentPositionHistory1 = new bool[possibleRewardPositions.Length];  // fill this first when spawning
+                presentPositionHistory2 = new bool[possibleRewardPositions.Length];  // fill this second when spawning (prevents leaving 2 slot on top of each other in final trial)
+                for (int i = 0; i < presentPositionHistory1.Length; i++) 
                 {
-                    presentPositionHistory[i] = false;
-                }
-
-                // the first trial in the block can place presents anywhere
-                greenPresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, greenRoomPositions);
-                redPresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, redRoomPositions);
-                yellowPresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, yellowRoomPositions);
-                bluePresentPositions = ChooseNRandomPresentPositions(numberPresentsPerRoom, blueRoomPositions);
-
-                // concatenate all the positions of generated presents 
-                greenPresentPositions.CopyTo(presentPositions[trial], 0);
-                redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
-                yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
-                bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
-
-                // monitor where the presents spawned on this trial
-                for (int i = 0; i < possibleRewardPositions.Length; i++)
-                {
-                    if (presentPositions[trial].Contains(possibleRewardPositions[i]))
-                    {
-                        presentPositionHistory[i] = true;
-                    }
+                    presentPositionHistory1[i] = false;
+                    presentPositionHistory2[i] = false;
                 }
             }
-            else 
-            {
-                // select reward positions based on ones that have not yet been occupied
-                // ...but if there isn't a space in the room that hasnt been occupied, just spawn wherever in the room
-                greenPresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, greenRoomPositions);
-                redPresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, redRoomPositions);
-                yellowPresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, yellowRoomPositions);
-                bluePresentPositions = ChooseNUnoccupiedPresentPositions(numberPresentsPerRoom, blueRoomPositions);
+            // select reward positions based on ones that have not yet been occupied
+            // ...but if there isn't a space in the room that hasnt been occupied, just spawn wherever in the room
+            greenPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, greenRoomPositions);
+            redPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, redRoomPositions);
+            yellowPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, yellowRoomPositions);
+            bluePresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, blueRoomPositions);
 
-                // concatenate all the positions of generated presents 
-                greenPresentPositions.CopyTo(presentPositions[trial], 0);
-                redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
-                yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
-                bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
-
-                // monitor where the presents spawned on this trial
-                for (int i = 0; i < possibleRewardPositions.Length; i++)
-                {
-                    if (presentPositions[trial].Contains(possibleRewardPositions[i]))
-                    {
-                        presentPositionHistory[i] = true;
-                    }
-                }
-            }
+            // concatenate all the positions of generated presents 
+            greenPresentPositions.CopyTo(presentPositions[trial], 0);
+            redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
+            yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
+            bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
         }
          
 
@@ -624,6 +634,7 @@ public class ExperimentConfig
         //int[] ZPositionsyellow = { 155, 165, 175, 185, 195 };
 
         // Version 2.0 smaller room positions
+        /*
         // Blue room
         int startind = 0;
         deltaSquarePosition = 8.5f; // ***HRS later should really use this to create loop for specifying positions
@@ -653,6 +664,43 @@ public class ExperimentConfig
         // Yellow room
         float[] XPositionsyellow = { 105.1f, 113.6f, 122.1f, 130.6f, 139.1f };
         float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
+        */
+
+
+        // Version 3.0 4x4 room positions
+
+        // Blue room
+        int startind = 0;
+        deltaSquarePosition = 8.5f; // ***HRS later should really use this to create loop for specifying positions
+        float[] XPositionsblue = { 113.6f, 122.1f, 130.6f, 139.1f };
+        float[] ZPositionsblue = { 101.8f, 110.3f, 118.8f, 127.3f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
+        startind = startind + roomSize * roomSize;
+
+        // Red room
+        float[] XPositionsred = { 156f, 164.5f, 173f, 181.5f };
+        float[] ZPositionsred = { 101.8f, 110.3f, 118.8f, 127.3f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, starYposition, ZPositionsred);
+        startind = startind + roomSize * roomSize;
+
+        // Green room
+        float[] XPositionsgreen = { 156f, 164.5f, 173f, 181.5f };
+        float[] ZPositionsgreen = { 144.3f, 152.8f, 161.3f, 169.8f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
+        startind = startind + roomSize * roomSize;
+
+        // Yellow room
+        float[] XPositionsyellow = { 113.6f, 122.1f, 130.6f, 139.1f };
+        float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
         AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
