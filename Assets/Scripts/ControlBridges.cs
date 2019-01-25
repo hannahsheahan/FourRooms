@@ -23,6 +23,9 @@ public class ControlBridges : MonoBehaviour
 
     private void Update()
     {
+        // could put a thing here where you check for the scene, but would 
+        // require more changes updating for future scenes so a bit annoying
+
         bridge1.SetActive(GameController.control.bridgeStates[0]);
         trigger1.SetActive(GameController.control.bridgeStates[0]);
 

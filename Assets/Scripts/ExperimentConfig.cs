@@ -33,7 +33,7 @@ public class ExperimentConfig
     private int sceneCount;
     private int roomSize;
     private float playerYposition;
-    private float starYposition;
+    private float rewardYposition;
     private float deltaSquarePosition;
     public bool[][] bridgeStates;                   // whether the 4 different bridges are ON (active) or OFF (a hole in the floor)
 
@@ -173,12 +173,12 @@ public class ExperimentConfig
         totalTrials = totalTrials + nbreaks;
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
-        dataRecordFrequency = 0.04f;
+        dataRecordFrequency = 0.06f;
         getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
-        preDisplayCueTime = 1.5f;    // will take a TR during this period
+        preDisplayCueTime      = 1.5f;    // will take a TR during this period
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    // will take a TR during this period
         goalHitPauseTime       = 1.0f;    // we will take a TR during this period
@@ -190,9 +190,9 @@ public class ExperimentConfig
         numberPresentsPerRoom  = 4;
 
         // These variables define the environment (are less likely to be played with)
-        roomSize = 4;           // rooms are each 5x5 grids. If this changes, you will need to change this code
+        roomSize        = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
         playerYposition = 72.5f;
-        starYposition   = 74.5f;
+        rewardYposition   = 74.5f;
         mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
 
 
@@ -642,7 +642,7 @@ public class ExperimentConfig
         float[] ZPositionsblue = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, rewardYposition, ZPositionsblue);
         startind = startind + roomSize * roomSize;
 
         // Red room
@@ -650,7 +650,7 @@ public class ExperimentConfig
         float[] ZPositionsred = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, starYposition, ZPositionsred);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, rewardYposition, ZPositionsred);
         startind = startind + roomSize * roomSize;
 
         // Green room
@@ -658,7 +658,7 @@ public class ExperimentConfig
         float[] ZPositionsgreen = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, rewardYposition, ZPositionsgreen);
         startind = startind + roomSize * roomSize;
 
         // Yellow room
@@ -666,7 +666,7 @@ public class ExperimentConfig
         float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, rewardYposition, ZPositionsyellow);
         */
 
 
@@ -679,7 +679,7 @@ public class ExperimentConfig
         float[] ZPositionsblue = { 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, rewardYposition, ZPositionsblue);
         startind = startind + roomSize * roomSize;
 
         // Red room
@@ -687,7 +687,7 @@ public class ExperimentConfig
         float[] ZPositionsred = { 101.8f, 110.3f, 118.8f, 127.3f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, starYposition, ZPositionsred);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, rewardYposition, ZPositionsred);
         startind = startind + roomSize * roomSize;
 
         // Green room
@@ -695,7 +695,7 @@ public class ExperimentConfig
         float[] ZPositionsgreen = { 144.3f, 152.8f, 161.3f, 169.8f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, rewardYposition, ZPositionsgreen);
         startind = startind + roomSize * roomSize;
 
         // Yellow room
@@ -703,14 +703,14 @@ public class ExperimentConfig
         float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f };
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, rewardYposition, ZPositionsyellow);
 
         // Add position arrays for locations in particular rooms
         startind = 0;
-        AddPossibleLocations(blueRoomPositions, startind, XPositionsblue, starYposition, ZPositionsblue);
-        AddPossibleLocations(redRoomPositions, startind, XPositionsred, starYposition, ZPositionsred);
-        AddPossibleLocations(greenRoomPositions, startind, XPositionsgreen, starYposition, ZPositionsgreen);
-        AddPossibleLocations(yellowRoomPositions, startind, XPositionsyellow, starYposition, ZPositionsyellow);
+        AddPossibleLocations(blueRoomPositions, startind, XPositionsblue, rewardYposition, ZPositionsblue);
+        AddPossibleLocations(redRoomPositions, startind, XPositionsred, rewardYposition, ZPositionsred);
+        AddPossibleLocations(greenRoomPositions, startind, XPositionsgreen, rewardYposition, ZPositionsgreen);
+        AddPossibleLocations(yellowRoomPositions, startind, XPositionsyellow, rewardYposition, ZPositionsyellow);
 
         // Get all the possible mazes/scenes in the build that we can work with
         sceneCount = SceneManager.sceneCountInBuildSettings;
