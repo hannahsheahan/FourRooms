@@ -104,8 +104,8 @@ public class ExperimentConfig
     {
         //experimentVersion = "mturk_learnpilot";
         //experimentVersion = "mturk_learnwithprepost";
-        //experimentVersion = "mturk_learntransferpilot";
-        experimentVersion = "micro_debug"; 
+        experimentVersion = "mturk_learntransfer";
+        //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
 
 
@@ -134,9 +134,9 @@ public class ExperimentConfig
 
                 break;
 
-            case "mturk_learntransferpilot":       // ----Full 4 block learning experiment-----
-                practiceTrials = 2 + getReadyTrial;
-                totalTrials = 16 * 8 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+            case "mturk_learntransfer":       // ----Full 4 block learning experiment-----
+                practiceTrials = 0 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
@@ -285,23 +285,7 @@ public class ExperimentConfig
 
                 break;
 
-            case "mturk_learntransferpilot":  // ----Full 3 block learning + 3 block transfer experiment (2hrs)-----
-
-                //---- training block 1
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 2
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 3
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 4
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
+            case "mturk_learntransfer":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
 
                 //---- transfer block 1
                 nextTrial = AddTransferBlock(nextTrial);
@@ -781,7 +765,7 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private int AddTransferBlock(int nextTrial)
+    private int OldAddTransferBlock(int nextTrial)
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
         bool freeForageFLAG = false;
@@ -795,6 +779,26 @@ public class ExperimentConfig
         {
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
+        }
+        return nextTrial;
+    }
+
+    // ********************************************************************** //
+
+    private int AddTransferBlock(int nextTrial)
+    {
+        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+        bool freeForageFLAG = false;
+
+        if (rand.Next(2) == 0)   // randomise whether the watermelon or banana sub-block happens first
+        {
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
+        }
+        else
+        {
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
         }
         return nextTrial;
     }
@@ -1095,6 +1099,7 @@ public class ExperimentConfig
                     break;
 
             case "watermelon":
+            case "peanut":
 
                 if (contextSide == 1)
                 {
@@ -1109,6 +1114,7 @@ public class ExperimentConfig
                 break;
 
             case "banana":
+            case "martini":
 
                 if (contextSide == 1)
                 {

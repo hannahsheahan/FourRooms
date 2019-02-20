@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/giftboxprepost
+/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/giftboxtransferonly
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity

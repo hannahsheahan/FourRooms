@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Persistent.unity
+- path: Assets/RewardTypePackages/Low Poly Fruits/resources/test_Scene.unity
   isLoaded: 1
   isActive: 1
