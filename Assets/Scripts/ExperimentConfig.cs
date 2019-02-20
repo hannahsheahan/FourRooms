@@ -66,7 +66,7 @@ public class ExperimentConfig
     public Vector3[][] presentPositions;
 
     // Counterbalancing
-    public bool cheeseHorizontalCovariance;  // True = (cheese horizontal and wine vertical); False = (cheese vertical and wine horizontal)
+    public bool transferCounterbalance = false;  // False = (cheese and peanut have the same covariance); True = (cheese and martinis have the same covariance)
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
@@ -102,21 +102,21 @@ public class ExperimentConfig
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
-        //experimentVersion = "mturk_learnpilot";
+        //experimentVersion = "mturk_learn";
         //experimentVersion = "mturk_learnwithprepost";
         experimentVersion = "mturk_learntransfer";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
 
-
         // Set these variables to define your experiment:
         switch (experimentVersion)
         {
-            case "mturk_learnpilot":       // ----Full 4 block learning experiment-----
+            case "mturk_learn":       // ----Full 4 block learning experiment-----
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;
                 break;
 
             case "mturk_learnwithprepost":
@@ -124,6 +124,7 @@ public class ExperimentConfig
                 totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;
                 break;
 
             case "mturk_learnwithprepost_partial":
@@ -131,14 +132,15 @@ public class ExperimentConfig
                 totalTrials = 16 * 2 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-
+                transferCounterbalance = false;
                 break;
 
             case "mturk_learntransfer":       // ----Full 4 block learning experiment-----
-                practiceTrials = 0 + getReadyTrial;
+                practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
@@ -146,6 +148,7 @@ public class ExperimentConfig
                 totalTrials = 16  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 20   + restbreakOffset;                          // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
+                transferCounterbalance = false;
                 break;
 
             case "singleblocktransfer_labpilot":   // ----Mini 1 block transfer rewards test experiment-----
@@ -153,6 +156,7 @@ public class ExperimentConfig
                 totalTrials = 16 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 20 + restbreakOffset;                          // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
+                transferCounterbalance = false;
                 break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
@@ -161,6 +165,7 @@ public class ExperimentConfig
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
+                transferCounterbalance = false;
                 break;
 
             default:
@@ -234,7 +239,7 @@ public class ExperimentConfig
         // Define the full trial sequence
         switch (experimentVersion)
         {
-            case "mturk_learnpilot":       // ----Full 4 block learning experiment-----
+            case "mturk_learn":       // ----Full 4 block learning experiment-----
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
@@ -790,7 +795,7 @@ public class ExperimentConfig
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
         bool freeForageFLAG = false;
 
-        if (rand.Next(2) == 0)   // randomise whether the watermelon or banana sub-block happens first
+        if (rand.Next(2) == 0)   // randomise whether the peanut or martini sub-block happens first
         {
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "martini", freeForageFLAG);
@@ -1068,53 +1073,24 @@ public class ExperimentConfig
 
         bool trialSetCorrectly = false;
 
-            switch (context)
-            {
-                case "cheese":
-                       
-                    if (contextSide==1)
-                    {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", contextSide, freeForageFLAG);
-                        trialSetCorrectly = true;
-                    } 
-                    else if (contextSide==2)
-                    {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", contextSide, freeForageFLAG);
-                        trialSetCorrectly = true;
-                    }
-                    break;
 
-                case "wine":
-
-                    if (contextSide == 1)
-                    {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", contextSide, freeForageFLAG);
-                        trialSetCorrectly = true;
-                    }
-                    else if (contextSide == 2)
-                    {
-                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", contextSide, freeForageFLAG);
-                        trialSetCorrectly = true;
-                    }
-                    break;
-
-            case "watermelon":
-            case "peanut":
-
-                if (contextSide == 1)
+        switch (context)
+        {
+            case "cheese":
+                   
+                if (contextSide==1)
                 {
                     SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", contextSide, freeForageFLAG);
                     trialSetCorrectly = true;
-                }
-                else if (contextSide == 2)
+                } 
+                else if (contextSide==2)
                 {
                     SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", contextSide, freeForageFLAG);
                     trialSetCorrectly = true;
                 }
                 break;
 
-            case "banana":
-            case "martini":
+            case "wine":
 
                 if (contextSide == 1)
                 {
@@ -1127,6 +1103,70 @@ public class ExperimentConfig
                     trialSetCorrectly = true;
                 }
                 break;
+
+            case "watermelon":
+            case "peanut":
+
+                if (transferCounterbalance) 
+                {
+                    if (contextSide == 1)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    else if (contextSide == 2)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    break;
+                }
+                else 
+                { 
+                    if (contextSide == 1)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    else if (contextSide == 2)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    break;
+                }
+
+            case "banana":
+            case "martini":
+
+                if (transferCounterbalance)
+                {
+                    if (contextSide == 1)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "blue", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    else if (contextSide == 2)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "green", "red", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    break;
+                }
+                else
+                {
+                    if (contextSide == 1)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "yellow", "green", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    else if (contextSide == 2)
+                    {
+                        SetDoubleRewardTrial(trial, trialInBlock, context, startRoom, "blue", "red", contextSide, freeForageFLAG);
+                        trialSetCorrectly = true;
+                    }
+                    break;
+                }
             default:
                     break;
             }

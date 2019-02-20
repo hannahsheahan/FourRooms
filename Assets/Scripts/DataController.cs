@@ -165,7 +165,9 @@ public class DataController : MonoBehaviour {
         gameData.dataRecordFrequency = config.GetDataFrequency();
         gameData.restbreakDuration = config.restbreakDuration;
         gameData.getReadyDuration = config.getReadyDuration;
-        
+        gameData.transferCounterbalance = config.transferCounterbalance;
+
+
         Debug.Log("Total number of trials to load: " + totalTrials);
 
         // Add each required trial data to gameData in turn

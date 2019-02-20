@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/giftboxtransferonly
+/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/cheese_wine
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity
@@ -16,6 +16,8 @@ Assets/Scenes/FourRooms_wine.unity
 Assets/Scenes/FourRooms_cheese.unity
 Assets/Scenes/FourRooms_banana.unity
 Assets/Scenes/FourRooms_watermelon.unity
+Assets/Scenes/FourRooms_peanut.unity
+Assets/Scenes/FourRooms_martini.unity
 Assets/Scenes/PrePostForage_cheese.unity
 Assets/Scenes/PrePostForage_wine.unity
 SceneListEnd?
@@ -231,7 +233,7 @@ e51c09a4cc447f11db225afcd8e3e490 Unity.TextMeshPro.dll:TMPro.TMP_Settings
 76b945b547f74d79302f337813e6c0be Assembly-CSharp-firstpass.dll:UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController
 74ef9834f798dfec27740a77366f605d Assembly-CSharp-firstpass.dll:UnityStandardAssets.Cameras.HandHeldCam
 28d790d202beb300ec2ffc6265160c26 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ContrastEnhance
-3bc790946ac80d4f13f27b691d0c4f24 Assembly-CSharp.dll:.DisplayRewardCue
+f1750169ae7384441a031af8fd915b8d Assembly-CSharp.dll:.DisplayRewardCue
 cf96e5f7b3d069bab453925bd41be04e UnityEngine.TestRunner.dll:UnityEngine.TestTools.EnumerableSetUpTearDownCommandState
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 259d013faac28e8ba0aa2a7542273735 UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
@@ -267,6 +269,7 @@ d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.Spa
 219ec6059796d8951d2adcd8505d0dc2 Assembly-CSharp-firstpass.dll:UnityStandardAssets.CrossPlatformInput.TouchPad
 61faedcd907718913efd3ec146822d0e Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Ball.Ball
 a8cd58c1680eb5251e5604e560cf89e9 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.TimedObjectDestructor
+fd92c2a103346e65a5a3e078e6dbea45 Assembly-CSharp.dll:.fruits_tester
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.GerstnerDisplace
 d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
 e53ec3e85874dccaf1e999c1252e4321 Assembly-CSharp.dll:.DataController
