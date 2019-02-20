@@ -793,11 +793,11 @@ public class ExperimentConfig
         if (rand.Next(2) == 0)   // randomise whether the watermelon or banana sub-block happens first
         {
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "martini", freeForageFLAG);
         }
         else
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "martini", freeForageFLAG);
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
         }
         return nextTrial;
