@@ -102,16 +102,16 @@ public class ExperimentConfig
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
-        //experimentVersion = "mturk_learn";
+        experimentVersion = "mturk_cheesewine";
         //experimentVersion = "mturk_learnwithprepost";
-        experimentVersion = "mturk_learntransfer";
+        //experimentVersion = "mturk_peanutmartini";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
 
         // Set these variables to define your experiment:
         switch (experimentVersion)
         {
-            case "mturk_learn":       // ----Full 4 block learning experiment-----
+            case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
@@ -135,7 +135,7 @@ public class ExperimentConfig
                 transferCounterbalance = false;
                 break;
 
-            case "mturk_learntransfer":       // ----Full 4 block learning experiment-----
+            case "mturk_peanutmartini":       // ----Full 4 block learning experiment-----
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
@@ -239,7 +239,7 @@ public class ExperimentConfig
         // Define the full trial sequence
         switch (experimentVersion)
         {
-            case "mturk_learn":       // ----Full 4 block learning experiment-----
+            case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
@@ -290,7 +290,7 @@ public class ExperimentConfig
 
                 break;
 
-            case "mturk_learntransfer":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
+            case "mturk_peanutmartini":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
 
                 //---- transfer block 1
                 nextTrial = AddTransferBlock(nextTrial);
@@ -523,13 +523,13 @@ public class ExperimentConfig
     private void GeneratePresentPositions(int trial, int trialInBlock, bool freeForageFLAG)
     {
         // - If the is a 2 reward covariance trial, spawn the presents in random positions within each room.
-        // - However, if this is a free foraging (all rewards) trial, we want to have had
-        //   every single square within each room have a present on it within the block, so this requires at least 7 trials and some constrained randomisation.
+        // - Make sure that every single square within each room have a present on it 2x within the block of 8 trials
 
         // presents can be at any position in the room now
         presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
         rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
 
+        /*
         if (!freeForageFLAG) 
         { 
             greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
@@ -545,33 +545,35 @@ public class ExperimentConfig
         }
         else 
         {
-            // constrain the randomised locations for the presents to spawn in different places to before
-            // Note: each index of presentPositionHistory specifies a different square in the maze. True means the square has had a present on it, False means it hasnt
+        */    
+           
+        // constrain the randomised locations for the presents to spawn in different places to before
+        // Note: each index of presentPositionHistory specifies a different square in the maze. True means the square has had a present on it, False means it hasnt
 
-            // reset the presentPositionHistory tracker
-            if (trialInBlock == 0) 
+        // reset the presentPositionHistory tracker
+        if (trialInBlock == 0) 
+        {
+            presentPositionHistory1 = new bool[possibleRewardPositions.Length];  // fill this first when spawning
+            presentPositionHistory2 = new bool[possibleRewardPositions.Length];  // fill this second when spawning (prevents leaving 2 slot on top of each other in final trial)
+            for (int i = 0; i < presentPositionHistory1.Length; i++) 
             {
-                presentPositionHistory1 = new bool[possibleRewardPositions.Length];  // fill this first when spawning
-                presentPositionHistory2 = new bool[possibleRewardPositions.Length];  // fill this second when spawning (prevents leaving 2 slot on top of each other in final trial)
-                for (int i = 0; i < presentPositionHistory1.Length; i++) 
-                {
-                    presentPositionHistory1[i] = false;
-                    presentPositionHistory2[i] = false;
-                }
+                presentPositionHistory1[i] = false;
+                presentPositionHistory2[i] = false;
             }
-            // select reward positions based on ones that have not yet been occupied
-            // ...but if there isn't a space in the room that hasnt been occupied, just spawn wherever in the room
-            greenPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, greenRoomPositions);
-            redPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, redRoomPositions);
-            yellowPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, yellowRoomPositions);
-            bluePresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, blueRoomPositions);
-
-            // concatenate all the positions of generated presents 
-            greenPresentPositions.CopyTo(presentPositions[trial], 0);
-            redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
-            yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
-            bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
         }
+        // select reward positions based on ones that have not yet been occupied
+        // ...but if there isn't a space in the room that hasnt been occupied, just spawn wherever in the room
+        greenPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, greenRoomPositions);
+        redPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, redRoomPositions);
+        yellowPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, yellowRoomPositions);
+        bluePresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, blueRoomPositions);
+
+        // concatenate all the positions of generated presents 
+        greenPresentPositions.CopyTo(presentPositions[trial], 0);
+        redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
+        yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
+        bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
+
          
 
         //--- alternative version
