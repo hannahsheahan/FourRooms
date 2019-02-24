@@ -1,12 +1,9 @@
 ﻿<Properties StartupConfiguration="{C82DCB6A-72C0-2839-2365-FE1C576BFCBC}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FramesPerSecond.cs">
     <Files>
-      <File FileName="PHP/fromunity.php" Line="15" Column="2" />
-      <File FileName="Assets/Scripts/GameController.cs" Line="757" Column="27" />
-      <File FileName="Assets/Scripts/DataController.cs" Line="118" Column="51" />
-      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="107" Column="11" />
-      <File FileName="Assets/Scripts/DisplayRewardCue.cs" Line="44" Column="52" />
-      <File FileName="Assets/Scripts/GameData.cs" Line="14" Column="39" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="724" Column="5" />
+      <File FileName="Assets/Scripts/DataController.cs" Line="263" Column="9" />
+      <File FileName="Assets/Scripts/FramesPerSecond.cs" Line="14" Column="38" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

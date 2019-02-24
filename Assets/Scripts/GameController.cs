@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
     // Persistent controllers for data management and gameplay
     private DataController dataController;
     public static GameController control;
+    private FramesPerSecond frameRateMonitor;
 
     // Game data
     private GameObject PlayerFPS;
@@ -43,7 +44,7 @@ public class GameController : MonoBehaviour
     public int rewardsRemaining;
     public Vector3[] presentPositions;
     public int numberPresentsPerRoom;
-    public bool[] bridgeStates;  // ***HRS use this to enable/disable certain bridges to control CW vs CCW movements
+    public bool[] bridgeStates;         // used to enable/disable different bridges
 
     private string nextScene;
 
@@ -109,6 +110,8 @@ public class GameController : MonoBehaviour
     public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
 
+    private float minFramerate = 45f;           // minimum fps required for decent gameplay on webGL build (fps depends on user's browser and plugins)
+
     // Error flags
     public bool FLAG_trialError;
     public bool FLAG_trialTimeout;
@@ -169,6 +172,7 @@ public class GameController : MonoBehaviour
     {
         dataController = FindObjectOfType<DataController>(); //usually be careful with 'Find' but in this case should be ok. Ok this fetches the instance of DataController, dataController.
         source = GetComponent<AudioSource>();
+        frameRateMonitor = GetComponent<FramesPerSecond>();
 
         // Trial invariant data
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
@@ -198,10 +202,6 @@ public class GameController : MonoBehaviour
         // Ensure cue images are off
         displayCue = false;
         rewardsVisible = new bool[maxNRewards]; //default
-        //for (int i = 0; i < rewardsVisible.Length; i++)
-        //{
-        //    rewardsVisible[i] = false;
-        //}
 
         StartExperiment();
 
@@ -213,6 +213,7 @@ public class GameController : MonoBehaviour
     {
         UpdateText();
         CheckFullScreen();
+        CheckFramerate();
 
         if (!pauseClock)
         {
@@ -317,7 +318,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case STATE_MOVING1:
-
+            
                 if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
                 {
                     StateNext(STATE_TIMEOUT);
@@ -489,13 +490,14 @@ public class GameController : MonoBehaviour
                 break;
 
             case STATE_PAUSE:
-                // Note: this state is triggered by exiting fullscreen mode, and can only be escaped from by re-enabling fullscreen mode.
+                // Note: this state is triggered by either:
+                // - exiting fullscreen mode, and can only be escaped from by re-enabling fullscreen mode.
+                // - having an insufficient gameplay framerate.
                 // pause the countdown timer display and disable the player controls
                 // Note that the FPSPlayer and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
                 pauseClock = true;
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
                 break;
-
 
             case STATE_HALLFREEZE:
 
@@ -705,6 +707,23 @@ public class GameController : MonoBehaviour
     }
 
     // ********************************************************************** //
+
+    public void CheckFramerate()
+    {
+        // Check if the game framerate is sufficiently high. If not, give warning telling them to open in a different browser with fewer plugins or quit.
+        if (frameRateMonitor.Framerate < minFramerate)
+        {
+            if (State != STATE_STARTSCREEN)
+            {
+                // if we're in the middle of the experiment, send them a warning and pause the experiment
+                displayMessage = "framerateError";
+                Debug.Log("ERROR: Frame rate of " + frameRateMonitor.Framerate.ToString() + " fps is too low for gameplay.");
+                StateNext(STATE_PAUSE);
+            }
+        }
+    }
+
+    // ********************************************************************** //
     // Note this is obsolete, because Application.Quit() does not work for web applications, only local ones.
     public void ExitGame()
     {
@@ -755,6 +774,9 @@ public class GameController : MonoBehaviour
         while (!dataController.writingDataProperly)
         {
             displayMessage = "dataWritingError";
+
+            // ***HRS this needs to display for longer than it currently is - at the moment this flashes so quick that the trial just restarts and people get confused. This needs to pause and display for 1.5-2 sec at least.
+            // ***HRS oh shit. Note that at the moment the data writing error will not actually display, and the whole game will continue to be run. OMG this is the bug.
 
             Debug.Log("There was a data writing error. Trial will save and restart.");
             // Try another attempt at the save function to see if the connection issue resolves
@@ -810,6 +832,10 @@ public class GameController : MonoBehaviour
 
             case "dataWritingError":
                 textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, please exit.";
+                break;
+
+            case "framerateError":
+                textMessage = "The browser-dependent frame rate is insufficient for this HIT. \n Please exit, or try using Chrome/Firefox with no plugins.";
                 break;
 
             case "notFullScreenError":
