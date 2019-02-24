@@ -130,7 +130,7 @@ public class DataController : MonoBehaviour {
 
     IEnumerator WaitForRequest(WWW data)
     {
-        writingDataProperly = true;
+        // writingDataProperly = true;
 
         yield return data;
         if (data.error != null)

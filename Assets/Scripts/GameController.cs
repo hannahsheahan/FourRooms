@@ -500,7 +500,15 @@ public class GameController : MonoBehaviour
                 // pause the countdown timer display and disable the player controls
                 // Note that the FPSPlayer and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
                 pauseClock = true;
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                if (PlayerFPS != null)
+                {
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                }
+                else 
+                {
+                    PlayerFPS = GameObject.Find("FPSController");
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                }
                 break;
 
             case STATE_HALLFREEZE:
@@ -721,7 +729,7 @@ public class GameController : MonoBehaviour
             if (State != STATE_STARTSCREEN)
             {
                 // prioritise the writing error messages 
-                if (displayMessage != "dataWritingError") 
+                if ((displayMessage != "dataWritingError") & (displayMessage != "notFullScreenError"))
                 {
                     // if we're in the middle of the experiment, send them a warning and pause the experiment
                     displayMessage = "framerateError";
@@ -741,15 +749,37 @@ public class GameController : MonoBehaviour
         {
             FLAG_dataWritingError = true;
             displayMessage = "dataWritingError";
-            Debug.Log("There was a data writing error. Trial will save and restart once connection is re-established.");
+
+            if (State != STATE_PAUSE) 
+            { 
+                Debug.Log("There was a data writing error. Trial will save and restart once connection is re-established.");
+            }
+
+            // Make sure the player controls are disabled (otherwise this can get missed if just triggered from STATE_PAUSE when a trial finishes)
+            if (PlayerFPS != null)
+            {
+                if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
+                {
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                }
+            }
+            else 
+            {
+                PlayerFPS = GameObject.Find("FPSController");
+                if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
+                {
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                }
+            }
             StateNext(STATE_PAUSE);
 
-            // Pause here for a set amount of time so that this writing error is visible before you try again.
+            // Every little while, try another attempt at the save function to see if the connection issue resolves (allows message to be seen too)
             if (messageTimer.ElapsedSeconds() > displayMessageTime)
             {
-                // Try another attempt at the save function to see if the connection issue resolves
                 dataController.SaveData();
+                messageTimer.Reset();
             }
+
         }
         else
         {
