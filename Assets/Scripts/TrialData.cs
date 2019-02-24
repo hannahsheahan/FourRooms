@@ -50,6 +50,7 @@ public class TrialData
     // trial error flags
     public List<bool> FLAG_trialTimeout = new List<bool>();        
     public List<bool> FLAG_trialError = new List<bool>();
+    public List<bool> FLAG_dataWritingError = new List<bool>();
 
     // Tracking data
     public List<string> stateTransitions = new List<string>();

@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/cheese_wine
+/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/peanut_martini
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity
@@ -255,7 +255,7 @@ c933b2cffdb9d1429a103e9d63c523ef Assembly-CSharp-firstpass.dll:UnityStandardAsse
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.LavaDeath
 977746b046726f13e46bfa6b97c0ee0d Assembly-CSharp.dll:.RewardHitScript
 a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
-473fb74262db1e1418f391b94620f7e0 Assembly-CSharp.dll:.GameController
+1a555fc365d08e975102d69944689650 Assembly-CSharp.dll:.GameController
 5fc094978ce3e3591a7500ed380d854a Unity.Analytics.DataPrivacy.dll:UnityEngine.Analytics.DataPrivacyButton
 a8c33406fd5a44e89bd47fea3b45028f Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ColorCorrectionRamp
 f080a86a4a939dd08c0cc4f4f05e1e4e Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Grayscale
@@ -272,7 +272,7 @@ a8cd58c1680eb5251e5604e560cf89e9 Assembly-CSharp-firstpass.dll:UnityStandardAsse
 fd92c2a103346e65a5a3e078e6dbea45 Assembly-CSharp.dll:.fruits_tester
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.GerstnerDisplace
 d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
-be6634cf75fabc4a2fb5ba8869cb6fda Assembly-CSharp.dll:.DataController
+557dd2ed9347cd4d792c8d7d7d2fcc98 Assembly-CSharp.dll:.DataController
 698812e8d71fd38ac0f66f7a70a25fb5 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.WaterTile
 e609b62cdc862f1f9fd465a00263d3ba Assembly-CSharp.dll:.TrialTypeMessageScript
 34665528cf8da97e082a230c8afb96c6 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.DepthOfFieldDeprecated
@@ -294,3 +294,5 @@ cb86ee5df074c566ee041db9a40db555 Assembly-CSharp.dll:.SubmitFeedbackButtonScript
 83dffc789cd416ac4ef1fc44f3423e35 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Tonemapping
 5e869f601eca6873b969dceef87d6303 Assembly-CSharp-firstpass.dll:UnityStandardAssets._2D.PlatformerCharacter2D
 47cd05cf11ce8beb2fd9a1522f58f5ec Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.AutoMobileShaderSwitch
+ecdff995b73ff4c77d7ea35c46b7ffe1 Assembly-CSharp.dll:Performance.FpsToText
+14bd14312c245aae022dbd95b49dfbac Assembly-CSharp.dll:.FramesPerSecond

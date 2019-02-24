@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\ExperimentConfig.cs" />
     <Compile Include="Assets\Scripts\ExperimentStartCountdown.cs" />
     <Compile Include="Assets\Scripts\filepath.cs" />
+    <Compile Include="Assets\Scripts\FpsToText.cs" />
     <Compile Include="Assets\Scripts\FramesPerSecond.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />

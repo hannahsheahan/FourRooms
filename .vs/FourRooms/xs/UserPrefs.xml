@@ -1,9 +1,8 @@
 ﻿<Properties StartupConfiguration="{C82DCB6A-72C0-2839-2365-FE1C576BFCBC}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FramesPerSecond.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ExperimentConfig.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameController.cs" Line="724" Column="5" />
-      <File FileName="Assets/Scripts/DataController.cs" Line="263" Column="9" />
-      <File FileName="Assets/Scripts/FramesPerSecond.cs" Line="14" Column="38" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="252" Column="40" />
+      <File FileName="Assets/Scripts/ExperimentConfig.cs" Line="108" Column="46" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

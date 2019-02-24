@@ -110,12 +110,13 @@ public class GameController : MonoBehaviour
     public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
 
-    private float minFramerate = 45f;           // minimum fps required for decent gameplay on webGL build (fps depends on user's browser and plugins)
+    private float minFramerate = 30f;           // minimum fps required for decent gameplay on webGL build (fps depends on user's browser and plugins)
 
     // Error flags
     public bool FLAG_trialError;
     public bool FLAG_trialTimeout;
     public bool FLAG_fullScreenModeError;
+    public bool FLAG_dataWritingError;
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
@@ -212,7 +213,10 @@ public class GameController : MonoBehaviour
     private void Update()     // Update() executes once per frame
     {
         UpdateText();
+
+        // Check that everything is working properly
         CheckFullScreen();
+        CheckWritingProperly();
         CheckFramerate();
 
         if (!pauseClock)
@@ -555,6 +559,7 @@ public class GameController : MonoBehaviour
         FLAG_trialError = false;
         FLAG_trialTimeout = false;
         FLAG_fullScreenModeError = false;
+        FLAG_dataWritingError = false;
         starFound = false;
         displayTimeLeft = false;
         scoreUpdated = false;
@@ -715,10 +720,45 @@ public class GameController : MonoBehaviour
         {
             if (State != STATE_STARTSCREEN)
             {
-                // if we're in the middle of the experiment, send them a warning and pause the experiment
-                displayMessage = "framerateError";
-                Debug.Log("ERROR: Frame rate of " + frameRateMonitor.Framerate.ToString() + " fps is too low for gameplay.");
-                StateNext(STATE_PAUSE);
+                // prioritise the writing error messages 
+                if (displayMessage != "dataWritingError") 
+                {
+                    // if we're in the middle of the experiment, send them a warning and pause the experiment
+                    displayMessage = "framerateError";
+                    Debug.Log("ERROR: Frame rate of " + frameRateMonitor.Framerate.ToString() + " fps is too low for gameplay.");
+                    StateNext(STATE_PAUSE);
+                }
+            }
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void CheckWritingProperly()
+    {
+        // Check if data is writing to file correctly.
+        if (!dataController.writingDataProperly)
+        {
+            FLAG_dataWritingError = true;
+            displayMessage = "dataWritingError";
+            Debug.Log("There was a data writing error. Trial will save and restart once connection is re-established.");
+            StateNext(STATE_PAUSE);
+
+            // Pause here for a set amount of time so that this writing error is visible before you try again.
+            if (messageTimer.ElapsedSeconds() > displayMessageTime)
+            {
+                // Try another attempt at the save function to see if the connection issue resolves
+                dataController.SaveData();
+            }
+        }
+        else
+        {
+            if (FLAG_dataWritingError)  // they had a writing error, but now its fixed :)
+            {
+                // It's fixed! So restart the trial
+                displayMessage = "restartTrialMessage";
+                StateNext(STATE_ERROR);    // record that this error happened and restart the trial (trial will be repeated later)
+                FLAG_dataWritingError = false;
             }
         }
     }
@@ -769,26 +809,6 @@ public class GameController : MonoBehaviour
     private void UpdateText()
     {
         // This is used for displaying boring, white text messages to the player, such as warnings
-
-        // Display any major errors that require the player to restart the experiment
-        while (!dataController.writingDataProperly)
-        {
-            displayMessage = "dataWritingError";
-
-            // ***HRS this needs to display for longer than it currently is - at the moment this flashes so quick that the trial just restarts and people get confused. This needs to pause and display for 1.5-2 sec at least.
-            // ***HRS oh shit. Note that at the moment the data writing error will not actually display, and the whole game will continue to be run. OMG this is the bug.
-
-            Debug.Log("There was a data writing error. Trial will save and restart.");
-            // Try another attempt at the save function to see if the connection issue resolves
-            dataController.SaveData();
-        }
-        // It's fixed! So restart the trial
-        if (displayMessage == "dataWritingError")
-        {
-            displayMessage = "restartTrialMessage";
-            NextAttempt();
-            StateNext(STATE_SETUP);
-        }
 
         // Display regular game messages to the player
         switch (displayMessage)

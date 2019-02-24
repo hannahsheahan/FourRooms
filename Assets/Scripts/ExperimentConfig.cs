@@ -102,9 +102,9 @@ public class ExperimentConfig
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
-        experimentVersion = "mturk_cheesewine";
+        //experimentVersion = "mturk_cheesewine";
         //experimentVersion = "mturk_learnwithprepost";
-        //experimentVersion = "mturk_peanutmartini";
+        experimentVersion = "mturk_peanutmartini";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
 
