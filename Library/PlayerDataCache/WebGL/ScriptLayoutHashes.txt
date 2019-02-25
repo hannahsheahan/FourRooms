@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/cheese_wine
+/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/peanuts_martinis_counter
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity
@@ -152,6 +152,7 @@ ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networki
 755aa9308df9cb5ec0a491ba4f5f09a5 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Bloom
 385666d964b0eabb4136cbb95125e502 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Cameras.ProtectCameraFromWallClip
 303da015e9d1de9fdb27bbc2ba279ebd Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.WaypointProgressTracker
+14bd14312c245aae022dbd95b49dfbac Assembly-CSharp.dll:.FramesPerSecond
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 27097c3cbcb7128970d5bf3f8f8e251f Assembly-CSharp.dll:.HideOrDisplayReward
 230f7b5038f49d457dbcc3c455c71d9a Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.ScreenSpaceAmbientObscurance
@@ -164,6 +165,7 @@ db1f205a8c9dae1c39098cd23fc97f63 Assembly-CSharp-firstpass.dll:UnityStandardAsse
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.DragRigidbody
 94017dcc9f00fe671ea7dc427b4da011 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
 a8b6c919b2049fcc280823488144371f Assembly-CSharp-firstpass.dll:UnityStandardAssets.CrossPlatformInput.Joystick
+ecdff995b73ff4c77d7ea35c46b7ffe1 Assembly-CSharp.dll:Performance.FpsToText
 4f631fd718256a8c69483c396671a274 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.PlatformSpecificContent
 5e8a01a14cef8c5fb6866e39e13545df Assembly-CSharp-firstpass.dll:UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter
 0574135745ea880aa1c1be2f2057ab89 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.ActivateTrigger
@@ -269,7 +271,6 @@ d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.Spa
 219ec6059796d8951d2adcd8505d0dc2 Assembly-CSharp-firstpass.dll:UnityStandardAssets.CrossPlatformInput.TouchPad
 61faedcd907718913efd3ec146822d0e Assembly-CSharp-firstpass.dll:UnityStandardAssets.Vehicles.Ball.Ball
 a8cd58c1680eb5251e5604e560cf89e9 Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.TimedObjectDestructor
-fd92c2a103346e65a5a3e078e6dbea45 Assembly-CSharp.dll:.fruits_tester
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:UnityStandardAssets.Water.GerstnerDisplace
 d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
 557dd2ed9347cd4d792c8d7d7d2fcc98 Assembly-CSharp.dll:.DataController
@@ -294,5 +295,4 @@ cb86ee5df074c566ee041db9a40db555 Assembly-CSharp.dll:.SubmitFeedbackButtonScript
 83dffc789cd416ac4ef1fc44f3423e35 Assembly-CSharp-firstpass.dll:UnityStandardAssets.ImageEffects.Tonemapping
 5e869f601eca6873b969dceef87d6303 Assembly-CSharp-firstpass.dll:UnityStandardAssets._2D.PlatformerCharacter2D
 47cd05cf11ce8beb2fd9a1522f58f5ec Assembly-CSharp-firstpass.dll:UnityStandardAssets.Utility.AutoMobileShaderSwitch
-ecdff995b73ff4c77d7ea35c46b7ffe1 Assembly-CSharp.dll:Performance.FpsToText
-14bd14312c245aae022dbd95b49dfbac Assembly-CSharp.dll:.FramesPerSecond
+fd92c2a103346e65a5a3e078e6dbea45 Assembly-CSharp.dll:.fruits_tester

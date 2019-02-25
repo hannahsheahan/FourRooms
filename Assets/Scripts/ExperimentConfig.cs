@@ -116,7 +116,7 @@ public class ExperimentConfig
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;
+                transferCounterbalance = false;                                     // this does nothing
                 break;
 
             case "mturk_learnwithprepost":
@@ -140,7 +140,7 @@ public class ExperimentConfig
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;
+                transferCounterbalance = true;                                     // this is important
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
