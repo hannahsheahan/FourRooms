@@ -464,6 +464,10 @@ public class GameController : MonoBehaviour
                     RepeatTrialAgainLater();
                     StateNext(STATE_SETUP);
 
+                    // reset the error flags so the trial can correctly restart
+                    FLAG_dataWritingError = false;
+                    FLAG_fullScreenModeError = false;
+
                 }
                 break;
 
@@ -714,7 +718,6 @@ public class GameController : MonoBehaviour
             if (FLAG_fullScreenModeError)  // they had exited fullscreen mode, but now its back to fullscreen :)
             {
                 StateNext(STATE_ERROR);    // record that this error happened and restart the trial
-                FLAG_fullScreenModeError = false;
             }
         }
     }
@@ -755,40 +758,28 @@ public class GameController : MonoBehaviour
                 Debug.Log("There was a data writing error. Trial will save and restart once connection is re-established.");
             }
 
-            // Make sure the player controls are disabled (otherwise this can get missed if just triggered from STATE_PAUSE when a trial finishes)
-            if (PlayerFPS != null)
-            {
-                if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
-                {
-                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
-                }
-            }
-            else 
+            // Disable the player controls (can get missed if only triggered from STATE_PAUSE when a trial finishes)
+            if (PlayerFPS == null)
             {
                 PlayerFPS = GameObject.Find("FPSController");
-                if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
-                {
-                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
-                }
             }
+            PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
             StateNext(STATE_PAUSE);
 
-            // Every little while, try another attempt at the save function to see if the connection issue resolves (allows message to be seen too)
+            // Every little while, try another attempt at saving to see if the connection issue resolves (allows error message to be seen for sufficient length of time too)
             if (messageTimer.ElapsedSeconds() > displayMessageTime)
             {
                 dataController.SaveData();
                 messageTimer.Reset();
             }
-
         }
         else
         {
             if (FLAG_dataWritingError)  // they had a writing error, but now its fixed :)
             {
-                // It's fixed! So restart the trial
+                // Writing connection is fixed! So restart the trial
                 displayMessage = "restartTrialMessage";
                 StateNext(STATE_ERROR);    // record that this error happened and restart the trial (trial will be repeated later)
-                FLAG_dataWritingError = false;
             }
         }
     }
