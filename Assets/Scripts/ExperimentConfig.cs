@@ -67,6 +67,7 @@ public class ExperimentConfig
 
     // Counterbalancing
     public bool transferCounterbalance = false;  // False = (cheese and peanut have the same covariance); True = (cheese and martinis have the same covariance)
+    public bool wackyColours = false;            // False = (red, blue, green, yellow); True = (turquoise, pink, white, orange)
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
@@ -103,8 +104,9 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_cheesewine";
+        experimentVersion = "mturk_cheesewine_wackycolours";
         //experimentVersion = "mturk_learnwithprepost";
-        experimentVersion = "mturk_peanutmartini";
+        //experimentVersion = "mturk_peanutmartini";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
 
@@ -117,6 +119,15 @@ public class ExperimentConfig
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
+                break;
+
+            case "mturk_cheesewine_wackycolours":       // ----Full 4 block learning experiment-----
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;                                     // this does nothing
+                wackyColours = true;                                                // use different colours to the peanut/martini case
                 break;
 
             case "mturk_learnwithprepost":
@@ -240,6 +251,7 @@ public class ExperimentConfig
         switch (experimentVersion)
         {
             case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
+            case "mturk_cheesewine_wackycolours":
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
@@ -1282,9 +1294,16 @@ public class ExperimentConfig
 
             }
             else
-            { 
+            {
                 // this is a two-reward trial
-                trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
+                if (wackyColours) 
+                {
+                    trialMazes[trial] = "FourRooms_wackycolours_" + rewardTypes[trial];
+                }
+                else
+                { 
+                    trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
+                }
                 freeForage[trial] = false;
                 maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials
 

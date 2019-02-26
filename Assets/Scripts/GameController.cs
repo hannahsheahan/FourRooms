@@ -117,6 +117,7 @@ public class GameController : MonoBehaviour
     public bool FLAG_trialTimeout;
     public bool FLAG_fullScreenModeError;
     public bool FLAG_dataWritingError;
+    public bool FLAG_cliffFallError;
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
@@ -572,6 +573,7 @@ public class GameController : MonoBehaviour
         FLAG_trialTimeout = false;
         FLAG_fullScreenModeError = false;
         FLAG_dataWritingError = false;
+        FLAG_cliffFallError = false;
         starFound = false;
         displayTimeLeft = false;
         scoreUpdated = false;
@@ -978,6 +980,8 @@ public class GameController : MonoBehaviour
     public void FallDeath()
     {   // Disable the player controller, give an error message, save the data and restart the trial
         Debug.Log("AAAAAAAAAAAAH! Player fell off the platform.");
+
+        FLAG_cliffFallError = true;
         StateNext(STATE_ERROR);
     }
 

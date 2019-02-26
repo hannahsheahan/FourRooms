@@ -261,6 +261,8 @@ public class DataController : MonoBehaviour {
         gameData.allTrialData[currentTrialNumber].FLAG_trialTimeout.Add(GameController.control.FLAG_trialTimeout);
         gameData.allTrialData[currentTrialNumber].FLAG_trialError.Add(GameController.control.FLAG_trialError);
         gameData.allTrialData[currentTrialNumber].FLAG_dataWritingError.Add(GameController.control.FLAG_dataWritingError);
+        gameData.allTrialData[currentTrialNumber].FLAG_fullScreenModeError.Add(GameController.control.FLAG_fullScreenModeError);
+        gameData.allTrialData[currentTrialNumber].FLAG_cliffFallError.Add(GameController.control.FLAG_cliffFallError);
         gameData.allTrialData[currentTrialNumber].firstMovementTime.Add(GameController.control.firstMovementTime);
         gameData.allTrialData[currentTrialNumber].totalMovementTime.Add(GameController.control.totalMovementTime);
         gameData.allTrialData[currentTrialNumber].trialListIndex.Add(trialListIndex);
