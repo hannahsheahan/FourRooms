@@ -104,10 +104,10 @@ public class ExperimentConfig
     public ExperimentConfig() 
     {
         //experimentVersion = "mturk_cheesewine";
-        experimentVersion = "mturk_cheesewine_wackycolours";
+        //experimentVersion = "mturk_cheesewine_wackycolours";
         //experimentVersion = "mturk_learnwithprepost";
         //experimentVersion = "mturk_peanutmartini";
-        //experimentVersion = "micro_debug"; 
+        experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
 
         // Set these variables to define your experiment:
@@ -171,8 +171,8 @@ public class ExperimentConfig
                 break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
-                practiceTrials = 1 + getReadyTrial;
-                nExecutedTrials = 2;                                         // note that this is only used for the micro_debug version
+                practiceTrials = 0 + getReadyTrial;
+                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?

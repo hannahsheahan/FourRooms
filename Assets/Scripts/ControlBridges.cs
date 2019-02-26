@@ -26,17 +26,19 @@ public class ControlBridges : MonoBehaviour
         // could put a thing here where you check for the scene, but would 
         // require more changes updating for future scenes so a bit annoying
 
-        bridge1.SetActive(GameController.control.bridgeStates[0]);
-        trigger1.SetActive(GameController.control.bridgeStates[0]);
+        if (GameController.control.State != GameController.STATE_EXIT) 
+        { 
+            bridge1.SetActive(GameController.control.bridgeStates[0]);
+            trigger1.SetActive(GameController.control.bridgeStates[0]);
 
-        bridge2.SetActive(GameController.control.bridgeStates[1]);
-        trigger2.SetActive(GameController.control.bridgeStates[1]);
+            bridge2.SetActive(GameController.control.bridgeStates[1]);
+            trigger2.SetActive(GameController.control.bridgeStates[1]);
 
-        bridge3.SetActive(GameController.control.bridgeStates[2]);
-        trigger3.SetActive(GameController.control.bridgeStates[2]);
+            bridge3.SetActive(GameController.control.bridgeStates[2]);
+            trigger3.SetActive(GameController.control.bridgeStates[2]);
 
-        bridge4.SetActive(GameController.control.bridgeStates[3]);
-        trigger4.SetActive(GameController.control.bridgeStates[3]);
-
+            bridge4.SetActive(GameController.control.bridgeStates[3]);
+            trigger4.SetActive(GameController.control.bridgeStates[3]);
+        }
     }
 }
