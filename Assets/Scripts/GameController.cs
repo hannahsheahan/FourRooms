@@ -238,37 +238,40 @@ public class GameController : MonoBehaviour
 
             case STATE_SETUP:
 
-                switch (TrialSetup())
-                {
-                    case "StartTrial":
-                        // ensure the reward is hidden from sight
-                        for (int i = 0; i < rewardsVisible.Length; i++)
-                        {
-                            rewardsVisible[i] = false;
-                        }
-                        StateNext(STATE_STARTTRIAL);
+                if (gameStarted) // this deals with the case that we encounter a writing error during the start screens etc
+                { 
+                    switch (TrialSetup())
+                    {
+                        case "StartTrial":
+                            // ensure the reward is hidden from sight
+                            for (int i = 0; i < rewardsVisible.Length; i++)
+                            {
+                                rewardsVisible[i] = false;
+                            }
+                            StateNext(STATE_STARTTRIAL);
 
-                        break;
-                    case "Menus":
-                        // fix.  ***HRS this should never have to do anything
-                        break;
+                            break;
+                        case "Menus":
+                            // fix.  ***HRS this should never have to do anything
+                            break;
 
-                    case "GetReady":
-                        getReadyTimer.Reset();
-                        StateNext(STATE_GETREADY);
-                        break;
+                        case "GetReady":
+                            getReadyTimer.Reset();
+                            StateNext(STATE_GETREADY);
+                            break;
 
-                    case "RestBreak":
-                        restbreakTimer.Reset();
-                        StateNext(STATE_REST);
-                        break;
+                        case "RestBreak":
+                            restbreakTimer.Reset();
+                            StateNext(STATE_REST);
+                            break;
 
-                    case "Exit":
-                        totalExperimentTime = experimentTimer.ElapsedSeconds();
-                        Cursor.visible = true;
-                        StateNext(STATE_EXIT);
-                        break;
+                        case "Exit":
+                            totalExperimentTime = experimentTimer.ElapsedSeconds();
+                            Cursor.visible = true;
+                            StateNext(STATE_EXIT);
+                            break;
 
+                    }
                 }
                 break;
 
@@ -512,7 +515,10 @@ public class GameController : MonoBehaviour
                 else 
                 {
                     PlayerFPS = GameObject.Find("FPSController");
-                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                    if (PlayerFPS != null)
+                    {
+                        PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                    }
                 }
                 break;
 
@@ -761,11 +767,16 @@ public class GameController : MonoBehaviour
             }
 
             // Disable the player controls (can get missed if only triggered from STATE_PAUSE when a trial finishes)
+            /*
             if (PlayerFPS == null)
             {
                 PlayerFPS = GameObject.Find("FPSController");
             }
-            PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+            if (PlayerFPS != null) 
+            { 
+                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+            }
+            */
             StateNext(STATE_PAUSE);
 
             // Every little while, try another attempt at saving to see if the connection issue resolves (allows error message to be seen for sufficient length of time too)
@@ -951,7 +962,10 @@ public class GameController : MonoBehaviour
 
                 if (State == STATE_ERROR)  // take off 20 points for a mistrial
                 {
-                    trialScore = -20;
+                    if (!(FLAG_dataWritingError || FLAG_fullScreenModeError))  // don't penalize internet connection or writing errors
+                    { 
+                        trialScore = -20;
+                    }
                 }
                 else                       // increase the total score
                 {

@@ -106,8 +106,8 @@ public class ExperimentConfig
         //experimentVersion = "mturk_cheesewine";
         //experimentVersion = "mturk_cheesewine_wackycolours";
         //experimentVersion = "mturk_learnwithprepost";
-        //experimentVersion = "mturk_peanutmartini";
-        experimentVersion = "micro_debug"; 
+        experimentVersion = "mturk_peanutmartini";
+        //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
 
         // Set these variables to define your experiment:
@@ -151,7 +151,7 @@ public class ExperimentConfig
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = true;                                     // this is important
+                transferCounterbalance = false;                                     // this is important
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----

@@ -362,6 +362,7 @@ public class DataController : MonoBehaviour {
         if (participantFeedbackGiven) 
         { 
             SaveData();
+
             participantFeedbackSubmitted = true;
         }
     }
