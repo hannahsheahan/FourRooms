@@ -12,6 +12,7 @@ public class GameData
     public string confirmationCode;
     public string participantFeedback;
     public bool transferCounterbalance;
+    public bool intermingledTrials;
     public int totalTrials;
     public float dataRecordFrequency;
     public float restbreakDuration;

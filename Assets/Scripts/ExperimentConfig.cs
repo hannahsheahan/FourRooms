@@ -68,6 +68,7 @@ public class ExperimentConfig
     // Counterbalancing
     public bool transferCounterbalance = false;  // False = (cheese and peanut have the same covariance); True = (cheese and martinis have the same covariance)
     public bool wackyColours = false;            // False = (red, blue, green, yellow); True = (turquoise, pink, white, orange)
+    public bool intermingledTrials = false;      // False = trial sequence is blocked by reward context. True = randomly intermingled rewards.
 
     // Rewards
     private bool[] doubleRewardTask;         // if there are two stars to collect: true, else false
@@ -103,18 +104,28 @@ public class ExperimentConfig
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
+        // Experiments with training blocked by context
+
         //experimentVersion = "mturk_cheesewine";
         //experimentVersion = "mturk_cheesewine_wackycolours";
         //experimentVersion = "mturk_learnwithprepost";
-        experimentVersion = "mturk_peanutmartini";
+        //experimentVersion = "mturk_peanutmartini";
         //experimentVersion = "micro_debug"; 
         //experimentVersion = "singleblock_labpilot";
+
+        // ------------------------------------------
+
+        // Experiments with training randomly intermingled across contexts
+
+        // experimentVersion = "mturk_interm_cheesewine_wackycolours";
+        experimentVersion = "mturk_interm_peanutmartini";
+
 
         // Set these variables to define your experiment:
         switch (experimentVersion)
         {
             case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
-                practiceTrials = 2 + getReadyTrial;
+                practiceTrials = 0 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -128,6 +139,16 @@ public class ExperimentConfig
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
                 wackyColours = true;                                                // use different colours to the peanut/martini case
+                break;
+
+            case "mturk_interm_cheesewine_wackycolours":       // ----Full 4 block learning experiment with intermingled trial structure-----
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;                                     // this does nothing
+                wackyColours = true;                                                // use different colours to the peanut/martini case
+                intermingledTrials = true;
                 break;
 
             case "mturk_learnwithprepost":
@@ -151,21 +172,22 @@ public class ExperimentConfig
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this is important
+                transferCounterbalance = true;                                     // this is important
+                break;
+
+            case "mturk_interm_peanutmartini":
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = true;                                     // this does nothing
+                intermingledTrials = true;
                 break;
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
                 practiceTrials = 1 + getReadyTrial;
                 totalTrials = 16  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 20   + restbreakOffset;                          // Take a rest after this many normal trials
-                restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
-                transferCounterbalance = false;
-                break;
-
-            case "singleblocktransfer_labpilot":   // ----Mini 1 block transfer rewards test experiment-----
-                practiceTrials = 1 + getReadyTrial;
-                totalTrials = 16 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 20 + restbreakOffset;                          // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
                 transferCounterbalance = false;
                 break;
@@ -269,6 +291,25 @@ public class ExperimentConfig
                 nextTrial = AddTrainingBlock(nextTrial);
 
                 break;
+
+            case "mturk_interm_cheesewine_wackycolours":      // ----Full 4 block learning experiment with intermingled contexts-----
+                //---- training block 1
+                nextTrial = AddIntermTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 2
+                nextTrial = AddIntermTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 3
+                nextTrial = AddIntermTrainingBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- training block 4
+                nextTrial = AddIntermTrainingBlock(nextTrial);
+
+                break;
+
             case "mturk_learnwithprepost":    // ----Full 4 block learning experiment with pre/post free-foraging tests-----
 
                 //---- pre-training free foraging block
@@ -321,6 +362,25 @@ public class ExperimentConfig
 
                 break;
 
+            case "mturk_interm_peanutmartini":   // ----To be performed day after learning experiment: 4 block transfer experiment (1hr) with intermingled trial structure-----
+
+                //---- transfer block 1
+                nextTrial = AddIntermTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 2
+                nextTrial = AddIntermTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 3
+                nextTrial = AddIntermTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 4
+                nextTrial = AddIntermTransferBlock(nextTrial);
+
+                break;
+
 
             case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
 
@@ -328,12 +388,7 @@ public class ExperimentConfig
                 nextTrial = AddTrainingBlock(nextTrial);
                 break;
 
-            case "singleblocktransfer_labpilot":   // ----Mini 1 block test experiment-----
-
-                //---- training block 1
-                nextTrial = AddTransferBlock(nextTrial);
-                break;
-
+           
             case "micro_debug":            // ----Mini debugging test experiment-----
 
                 nextTrial = AddTrainingBlock_micro(nextTrial, nExecutedTrials); 
@@ -541,23 +596,6 @@ public class ExperimentConfig
         presentPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
         rewardPositions[trial] = new Vector3[numberPresentsPerRoom * 4];
 
-        /*
-        if (!freeForageFLAG) 
-        { 
-            greenPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, greenRoomPositions );
-            redPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, redRoomPositions );
-            yellowPresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, yellowRoomPositions );
-            bluePresentPositions = ChooseNRandomPresentPositions( numberPresentsPerRoom, blueRoomPositions );
-
-            // concatenate all the positions of generated presents 
-            greenPresentPositions.CopyTo(presentPositions[trial], 0);
-            redPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length);
-            yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
-            bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
-        }
-        else 
-        {
-        */    
            
         // constrain the randomised locations for the presents to spawn in different places to before
         // Note: each index of presentPositionHistory specifies a different square in the maze. True means the square has had a present on it, False means it hasnt
@@ -784,6 +822,22 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
+    private int AddIntermTrainingBlock(int nextTrial)
+    {
+        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+        int firstTrial = nextTrial;
+        bool freeForageFLAG = false;
+        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+
+        // reshuffle the trial ordering so they are intermingled but preserve the previous arrangement of things
+        ReshuffleTrialOrder(firstTrial, nextTrial-firstTrial );
+
+        return nextTrial;
+    }
+
+    // ********************************************************************** //
+
     private int OldAddTransferBlock(int nextTrial)
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
@@ -819,6 +873,22 @@ public class ExperimentConfig
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "martini", freeForageFLAG);
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
         }
+        return nextTrial;
+    }
+
+    // ********************************************************************** //
+
+    private int AddIntermTransferBlock(int nextTrial)
+    {
+        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
+        int firstTrial = nextTrial;
+        bool freeForageFLAG = false;
+        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "peanut", freeForageFLAG);
+        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "martini", freeForageFLAG);
+
+        // reshuffle the trial ordering so they are intermingled but preserve the previous arrangement of things
+        ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
+
         return nextTrial;
     }
 
@@ -1465,6 +1535,90 @@ public class ExperimentConfig
             context = arrayContexts[i];
             contextSide = arrayContextSides[i];
             SetTrialInContext(i + firstTrial, i, startRoom, context, contextSide, freeForageFLAG);
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void ReshuffleTrialOrder(int firstTrial, int blockLength)
+    {
+        // This function reshuffles the set prospective trials from firstTrial to firstTrial+blockLength and stores them.
+        // Bit ugly but ok for now (***HRS could have a function with a different or flexible return type that does this for each var)
+
+        // ***HRS this def needs checking to see if it actually does the right thing
+
+        int n = blockLength;
+        // Perform the Fisher-Yates algorithm for shuffling array elements in place 
+        // (use same sample for each of the 3 arrays to keep order aligned across arrays)
+        for (int i = 0; i < n; i++)
+        {
+            int k = i + rand.Next(n - i); // select random index in array, less than n-i
+
+            // shuffle contexts / reward types
+            string tempContext = rewardTypes[k + firstTrial];
+            rewardTypes[k + firstTrial] = rewardTypes[i + firstTrial];
+            rewardTypes[i + firstTrial] = tempContext;
+
+            // shuffle start room
+            string tempRoom = playerStartRooms[k + firstTrial];
+            playerStartRooms[k + firstTrial] = playerStartRooms[i + firstTrial];
+            playerStartRooms[i + firstTrial] = tempRoom;
+
+            // shuffle start position
+            Vector3 tempStartPosition = playerStartPositions[k + firstTrial];
+            playerStartPositions[k + firstTrial] = playerStartPositions[i + firstTrial];
+            playerStartPositions[i + firstTrial] = tempStartPosition;
+
+            // shuffle start orientation
+            Vector3 tempStartOrientation = playerStartOrientations[k + firstTrial];
+            playerStartOrientations[k + firstTrial] = playerStartOrientations[i + firstTrial];
+            playerStartOrientations[i + firstTrial] = tempStartOrientation;
+
+            // shuffle reward positions
+            Vector3[] tempRewardPosition = rewardPositions[k + firstTrial];
+            rewardPositions[k + firstTrial] = rewardPositions[i + firstTrial];
+            rewardPositions[i + firstTrial] = tempRewardPosition;
+
+            // shuffle present positions
+            Vector3[] tempPresentPositions = presentPositions[k + firstTrial];
+            presentPositions[k + firstTrial] = presentPositions[i + firstTrial];
+            presentPositions[i + firstTrial] = tempPresentPositions;
+
+            // reward room 1
+            string tempRewardRoom = star1Rooms[k + firstTrial];
+            star1Rooms[k + firstTrial] = star1Rooms[i + firstTrial];
+            star1Rooms[i + firstTrial] = tempRewardRoom;
+
+            // reward room 2
+            tempRewardRoom = star2Rooms[k + firstTrial];
+            star2Rooms[k + firstTrial] = star2Rooms[i + firstTrial];
+            star2Rooms[i + firstTrial] = tempRewardRoom;
+
+            // movement time
+            float tempMoveTime = maxMovementTime[k + firstTrial];
+            maxMovementTime[k + firstTrial] = maxMovementTime[i + firstTrial];
+            maxMovementTime[i + firstTrial] = tempMoveTime;
+
+            // free forage flag
+            bool tempForage = freeForage[k + firstTrial];
+            freeForage[k + firstTrial] = freeForage[i + firstTrial];
+            freeForage[i + firstTrial] = tempForage;
+
+            // shuffle trialMazes
+            string tempTrialMazes = trialMazes[k + firstTrial];
+            trialMazes[k + firstTrial] = trialMazes[i + firstTrial];
+            trialMazes[i + firstTrial] = tempTrialMazes;
+
+            // shuffle trialMazes
+            bool tempDoubleReward = doubleRewardTask[k + firstTrial];
+            doubleRewardTask[k + firstTrial] = doubleRewardTask[i + firstTrial];
+            doubleRewardTask[i + firstTrial] = tempDoubleReward;
+
+            // shuffle bridge states
+            bool[] tempBridgeStates = bridgeStates[k + firstTrial];
+            bridgeStates[k + firstTrial] = bridgeStates[i + firstTrial];
+            bridgeStates[i + firstTrial] = tempBridgeStates;
+
         }
     }
 

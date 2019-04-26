@@ -117,6 +117,7 @@ public class GameController : MonoBehaviour
     public bool FLAG_trialTimeout;
     public bool FLAG_fullScreenModeError;
     public bool FLAG_dataWritingError;
+    public bool FLAG_frameRateError;
     public bool FLAG_cliffFallError;
 
     // Game-play state machine states
@@ -471,7 +472,7 @@ public class GameController : MonoBehaviour
                     // reset the error flags so the trial can correctly restart
                     FLAG_dataWritingError = false;
                     FLAG_fullScreenModeError = false;
-
+                    FLAG_frameRateError = false;
                 }
                 break;
 
@@ -579,6 +580,7 @@ public class GameController : MonoBehaviour
         FLAG_trialTimeout = false;
         FLAG_fullScreenModeError = false;
         FLAG_dataWritingError = false;
+        FLAG_frameRateError = false;
         FLAG_cliffFallError = false;
         starFound = false;
         displayTimeLeft = false;
@@ -639,7 +641,7 @@ public class GameController : MonoBehaviour
 
         string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady" };
 
-        if (menuScenesArray.Contains(nextScene))
+        if (menuScenesArray.Contains(nextScene))  // ***HRS (how is this working if contains is a List method?)
         {
             return nextScene;   // we don't want to record data and do the FSM transitions during the exit and rest break scenes
         }
@@ -737,8 +739,10 @@ public class GameController : MonoBehaviour
         // Check if the game framerate is sufficiently high. If not, give warning telling them to open in a different browser with fewer plugins or quit.
         if (frameRateMonitor.Framerate < minFramerate)
         {
-            if (State != STATE_STARTSCREEN)
+            if (State != STATE_STARTSCREEN) // ***HRS ah, this is why the start button doesnt work for some people, but if we check framerate from the start of the experiment the smoothing from starting at 0fps will mean every computer fails this test
             {
+                FLAG_frameRateError = true;
+
                 // prioritise the writing error messages 
                 if ((displayMessage != "dataWritingError") & (displayMessage != "notFullScreenError"))
                 {
@@ -747,6 +751,14 @@ public class GameController : MonoBehaviour
                     Debug.Log("ERROR: Frame rate of " + frameRateMonitor.Framerate.ToString() + " fps is too low for gameplay.");
                     StateNext(STATE_PAUSE);
                 }
+            }
+        }
+        else 
+        {
+            if (FLAG_frameRateError & (messageTimer.ElapsedSeconds() > displayMessageTime))  // they had a framerate error, but now its fixed :)
+            {
+                displayMessage = "restartTrialMessage";
+                StateNext(STATE_ERROR);    // record that this error happened and restart the trial (trial will be repeated later)
             }
         }
     }
@@ -766,17 +778,7 @@ public class GameController : MonoBehaviour
                 Debug.Log("There was a data writing error. Trial will save and restart once connection is re-established.");
             }
 
-            // Disable the player controls (can get missed if only triggered from STATE_PAUSE when a trial finishes)
-            /*
-            if (PlayerFPS == null)
-            {
-                PlayerFPS = GameObject.Find("FPSController");
-            }
-            if (PlayerFPS != null) 
-            { 
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
-            }
-            */
+            // Disable the player controls (can get missed if only triggered from STATE_PAUSE when a trial finishes?)
             StateNext(STATE_PAUSE);
 
             // Every little while, try another attempt at saving to see if the connection issue resolves (allows error message to be seen for sufficient length of time too)
@@ -885,11 +887,11 @@ public class GameController : MonoBehaviour
                 break;
 
             case "dataWritingError":
-                textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, please exit.";
+                textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
                 break;
 
             case "framerateError":
-                textMessage = "The browser-dependent frame rate is insufficient for this HIT. \n Please exit, or try using Chrome/Firefox with no plugins.";
+                textMessage = "The browser-dependent frame rate is insufficient for this HIT. \n Please exit, or try using Chrome/Firefox with no plugins. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
                 break;
 
             case "notFullScreenError":
@@ -962,7 +964,7 @@ public class GameController : MonoBehaviour
 
                 if (State == STATE_ERROR)  // take off 20 points for a mistrial
                 {
-                    if (!(FLAG_dataWritingError || FLAG_fullScreenModeError))  // don't penalize internet connection or writing errors
+                    if (!((FLAG_dataWritingError || FLAG_fullScreenModeError) || (FLAG_frameRateError)))  // don't penalize internet connection or writing errors or framerate errors
                     { 
                         trialScore = -20;
                     }

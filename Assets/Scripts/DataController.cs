@@ -166,7 +166,7 @@ public class DataController : MonoBehaviour {
         gameData.restbreakDuration = config.restbreakDuration;
         gameData.getReadyDuration = config.getReadyDuration;
         gameData.transferCounterbalance = config.transferCounterbalance;
-
+        gameData.intermingledTrials = config.intermingledTrials;
 
         Debug.Log("Total number of trials to load: " + totalTrials);
 
@@ -223,17 +223,46 @@ public class DataController : MonoBehaviour {
         // Determine where to integrate another trial attempt
         int trialInsertIndex = trialListIndex + 1;                   // default to repeating trial immediately (if code below is ever deprecated)
         int trialInsertNumber;
-
-        // find the next trial in the trial list that is of a different context to the current (error trial) context
         int trial = currentTrialNumber;
-        while (gameData.allTrialData[trial].mapName == gameData.allTrialData[currentTrialNumber].mapName)
+        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady" };
+        bool searching = true;
+
+        if (!gameData.intermingledTrials) 
         {
-            trial++;
-            if (trial == totalTrials)                                // we need an out for this loop, and don't want to access trials that dont exist
+            // find the next trial in the trial list that is of a different context to the current (error trial) context
+            while (gameData.allTrialData[trial].mapName == gameData.allTrialData[currentTrialNumber].mapName)
             {
-                break;
+                trial++;
+                if (trial == totalTrials)                                // we need an out for this loop, and don't want to access trials that dont exist
+                {
+                    break;
+                }
             }
         }
+        else 
+        {
+            // the trials are sequenced to intermingle across reward types, so just insert the trial at the end of this block before the getready/restbreak/exit
+            while (searching)
+            {
+                int pos = Array.IndexOf(menuScenesArray, gameData.allTrialData[trial].mapName);
+                // the trial is a restbreak, exit or get ready trial, so choose the trial before it as the reinsertion point.
+                if (pos > -1)
+                {
+                    searching = false;                                   // safety check
+                    break;
+                }
+                else 
+                { 
+                    trial++;
+                }
+                if (trial == totalTrials)                                // this should never be struck, but its a good safety to make sure we don't access an element that doesnt exist
+                {
+                    Debug.Log("Something has gone a bit wrong with trial reinsertion because this shouldn't trigger.");
+                    break;
+                }
+            }
+        }
+
         trialInsertNumber = trial;                                           // the trial NUMBER to insert the repeat trial at
         trialInsertIndex = trialList.FindIndex(a => a == trialInsertNumber); // the corresponding trial INDEX in the trialList (will change as we perform more error trials etc)
 
@@ -261,6 +290,7 @@ public class DataController : MonoBehaviour {
         gameData.allTrialData[currentTrialNumber].FLAG_trialTimeout.Add(GameController.control.FLAG_trialTimeout);
         gameData.allTrialData[currentTrialNumber].FLAG_trialError.Add(GameController.control.FLAG_trialError);
         gameData.allTrialData[currentTrialNumber].FLAG_dataWritingError.Add(GameController.control.FLAG_dataWritingError);
+        gameData.allTrialData[currentTrialNumber].FLAG_frameRateError.Add(GameController.control.FLAG_frameRateError);
         gameData.allTrialData[currentTrialNumber].FLAG_fullScreenModeError.Add(GameController.control.FLAG_fullScreenModeError);
         gameData.allTrialData[currentTrialNumber].FLAG_cliffFallError.Add(GameController.control.FLAG_cliffFallError);
         gameData.allTrialData[currentTrialNumber].firstMovementTime.Add(GameController.control.firstMovementTime);
