@@ -8,7 +8,7 @@
 $data = $_POST["gameData"];
 $fileName = $_POST["fileName"];
 
-$serverDataPath = __DIR__ . "/../../pilot/data/";
+$serverDataPath = __DIR__ . "/../../dataset_1/data/";
 $filePath = $serverDataPath . $fileName;
 
 //$filePath = $fileName;   // for writing to local file instead

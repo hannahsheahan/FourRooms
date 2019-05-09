@@ -1,0 +1,13 @@
+{
+"companyName": "SummerfieldLab",
+"productName": "MartiniTask",
+"dataUrl": "giftboxprepost.data.unityweb",
+"asmCodeUrl": "giftboxprepost.asm.code.unityweb",
+"asmMemoryUrl": "giftboxprepost.asm.memory.unityweb",
+"asmFrameworkUrl": "giftboxprepost.asm.framework.unityweb",
+"TOTAL_MEMORY": 536870912,
+"graphicsAPI": ["WebGL 2.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}

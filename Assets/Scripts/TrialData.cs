@@ -19,12 +19,13 @@ public class TrialData
     //public int mapIndex;   // this causes some complications (because SceneManager only manages active/loaded scenes, so .buildIndex throws -1)
     public string mapName;
     public bool doubleRewardTask;
+    public bool freeForage;
     public string rewardType;
+    public bool[] bridgeStates;
 
     public Vector3 playerSpawnLocation;
     public Vector3 playerSpawnOrientation;
-    public Vector3 star1Location;
-    public Vector3 star2Location;
+    public Vector3[] rewardPositions;
     public Vector3[] presentPositions;
 
     // trial event times
@@ -47,8 +48,12 @@ public class TrialData
 
 
     // trial error flags
+    public List<bool> FLAG_cliffFallError = new List<bool>();
     public List<bool> FLAG_trialTimeout = new List<bool>();        
     public List<bool> FLAG_trialError = new List<bool>();
+    public List<bool> FLAG_dataWritingError = new List<bool>();
+    public List<bool> FLAG_fullScreenModeError = new List<bool>();
+    public List<bool> FLAG_frameRateError = new List<bool>();
 
     // Tracking data
     public List<string> stateTransitions = new List<string>();

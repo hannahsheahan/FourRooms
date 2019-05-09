@@ -9,7 +9,8 @@ using UnityStandardAssets.Characters.FirstPerson;
 using System.IO;
 using System.Linq;
 
-public class GameController : MonoBehaviour {
+public class GameController : MonoBehaviour
+{
     /// <summary>
     /// The GameController is a singleton script will control the game flow between scenes, 
     /// and centralise everything so all main processes branch from here.
@@ -23,6 +24,7 @@ public class GameController : MonoBehaviour {
     // Persistent controllers for data management and gameplay
     private DataController dataController;
     public static GameController control;
+    private FramesPerSecond frameRateMonitor;
 
     // Game data
     private GameObject PlayerFPS;
@@ -36,12 +38,13 @@ public class GameController : MonoBehaviour {
 
     public Vector3 playerSpawnLocation;
     public Vector3 playerSpawnOrientation;
-    public Vector3 star1SpawnLocation;
-    public Vector3 star2SpawnLocation;
-    public Vector3 activeStarSpawnLocation;   // this is obsolete: only used for if we have sequential order on reward collection
+    public Vector3[] rewardSpawnLocations;
     public bool doubleRewardTask;
+    public bool freeForage;
+    public int rewardsRemaining;
     public Vector3[] presentPositions;
     public int numberPresentsPerRoom;
+    public bool[] bridgeStates;         // used to enable/disable different bridges
 
     private string nextScene;
 
@@ -52,7 +55,7 @@ public class GameController : MonoBehaviour {
     // Audio clips
     public AudioClip starFoundSound;
     public AudioClip goCueSound;
-    public AudioClip errorSound; 
+    public AudioClip errorSound;
     public AudioClip fallSound;
     public AudioClip openBoxSound;
     private AudioSource source;
@@ -62,8 +65,8 @@ public class GameController : MonoBehaviour {
     public string textMessage = "";
     public bool displayCue;
     public string rewardType;
-    public bool reward1Visible;
-    public bool reward2Visible;
+    public bool[] rewardsVisible;
+    public int maxNRewards = 20;
     public int trialScore = 0;
     public int totalScore = 0;
     public int nextScore;
@@ -90,14 +93,14 @@ public class GameController : MonoBehaviour {
     public bool displayTimeLeft;
     public float firstFrozenTime;
 
-    public float maxMovementTime;  
+    public float maxMovementTime;
     private float preDisplayCueTime;
     private float goCueDelay;
     private float displayCueTime;
     private float goalHitPauseTime;
     private float finalGoalHitPauseTime;
-    public  float minDwellAtReward; 
-    public float displayMessageTime; 
+    public float minDwellAtReward;
+    public float displayMessageTime;
     public float errorDwellTime;
     public float restbreakDuration;
     public float elapsedRestbreakTime;
@@ -107,35 +110,40 @@ public class GameController : MonoBehaviour {
     public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
 
+    private float minFramerate = 30f;           // minimum fps required for decent gameplay on webGL build (fps depends on user's browser and plugins)
+
     // Error flags
     public bool FLAG_trialError;
     public bool FLAG_trialTimeout;
     public bool FLAG_fullScreenModeError;
+    public bool FLAG_dataWritingError;
+    public bool FLAG_frameRateError;
+    public bool FLAG_cliffFallError;
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
-    public const int STATE_SETUP       = 1;
-    public const int STATE_STARTTRIAL  = 2;
-    public const int STATE_GOALAPPEAR  = 3;
-    public const int STATE_DELAY       = 4;
-    public const int STATE_GO          = 5;
-    public const int STATE_MOVING1     = 6;
-    public const int STATE_STAR1FOUND  = 7;
-    public const int STATE_MOVING2     = 8;
-    public const int STATE_STAR2FOUND  = 9;
-    public const int STATE_FINISH      = 10;
-    public const int STATE_NEXTTRIAL   = 11;
-    public const int STATE_INTERTRIAL  = 12;
-    public const int STATE_TIMEOUT     = 13;
-    public const int STATE_ERROR       = 14;
-    public const int STATE_REST        = 15;
-    public const int STATE_GETREADY    = 16;
-    public const int STATE_PAUSE       = 17;
-    public const int STATE_HALLFREEZE  = 18;
-    public const int STATE_EXIT        = 19;
-    public const int STATE_MAX         = 20;
+    public const int STATE_SETUP = 1;
+    public const int STATE_STARTTRIAL = 2;
+    public const int STATE_GOALAPPEAR = 3;
+    public const int STATE_DELAY = 4;
+    public const int STATE_GO = 5;
+    public const int STATE_MOVING1 = 6;
+    public const int STATE_STAR1FOUND = 7;
+    public const int STATE_MOVING2 = 8;
+    public const int STATE_STAR2FOUND = 9;
+    public const int STATE_FINISH = 10;
+    public const int STATE_NEXTTRIAL = 11;
+    public const int STATE_INTERTRIAL = 12;
+    public const int STATE_TIMEOUT = 13;
+    public const int STATE_ERROR = 14;
+    public const int STATE_REST = 15;
+    public const int STATE_GETREADY = 16;
+    public const int STATE_PAUSE = 17;
+    public const int STATE_HALLFREEZE = 18;
+    public const int STATE_EXIT = 19;
+    public const int STATE_MAX = 20;
 
-    private string[] stateText = new string[] { "StartScreen","Setup","StartTrial","GoalAppear","Delay","Go","Moving1","FirstGoalHit", "Moving2", "FinalGoalHit", "Finish","NextTrial","InterTrial","Timeout","Error","Rest","GetReady","Pause","HallwayFreeze","Exit","Max" };
+    private string[] stateText = new string[] { "StartScreen", "Setup", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Exit", "Max" };
     public int State;
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
@@ -147,7 +155,7 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    void Awake ()           // Awake() executes once before anything else
+    void Awake()           // Awake() executes once before anything else
     {
         // Make GameController a singleton
         if (control == null)   // if control doesn't exist, make it
@@ -167,6 +175,7 @@ public class GameController : MonoBehaviour {
     {
         dataController = FindObjectOfType<DataController>(); //usually be careful with 'Find' but in this case should be ok. Ok this fetches the instance of DataController, dataController.
         source = GetComponent<AudioSource>();
+        frameRateMonitor = GetComponent<FramesPerSecond>();
 
         // Trial invariant data
         filepath = dataController.filePath;   //this works because we actually have an instance of dataController
@@ -195,10 +204,9 @@ public class GameController : MonoBehaviour {
 
         // Ensure cue images are off
         displayCue = false;
-        reward1Visible = false;
-        reward2Visible = false;
+        rewardsVisible = new bool[maxNRewards]; //default
 
-        StartExperiment();  
+        StartExperiment();
 
     }
 
@@ -207,7 +215,11 @@ public class GameController : MonoBehaviour {
     private void Update()     // Update() executes once per frame
     {
         UpdateText();
+
+        // Check that everything is working properly
         CheckFullScreen();
+        CheckWritingProperly();
+        CheckFramerate();
 
         if (!pauseClock)
         {
@@ -227,41 +239,46 @@ public class GameController : MonoBehaviour {
 
             case STATE_SETUP:
 
-                switch (TrialSetup())
-                {
-                    case "StartTrial":
-                        // ensure the reward is hidden from sight
-                        reward1Visible = false;
-                        reward2Visible = false;
-                        StateNext(STATE_STARTTRIAL);
+                if (gameStarted) // this deals with the case that we encounter a writing error during the start screens etc
+                { 
+                    switch (TrialSetup())
+                    {
+                        case "StartTrial":
+                            // ensure the reward is hidden from sight
+                            for (int i = 0; i < rewardsVisible.Length; i++)
+                            {
+                                rewardsVisible[i] = false;
+                            }
+                            StateNext(STATE_STARTTRIAL);
 
-                        break;
-                    case "Menus":
-                        // fix.  ***HRS this should never have to do anything
-                        break;
+                            break;
+                        case "Menus":
+                            // fix.  ***HRS this should never have to do anything
+                            break;
 
-                    case "GetReady":
-                        getReadyTimer.Reset();
-                        StateNext(STATE_GETREADY);
-                        break;
+                        case "GetReady":
+                            getReadyTimer.Reset();
+                            StateNext(STATE_GETREADY);
+                            break;
 
-                    case "RestBreak":
-                        restbreakTimer.Reset();
-                        StateNext(STATE_REST);
-                        break;
+                        case "RestBreak":
+                            restbreakTimer.Reset();
+                            StateNext(STATE_REST);
+                            break;
 
-                    case "Exit":
-                        totalExperimentTime = experimentTimer.ElapsedSeconds();
-                        Cursor.visible = true;
-                        StateNext(STATE_EXIT);
-                        break;
+                        case "Exit":
+                            totalExperimentTime = experimentTimer.ElapsedSeconds();
+                            Cursor.visible = true;
+                            StateNext(STATE_EXIT);
+                            break;
 
+                    }
                 }
                 break;
 
             case STATE_STARTTRIAL:
 
-                StartRecording();    
+                StartRecording();
 
                 // Wait until the goal/target cue appears (will take a TR here)
                 if (stateTimer.ElapsedSeconds() >= preDisplayCueTime)
@@ -290,8 +307,10 @@ public class GameController : MonoBehaviour {
                 if (stateTimer.ElapsedSeconds() >= goCueDelay)
                 {
                     source.PlayOneShot(goCueSound, 1F);
-                    reward1Visible = true;     // make the reward itself appear in the environment
-                    reward2Visible = true;     // make the reward itself appear in the environment
+                    for (int i = 0; i < rewardsVisible.Length; i++)
+                    {
+                        rewardsVisible[i] = true;
+                    }
                     StateNext(STATE_GO);
                 }
                 break;
@@ -308,7 +327,7 @@ public class GameController : MonoBehaviour {
                 break;
 
             case STATE_MOVING1:
-
+            
                 if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
                 {
                     StateNext(STATE_TIMEOUT);
@@ -319,7 +338,7 @@ public class GameController : MonoBehaviour {
                     source.PlayOneShot(starFoundSound, 1F);
                     firstMovementTime = movementTimer.ElapsedSeconds();
 
-                    if (doubleRewardTask)  // we are collecting two stars on this trial
+                    if (doubleRewardTask)  // we are collecting two or more stars on this trial
                     {
                         StateNext(STATE_STAR1FOUND);
                     }
@@ -335,18 +354,24 @@ public class GameController : MonoBehaviour {
             case STATE_STAR1FOUND:
 
                 // disable the player control and reset the starFound trigger ready to collect the next star
-                starFound = false; 
+                starFound = false;
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
 
-                // Guide a player a little more on practice trials
-                if (currentTrialData.mapName == "Practice")
+                if (!freeForage) 
                 {
-                    displayMessage = "keepSearchingMessage";
+                    // Guide a player a little more on practice trials
+                    if (currentTrialData.mapName == "Practice")
+                    {
+                        displayMessage = "keepSearchingMessage";
+                    }
                 }
                 // pause here so that we can take a TR
-                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)  // the trial should timeout
+                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
                 {
-                    //activeStarSpawnLocation = star2SpawnLocation;
+                    // decrement the counter tracking the number of rewards remaining to be collected
+                    rewardsRemaining = rewardsRemaining - 1;
+                    Debug.Log("Rewards remaining: " + rewardsRemaining);
+
                     PlayerFPS.GetComponent<FirstPersonController>().enabled = true; // let the player move again
                     StateNext(STATE_MOVING2);
                 }
@@ -363,12 +388,23 @@ public class GameController : MonoBehaviour {
                 if (starFound)
                 {
                     source.PlayOneShot(starFoundSound, 1F);
-                    totalMovementTime = movementTimer.ElapsedSeconds();
-                    StateNext(STATE_STAR2FOUND);
+
+                    // help the FSM deal with the free-foraging multi-reward case
+                    if (rewardsRemaining > 1)
+                    {
+                        StateNext(STATE_STAR1FOUND);
+                    }
+                    else
+                    {   // STATE_STAR2FOUND is the state accessed when the FINAL reward to be collected is found
+                        totalMovementTime = movementTimer.ElapsedSeconds(); 
+                        StateNext(STATE_STAR2FOUND);
+                    }
                 }
                 break;
 
             case STATE_STAR2FOUND:
+
+                // This is the state when the FINAL reward to be collected is found (in the case of 2 or multiple rewards)
 
                 PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
                 displayTimeLeft = false;             // freeze the visible countdown
@@ -407,7 +443,7 @@ public class GameController : MonoBehaviour {
 
 
             case STATE_ERROR:
-                // Handle error trials by continuing to record data on the same trial ***HRS
+                // Handle error trials by continuing to record data on the same trial
 
                 if (FLAG_trialError == false)
                 {
@@ -433,10 +469,14 @@ public class GameController : MonoBehaviour {
                     RepeatTrialAgainLater();
                     StateNext(STATE_SETUP);
 
+                    // reset the error flags so the trial can correctly restart
+                    FLAG_dataWritingError = false;
+                    FLAG_fullScreenModeError = false;
+                    FLAG_frameRateError = false;
                 }
                 break;
 
-          
+
             case STATE_REST:
 
                 elapsedRestbreakTime = restbreakTimer.ElapsedSeconds();
@@ -463,13 +503,25 @@ public class GameController : MonoBehaviour {
                 break;
 
             case STATE_PAUSE:
-                // Note: this state is triggered by exiting fullscreen mode, and can only be escaped from by re-enabling fullscreen mode.
+                // Note: this state is triggered by either:
+                // - exiting fullscreen mode, and can only be escaped from by re-enabling fullscreen mode.
+                // - having an insufficient gameplay framerate.
                 // pause the countdown timer display and disable the player controls
                 // Note that the FPSPlayer and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
-                pauseClock = true; 
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                pauseClock = true;
+                if (PlayerFPS != null)
+                {
+                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                }
+                else 
+                {
+                    PlayerFPS = GameObject.Find("FPSController");
+                    if (PlayerFPS != null)
+                    {
+                        PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                    }
+                }
                 break;
-
 
             case STATE_HALLFREEZE:
 
@@ -497,7 +549,7 @@ public class GameController : MonoBehaviour {
     public void NextScene()
     {
         // Save the current trial data and move data storage to the next trial
-        dataController.AddTrial();  
+        dataController.AddTrial();
         dataController.SaveData();
     }
 
@@ -527,6 +579,9 @@ public class GameController : MonoBehaviour {
         FLAG_trialError = false;
         FLAG_trialTimeout = false;
         FLAG_fullScreenModeError = false;
+        FLAG_dataWritingError = false;
+        FLAG_frameRateError = false;
+        FLAG_cliffFallError = false;
         starFound = false;
         displayTimeLeft = false;
         scoreUpdated = false;
@@ -537,14 +592,35 @@ public class GameController : MonoBehaviour {
         // Load in the trial data
         currentTrialData = dataController.GetCurrentTrialData();
         nextScene = currentTrialData.mapName;
-        
+
         // Location and orientation variables
-        playerSpawnLocation     = currentTrialData.playerSpawnLocation;
-        playerSpawnOrientation  = currentTrialData.playerSpawnOrientation;
-        star1SpawnLocation      = currentTrialData.star1Location;
-        star2SpawnLocation      = currentTrialData.star2Location;
-        doubleRewardTask        = currentTrialData.doubleRewardTask;
-        presentPositions        = currentTrialData.presentPositions;
+        playerSpawnLocation = currentTrialData.playerSpawnLocation;
+        playerSpawnOrientation = currentTrialData.playerSpawnOrientation;
+        rewardSpawnLocations = currentTrialData.rewardPositions;
+        doubleRewardTask = currentTrialData.doubleRewardTask;
+        presentPositions = currentTrialData.presentPositions;
+        freeForage = currentTrialData.freeForage;
+        bridgeStates = currentTrialData.bridgeStates;
+
+        // ***HRS This is a hack for now for dealing with the free-foraging multi-reward case in the FSM, can make elegant later
+        rewardsRemaining = 1;  // default
+        if (doubleRewardTask)
+        {
+            if (freeForage)
+            {
+                rewardsRemaining = 16;
+            }
+            else
+            {
+                rewardsRemaining = 2;
+            }
+        }
+
+        //rewardsVisible = new bool[rewardsRemaining];
+        for (int i = 0; i < rewardsVisible.Length; i++)
+        {
+            rewardsVisible[i] = false;
+        }
 
         // Timer variables
         maxMovementTime = currentTrialData.maxMovementTime;
@@ -552,20 +628,20 @@ public class GameController : MonoBehaviour {
         displayCueTime = currentTrialData.displayCueTime;
         goalHitPauseTime = currentTrialData.goalHitPauseTime;
         finalGoalHitPauseTime = currentTrialData.finalGoalHitPauseTime;
-        goCueDelay      = currentTrialData.goCueDelay;
-        minDwellAtReward  = currentTrialData.minDwellAtReward;
+        goCueDelay = currentTrialData.goCueDelay;
+        minDwellAtReward = currentTrialData.minDwellAtReward;
         displayMessageTime = currentTrialData.displayMessageTime;
-        errorDwellTime  = currentTrialData.errorDwellTime;
-        rewardType      = currentTrialData.rewardType;
+        errorDwellTime = currentTrialData.errorDwellTime;
+        rewardType = currentTrialData.rewardType;
         hallwayFreezeTime = currentTrialData.hallwayFreezeTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
 
-        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady"};
+        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady" };
 
-        if (menuScenesArray.Contains(nextScene))
+        if (menuScenesArray.Contains(nextScene))  // ***HRS (how is this working if contains is a List method?)
         {
             return nextScene;   // we don't want to record data and do the FSM transitions during the exit and rest break scenes
         }
@@ -621,7 +697,7 @@ public class GameController : MonoBehaviour {
         Debug.Log("The game has started now and into the FSM!");
         NextScene();
         gameStarted = true;     // start the game rolling!
-        Cursor.visible = false; 
+        Cursor.visible = false;
     }
 
     // ********************************************************************** //
@@ -639,7 +715,7 @@ public class GameController : MonoBehaviour {
         // Check if playing in fullscreen mode. If not, give warning until we're back in full screen.
         if (!Screen.fullScreen)
         {
-            if(State!=STATE_STARTSCREEN)
+            if (State != STATE_STARTSCREEN)
             {
                 // if we're in the middle of the experiment, send them a warning and restart the trial
                 FLAG_fullScreenModeError = true;
@@ -652,7 +728,73 @@ public class GameController : MonoBehaviour {
             if (FLAG_fullScreenModeError)  // they had exited fullscreen mode, but now its back to fullscreen :)
             {
                 StateNext(STATE_ERROR);    // record that this error happened and restart the trial
-                FLAG_fullScreenModeError = false;
+            }
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void CheckFramerate()
+    {
+        // Check if the game framerate is sufficiently high. If not, give warning telling them to open in a different browser with fewer plugins or quit.
+        if (frameRateMonitor.Framerate < minFramerate)
+        {
+            if (State != STATE_STARTSCREEN) // ***HRS ah, this is why the start button doesnt work for some people, but if we check framerate from the start of the experiment the smoothing from starting at 0fps will mean every computer fails this test
+            {
+                FLAG_frameRateError = true;
+
+                // prioritise the writing error messages 
+                if ((displayMessage != "dataWritingError") & (displayMessage != "notFullScreenError"))
+                {
+                    // if we're in the middle of the experiment, send them a warning and pause the experiment
+                    displayMessage = "framerateError";
+                    Debug.Log("ERROR: Frame rate of " + frameRateMonitor.Framerate.ToString() + " fps is too low for gameplay.");
+                    StateNext(STATE_PAUSE);
+                }
+            }
+        }
+        else 
+        {
+            if (FLAG_frameRateError & (messageTimer.ElapsedSeconds() > displayMessageTime))  // they had a framerate error, but now its fixed :)
+            {
+                displayMessage = "restartTrialMessage";
+                StateNext(STATE_ERROR);    // record that this error happened and restart the trial (trial will be repeated later)
+            }
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void CheckWritingProperly()
+    {
+        // Check if data is writing to file correctly.
+        if (!dataController.writingDataProperly)
+        {
+            FLAG_dataWritingError = true;
+            displayMessage = "dataWritingError";
+
+            if (State != STATE_PAUSE) 
+            { 
+                Debug.Log("There was a data writing error. Trial will save and restart once connection is re-established.");
+            }
+
+            // Disable the player controls (can get missed if only triggered from STATE_PAUSE when a trial finishes?)
+            StateNext(STATE_PAUSE);
+
+            // Every little while, try another attempt at saving to see if the connection issue resolves (allows error message to be seen for sufficient length of time too)
+            if (messageTimer.ElapsedSeconds() > displayMessageTime)
+            {
+                dataController.SaveData();
+                messageTimer.Reset();
+            }
+        }
+        else
+        {
+            if (FLAG_dataWritingError)  // they had a writing error, but now its fixed :)
+            {
+                // Writing connection is fixed! So restart the trial
+                displayMessage = "restartTrialMessage";
+                StateNext(STATE_ERROR);    // record that this error happened and restart the trial (trial will be repeated later)
             }
         }
     }
@@ -687,7 +829,7 @@ public class GameController : MonoBehaviour {
 
     // ********************************************************************** //
 
-    public void RecordGiftStates() 
+    public void RecordGiftStates()
     {
         // add the current state of the presents to an array
         string giftWrapStateString = string.Format("{0:0.00}", Time.time);    // timestamp the state array with same timer as the positional tracking data
@@ -703,22 +845,6 @@ public class GameController : MonoBehaviour {
     private void UpdateText()
     {
         // This is used for displaying boring, white text messages to the player, such as warnings
-
-        // Display any major errors that require the player to restart the experiment
-        while (!dataController.writingDataProperly) 
-        {
-            displayMessage = "dataWritingError";
-
-            // Try another attempt at the save function to see if the connection issue resolves
-            dataController.SaveData();
-        }
-        // It's fixed! So restart the trial
-        if (displayMessage == "dataWritingError")
-        {
-            displayMessage = "restartTrialMessage";
-            NextAttempt();
-            StateNext(STATE_SETUP);
-        }
 
         // Display regular game messages to the player
         switch (displayMessage)
@@ -761,7 +887,11 @@ public class GameController : MonoBehaviour {
                 break;
 
             case "dataWritingError":
-                textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, please exit.";
+                textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
+                break;
+
+            case "framerateError":
+                textMessage = "The browser-dependent frame rate is insufficient for this HIT. \n Please exit, or try using Chrome/Firefox with no plugins. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
                 break;
 
             case "notFullScreenError":
@@ -785,7 +915,7 @@ public class GameController : MonoBehaviour {
                 textMessage = "Press space-bar to open the gift box";
                 break;
 
-        }  
+        }
     }
 
     // ********************************************************************** //
@@ -834,10 +964,13 @@ public class GameController : MonoBehaviour {
 
                 if (State == STATE_ERROR)  // take off 20 points for a mistrial
                 {
-                    trialScore = -20;
+                    if (!((FLAG_dataWritingError || FLAG_fullScreenModeError) || (FLAG_frameRateError)))  // don't penalize internet connection or writing errors or framerate errors
+                    { 
+                        trialScore = -20;
+                    }
                 }
                 else                       // increase the total score
-                {                        
+                {
                     trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
                 }
                 totalScore += trialScore;
@@ -863,6 +996,8 @@ public class GameController : MonoBehaviour {
     public void FallDeath()
     {   // Disable the player controller, give an error message, save the data and restart the trial
         Debug.Log("AAAAAAAAAAAAH! Player fell off the platform.");
+
+        FLAG_cliffFallError = true;
         StateNext(STATE_ERROR);
     }
 
@@ -877,21 +1012,8 @@ public class GameController : MonoBehaviour {
 
     public void DisableRewardByIndex(int index)
     {
-        // Disable whichever of the two rewards was just hit. Called from RewardHitScript.cs
-        switch (index)
-        {
-            case 1:
-                reward1Visible = false;
-                break;
-
-            case 2:
-                reward2Visible = false;
-                break;
-            default:
-                reward1Visible = false;
-                reward2Visible = false;
-                break;
-        }
+        // Disable whichever of the rewards was just hit. Called from RewardHitScript.cs
+        rewardsVisible[index] = false;
     }
 
     // ********************************************************************** //

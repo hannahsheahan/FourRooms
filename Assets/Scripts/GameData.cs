@@ -11,6 +11,8 @@ public class GameData
     public int participantGender;
     public string confirmationCode;
     public string participantFeedback;
+    public bool transferCounterbalance;
+    public bool intermingledTrials;
     public int totalTrials;
     public float dataRecordFrequency;
     public float restbreakDuration;
