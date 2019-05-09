@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Persistent.unity
+- path: Assets/Scenes/FourRooms_wine.unity
   isLoaded: 1
   isActive: 1

@@ -1,6 +1,6 @@
 WebGL
 PlayerPath?
-/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/cheese_wine
+/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/PHP/cheese_wine_wacky_interm
 SceneListBegin?
 Assets/Scenes/Persistent.unity
 Assets/Scenes/InformationScreen.unity

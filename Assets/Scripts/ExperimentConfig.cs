@@ -106,7 +106,7 @@ public class ExperimentConfig
     {
         // Experiments with training blocked by context
 
-        experimentVersion = "mturk_cheesewine";
+        //experimentVersion = "mturk_cheesewine";
         //experimentVersion = "mturk_cheesewine_wackycolours";
         //experimentVersion = "mturk_learnwithprepost";
         //experimentVersion = "mturk_peanutmartini";
@@ -117,7 +117,7 @@ public class ExperimentConfig
 
         // Experiments with training randomly intermingled across contexts
 
-        //experimentVersion = "mturk_interm_cheesewine_wackycolours";
+        experimentVersion = "mturk_interm_cheesewine_wackycolours";
         //experimentVersion = "mturk_interm_peanutmartini";
 
 
